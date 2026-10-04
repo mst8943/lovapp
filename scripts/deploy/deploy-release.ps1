@@ -12,6 +12,12 @@ $repo = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 Set-Location $repo
 $label = 'audit-' + (Get-Date -Format 'yyyyMMdd-HHmm')
 
+foreach ($tool in 'git', 'npm', 'tar', 'ssh', 'scp') {
+  if (-not (Get-Command $tool -ErrorAction SilentlyContinue)) {
+    throw "$tool bulunamadi. ssh/scp icin: Ayarlar > Uygulamalar > Istege bagli ozellikler > OpenSSH Istemcisi."
+  }
+}
+
 if (git status --porcelain --untracked-files=no) { throw 'Commit edilmemis degisiklik var; once commit edin.' }
 
 Write-Host '==> Web kontrolleri (lint, typecheck, build)'
