@@ -283,6 +283,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int _currentTab = 0;
   final Set<int> _visitedTabs = {0};
   int _unread = 0;
+  int _unreadLikes = 0;
   late final _api = widget.api ?? LovaskApi();
   Timer? _presenceTimer;
   LovaskNotificationManager? _notificationManager;
@@ -305,6 +306,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         switchTab: _switchTab,
         onUnreadChange: (count) {
           if (mounted && count != _unread) setState(() => _unread = count);
+        },
+        onUnreadLikesChange: (count) {
+          // The open likes tab has already marked these as seen.
+          final next = _currentTab == 2 ? 0 : count;
+          if (mounted && next != _unreadLikes) {
+            setState(() => _unreadLikes = next);
+          }
         },
       );
       _notificationManager?.start();
@@ -352,9 +360,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   void _switchTab(int index) {
     if (_currentTab == index) return;
+    if (index == 2 && _unreadLikes > 0) {
+      _api.markLikesSeen().catchError((_) => <String, dynamic>{});
+    }
     setState(() {
       _currentTab = index;
       _visitedTabs.add(index);
+      if (index == 2) _unreadLikes = 0;
     });
   }
 
@@ -435,6 +447,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 icon: Icons.favorite_border_rounded,
                 activeIcon: Icons.favorite_rounded,
                 label: 'Beğeniler',
+                count: _unreadLikes,
                 selected: _currentTab == 2,
                 onTap: () => _switchTab(2),
               ),

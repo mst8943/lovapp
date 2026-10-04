@@ -37,7 +37,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   String? _error;
   List<ConversationSummary> _conversations = [];
   Timer? _poll;
-  bool _fetching = false;
+  RealtimeChannel? _inboxChannel;
+  bool _fetching = false, _reloadQueued = false;
   int _filter = 0;
   bool _searching = false;
   String _query = '';
@@ -48,6 +49,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     super.initState();
     _loadConversations();
     WidgetsBinding.instance.addObserver(this);
+    _subscribeInbox();
     _poll = Timer.periodic(const Duration(seconds: 15), (_) {
       if (widget.active &&
           WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
@@ -65,8 +67,36 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   @override
   void dispose() {
     _poll?.cancel();
+    _inboxChannel?.unsubscribe();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  // RLS limits these rows to the member's own matches; polling stays as fallback.
+  void _subscribeInbox() {
+    void refresh(PostgresChangePayload _) {
+      if (widget.active &&
+          WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
+        _loadConversations(silent: true);
+      }
+    }
+
+    try {
+      _inboxChannel = Supabase.instance.client.channel('lovask-mobile-inbox')
+        ..onPostgresChanges(
+          event: PostgresChangeEvent.insert,
+          schema: 'public',
+          table: 'messages',
+          callback: refresh,
+        )
+        ..onPostgresChanges(
+          event: PostgresChangeEvent.insert,
+          schema: 'public',
+          table: 'matches',
+          callback: refresh,
+        )
+        ..subscribe();
+    } catch (_) {}
   }
 
   @override
@@ -77,7 +107,11 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   }
 
   Future<void> _loadConversations({bool silent = false}) async {
-    if (!mounted || _fetching) return;
+    if (!mounted) return;
+    if (_fetching) {
+      _reloadQueued = true;
+      return;
+    }
     _fetching = true;
     setState(() {
       _loading = !silent && _conversations.isEmpty;
@@ -112,6 +146,10 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       }
     } finally {
       _fetching = false;
+      if (_reloadQueued) {
+        _reloadQueued = false;
+        _loadConversations(silent: true);
+      }
     }
   }
 
@@ -627,6 +665,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   Map<String, dynamic>? _request;
   Map<String, dynamic>? _cursor;
   bool _hasMore = false, _olderBusy = false, _fetching = false, _typing = false;
+  bool _reloadQueued = false;
   bool _online = false;
   String _presenceLabel = 'Çevrimiçi';
   bool _newMessages = false;
@@ -702,7 +741,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   Future<void> _loadMessages({bool silent = false}) async {
-    if (!mounted || _fetching) return;
+    if (!mounted) return;
+    if (_fetching) {
+      // A realtime row arriving mid-fetch must not wait for the next poll.
+      _reloadQueued = true;
+      return;
+    }
     _fetching = true;
     final nearBottom =
         !_scrollController.hasClients ||
@@ -761,6 +805,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       }
     } finally {
       _fetching = false;
+      if (_reloadQueued) {
+        _reloadQueued = false;
+        _loadMessages(silent: true);
+      }
     }
   }
 

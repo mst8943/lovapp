@@ -153,7 +153,8 @@ async function hydrateProfiles(rows: DiscoveryRow[], admin: SupabaseClient, view
       image,
       photos: photos.length ? photos : [image],
       city: row.city ?? undefined,
-      distance: row.distance_km === null || row.distance_km === undefined ? "Mesafe bilgisi yok" : `≈ ${row.distance_km} km`,
+      // Distances are city-centre based, so same-city members would read as "≈ 0 km".
+      distance: row.distance_km === null || row.distance_km === undefined ? "Mesafe bilgisi yok" : row.distance_km < 5 ? "Yakınında" : `≈ ${row.distance_km} km`,
       verified: row.is_verified,
       isBot: row.kind === "bot",
       badges: row.badges ?? [],

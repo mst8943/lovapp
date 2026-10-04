@@ -31,13 +31,14 @@ export async function GET(request: Request) {
         return authRedirect(origin, "auth_unavailable");
       }
 
-      const registration = flow === "register" ? await readOpenRegistration(admin) : null;
+      // New Google users often press "log in"; open registration admits them on either flow.
+      const registration = await readOpenRegistration(admin);
       if (registration?.enabled && !registration.error) {
         const { error: metadataError } = await admin.auth.admin.updateUserById(user.id, {
           app_metadata: { ...user.app_metadata, approved_member: true, registration_source: "open_google" },
         });
         if (!metadataError) {
-          await admin.from("product_funnel_events").insert({ event_name: "signup_completed", subject_id: user.id });
+          await admin.from("product_funnel_events").insert({ event_name: "signup_completed", subject_id: user.id, source: "web" });
           await notifyHermes({ title: "Yeni Lovask üyeliği", fields: { platform: "web", provider: "Google" }, dedupeKey: `signup:${user.id}` });
           // Include the new approval in the JWT used by onboarding RPCs.
           const { data, error: refreshError } = await supabase.auth.refreshSession();
@@ -50,8 +51,11 @@ export async function GET(request: Request) {
       }
 
       await supabase.auth.signOut();
-      await admin.auth.admin.deleteUser(user.id);
-      return authRedirect(origin, registration?.error ? "auth_unavailable" : flow === "register" ? "registration_closed" : "application_required");
+      // Only remove the account this OAuth attempt just created; never an older pending account.
+      const createdByThisAttempt = user.identities?.every((identity) => identity.provider === "google")
+        && Date.now() - new Date(user.created_at).getTime() < 10 * 60 * 1000;
+      if (createdByThisAttempt) await admin.auth.admin.deleteUser(user.id);
+      return authRedirect(origin, registration.error ? "auth_unavailable" : registration.enabled ? "auth_unavailable" : flow === "register" ? "registration_closed" : "application_required");
     }
   }
 

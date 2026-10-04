@@ -565,6 +565,32 @@ export function LovaskApp({
     };
   }, [liveMode, loadConversations, loadLikeNotifications, tab]);
 
+  // New matches are not in realtimeMatchKey yet; RLS limits these rows to the viewer.
+  useEffect(() => {
+    if (!liveMode) return;
+    let disposed = false;
+    let disconnect: (() => void) | undefined;
+    void import("@/lib/supabase/client").then(({ createClient }) => {
+      if (disposed) return;
+      const supabase = createClient();
+      if (!supabase) return;
+      const refresh = () => {
+        void loadConversations();
+        void loadLikeNotifications();
+      };
+      const channel = supabase
+        .channel("lovask-matches")
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "matches" }, refresh)
+        .subscribe();
+      disconnect = () => void supabase.removeChannel(channel);
+      if (disposed) disconnect();
+    });
+    return () => {
+      disposed = true;
+      disconnect?.();
+    };
+  }, [liveMode, loadConversations, loadLikeNotifications]);
+
   useEffect(() => {
     if (!liveMode) return;
     const touch = () => {
@@ -1285,7 +1311,7 @@ function ExploreView({
             onSwitch={onSwipe}
             onFilter={() => setPreferencesOpen(true)}
           />
-          <StoryStrip />
+          <StoryStrip live={liveMode} />
         </>
       )}
       {likesOnly ? (
@@ -1928,7 +1954,7 @@ function DiscoverView({
         onRitual={() => setTasksOpen(true)}
         onBoost={onBoost}
       />
-      <StoryStrip />
+      <StoryStrip live={liveMode} />
       <div className="deck" aria-live="polite">
         {profile ? (
           <>

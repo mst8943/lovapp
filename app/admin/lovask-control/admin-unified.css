@@ -298,6 +298,13 @@
   height: 100dvh !important;
   align-self: start !important;
 }
+/* Desks rendered without .ops-content must not keep the legacy fixed-nav 240px offset. */
+.admin-stage > :not(.ops-nav),
+.ops-stage > :not(.ops-nav) {
+  grid-column: 2 !important;
+  margin-left: 0 !important;
+  min-width: 0 !important;
+}
 .admin-stage > .admin-main,
 .ops-stage > .ops-content {
   grid-column: 2 !important;

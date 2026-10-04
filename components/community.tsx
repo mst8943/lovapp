@@ -63,7 +63,7 @@ export function DiscoveryHeader({ list, onSwitch, onFilter, onRitual, onBoost }:
     </div>
   );
 }
-export function StoryStrip() {
+export function StoryStrip({ live = true }: { live?: boolean }) {
   const [stories, setStories] = useState<Story[]>([]);
   const [error, setError] = useState("");
   const [opened, setOpened] = useState<Story[] | null>(null);
@@ -74,11 +74,13 @@ export function StoryStrip() {
     catch { setError("Hikayeleri yenile"); }
   }, []);
   useEffect(() => {
+    // The demo has no session; /api/stories would only answer 401.
+    if (!live) return;
     const initial = window.setTimeout(() => void load(), 0);
     const timer = window.setInterval(() => { if (document.visibilityState === "visible") void load(); }, 30_000);
     const focus = () => { void load(); }; window.addEventListener("focus", focus);
     return () => { clearTimeout(initial); clearInterval(timer); window.removeEventListener("focus", focus); };
-  }, [load]);
+  }, [live, load]);
   const own = stories.filter((s) => s.own);
   const groups = new Map<string, Story[]>();
   stories.filter((s) => !s.own).forEach((s) => groups.set(s.profileId, [...(groups.get(s.profileId) ?? []), s]));

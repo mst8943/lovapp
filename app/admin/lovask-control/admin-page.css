@@ -1496,6 +1496,8 @@
 
 .studio-tabs {
   display: inline-flex;
+  max-width: 100%;
+  overflow-x: auto;
   background: #14161a;
   padding: 4px;
   border-radius: 8px;

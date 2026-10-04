@@ -133,6 +133,12 @@ class LovaskApi {
   // Likes & Visitors
   Future<Map<String, dynamic>> likes() => _get('/api/discovery/likes');
 
+  // Same unread-like counters as the web Beğeniler badge.
+  Future<Map<String, dynamic>> likeNotifications() =>
+      _get('/api/notifications');
+  Future<Map<String, dynamic>> markLikesSeen() =>
+      _request('/api/notifications', method: 'PATCH');
+
   Future<Map<String, dynamic>> visitors() => _get('/api/profile/visitors');
 
   Future<Map<String, dynamic>> recordVisit(String profileId) =>

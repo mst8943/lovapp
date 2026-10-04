@@ -1,5 +1,15 @@
 # Lovask proje devri
 
+## 2026-10-04 genel denetim: Google girişi, admin yerleşimi, gerçek zamanlı akış
+
+- Google: Açık kayıt açıkken yeni kullanıcı "Google ile giriş yap"a basınca hesap oluşturulup siliniyor ve "başvuru gerekli" hatası veriliyordu. Web `/auth/callback` ve mobil `/api/auth/mobile-oauth` artık açık kayıtta iki akışta da üyeliği onaylıyor. Başarısız denemede yalnızca o denemenin oluşturduğu (yalnız Google kimlikli, 10 dakikadan yeni) hesap siliniyor. İstemci Supabase yetkilendirme adresine doğru yönleniyor; Supabase Google sağlayıcısı ve yönlendirme izin listesi (`https://lovask.com.tr/**`, `lovask://auth-callback`) panelden ayrıca doğrulanmalı.
+- Admin: `ops-stage` altında `.ops-content` dışında içerik kullanan sayfalarda (Büyüme, Başvurular, Fotoğraflar, Ödemeler, Blog) masaüstünde çift 240 px boşluk ve sağ taşma vardı; düzeltildi. 390 px'te Ayarlar ve Bot stüdyosu sekmelerindeki taşma giderildi.
+- Keşif: Şehir merkezli mesafe aynı şehirde "≈ 0 km" gösteriyordu; 5 km altı "Yakınında" olarak gösteriliyor (web ve Android aynı API metnini kullanır).
+- Gerçek zamanlı: Web'de yeni eşleşmeler `matches` INSERT ile anında listeye düşüyor. Android mesaj listesi `messages`/`matches` INSERT ile yenileniyor; yükleme sürerken gelen olay kaybolmuyor. Android Beğeniler sekmesine web ile aynı okunmamış beğeni rozeti eklendi.
+- Demo: Oturumsuz `/demo` hikâye şeridi `/api/stories` 401 üretmiyor.
+- Doğrulama: `npm run verify` geçti (mevcut 7 uyarı). `flutter analyze lib` temiz. `flutter test`'teki 19 başarısız test değişiklikten önce de aynıydı (golden/platform farkları). Canlıya yayın ve APK yapılmadı; veritabanı değişmedi.
+- Bilinen açık: Admin "Marka ve sistem ayarları" kaydediliyor ama web/Android bu değerleri okumuyor.
+
 ## 2026-10-03 web sohbet taşması ve sesli biyografi görünümü
 
 - `hatalar/tasma-sorunu.png` görselindeki dar ekran sohbet taşması grid sütununun içerik tarafından genişletilmesinden kaynaklanıyordu. Sohbet sütunu ve iç bölgelerinin minimum genişliği sınırlandı; 320, 372, 390, 768 ve 1024 px yerel kontrollerde gönder düğmesi görünür ve yatay taşma yok. Canlı 372 px demo sohbet kontrolü de geçti.

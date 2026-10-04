@@ -11,12 +11,14 @@ class LovaskNotificationManager {
     required this.getContext,
     required this.switchTab,
     required this.onUnreadChange,
+    this.onUnreadLikesChange,
   });
 
   final LovaskApi api;
   final BuildContext Function() getContext;
   final void Function(int tabIndex) switchTab;
   final void Function(int count) onUnreadChange;
+  final void Function(int count)? onUnreadLikesChange;
 
   RealtimeChannel? _realtimeChannel;
   Timer? _pollTimer;
@@ -105,9 +107,20 @@ class LovaskNotificationManager {
 
   void _startPolling() {
     _refreshUnread();
+    _refreshLikes();
     _pollTimer = Timer.periodic(const Duration(seconds: 25), (_) {
       _refreshUnread();
+      _refreshLikes();
     });
+  }
+
+  Future<void> _refreshLikes() async {
+    final callback = onUnreadLikesChange;
+    if (callback == null) return;
+    try {
+      final res = await api.likeNotifications();
+      callback((res['unreadLikes'] as num?)?.toInt() ?? 0);
+    } catch (_) {}
   }
 
   Future<void> _refreshUnread() async {
