@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { hasValidAuthOrigin } from "@/lib/auth-origin";
+import { loadGoogleAuthEnabled } from "@/lib/auth-providers";
 import { readOpenRegistration } from "@/lib/registration-settings";
 import { consumeRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { notifyHermes } from "@/lib/hermes-notifications";
@@ -64,7 +65,7 @@ export async function GET() {
         process.env.TURNSTILE_SECRET_KEY ||
         process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
       ),
-      googleEnabled: process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === "true",
+      googleEnabled: await loadGoogleAuthEnabled(),
     },
     { headers: { "Cache-Control": "no-store" } },
   );

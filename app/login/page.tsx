@@ -17,7 +17,7 @@ import { TurnstileChallenge } from "@/components/turnstile-challenge";
 import { safeInternalPath } from "@/lib/navigation";
 import { turkishCities } from "@/lib/turkish-cities";
 import { createClient } from "@/lib/supabase/client";
-import { useOpenRegistration } from "./registration-mode-context";
+import { useGoogleAuthEnabled, useOpenRegistration } from "./registration-mode-context";
 import "./application.css";
 
 type Mode = "login" | "apply" | "register";
@@ -50,7 +50,7 @@ function LoginContent() {
   const [applicationChallenge, setApplicationChallenge] = useState("");
   const [applicationChallengeReset, setApplicationChallengeReset] = useState(0);
   const [registrationSent, setRegistrationSent] = useState("");
-  const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === "true";
+  const googleEnabled = useGoogleAuthEnabled();
 
   const destination = () =>
     safeInternalPath(
