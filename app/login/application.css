@@ -1,0 +1,58 @@
+.membership-gate{background:radial-gradient(circle at 50% -15%,rgba(134,94,45,.18),transparent 35%),linear-gradient(155deg,#070708,#100d10 60%,#070708)}
+.membership-gate .login-card{border-color:rgba(216,181,108,.18);background:linear-gradient(150deg,rgba(25,21,23,.97),rgba(8,8,10,.99))}.membership-gate .login-card>p{max-width:360px}.membership-gate .application-card{width:min(720px,100%)}
+.login-android-link{display:block;margin:14px 0 0;text-align:center;color:#8e43c5;font-size:12px;font-weight:700;text-decoration:none}.login-android-link:hover{text-decoration:underline}
+.application-fields{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.application-form .field span i{color:#6d6468;font-size:10px;font-style:normal;letter-spacing:0;text-transform:none}.application-form textarea{min-height:88px}.application-note{margin-top:2px}.instagram-field{display:flex;align-items:center;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:#181319}.instagram-field b{padding-left:13px;color:#8b7f85}.instagram-field input{border:0;background:transparent}.application-honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;opacity:0!important}
+.application-consent{display:flex;align-items:flex-start;gap:9px;margin:10px 0;color:#9a8f94;font-size:12px;line-height:1.5}.application-consent input{flex:none;margin-top:3px;accent-color:var(--gold)}.application-consent.optional{color:#736970}.application-consent b{color:#8e8288;font-weight:500}.application-form .flow-next{margin-top:16px}
+.application-success{padding:34px 4px 18px;display:flex;flex-direction:column;align-items:center;text-align:center}.application-success>span{width:62px;height:62px;display:grid;place-items:center;border:1px solid rgba(216,181,108,.36);border-radius:50%;color:var(--champagne);box-shadow:0 0 35px rgba(216,181,108,.08)}.application-success>small:first-of-type{margin-top:18px;color:var(--gold);letter-spacing:2px;text-transform:uppercase}.application-success h2{max-width:420px;margin:8px 0 10px;font:600 36px/.96 var(--display)}.application-success>p{max-width:430px;margin:0;color:var(--muted);line-height:1.7}.application-success>div{width:min(430px,100%);margin:22px 0 13px;padding:13px;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(216,181,108,.16);border-radius:14px;background:rgba(216,181,108,.05);color:#bdb0b5;font-size:13px}.application-success>div svg{color:var(--gold)}.application-success code{padding:9px 13px;border-radius:9px;background:#0b090c;color:var(--champagne);letter-spacing:1.4px}.application-success>small:last-child{margin-top:8px;color:#685f64}
+.registration-form{display:grid}.registration-form .flow-next{margin-top:8px}.registration-success{padding-block:30px}.registration-success>p strong{color:var(--champagne);font-weight:600;overflow-wrap:anywhere}
+/* Keep entered text readable on dark fields across browsers. */
+.membership-gate input,.membership-gate textarea,.membership-gate select{color:#f8f3ec!important;background-color:#181319}
+@media(max-width:620px){.membership-gate .application-card{padding-inline:20px}.application-fields{grid-template-columns:1fr}.application-success h2{font-size:31px}}
+
+.membership-gate{background:#fff8f5;color:#352b3c;color-scheme:light}
+.membership-gate .login-card{border-color:#eee3e5;background:#fff;box-shadow:0 24px 70px rgba(63,35,52,.13)}
+.membership-gate .login-card .brand img{filter:sepia(1) saturate(5) hue-rotate(295deg) brightness(.8)}
+.membership-gate .login-card>.eyebrow{color:#d62f58}
+.membership-gate .login-card h1{font-family:Arial,Helvetica,sans-serif;font-size:clamp(43px,8vw,60px);line-height:.95;color:#352b3c}
+.membership-gate .login-card h1 em{color:#d62f58}
+.membership-gate .login-card>p,.membership-gate .legal{color:#796b77}
+.membership-gate .auth-mode{border-color:#eee3e5;background:#fff0eb}
+.membership-gate .auth-mode button{color:#6d6070}
+.membership-gate .auth-mode button.active{background:#fff;color:#d62f58;box-shadow:0 1px 6px rgba(63,35,52,.08)}
+.membership-gate .google-login{border-color:#eee3e5;background:#fff;color:#352b3c}
+.membership-gate .or{color:#6d6070}.membership-gate .or span{background:#eee3e5}
+.membership-gate .field>span{color:#6d6070}
+.membership-gate input,.membership-gate textarea,.membership-gate select{border-color:#d8c7d0!important;background:#fff!important;color:#352b3c!important}
+.membership-gate .instagram-field{border-color:#d8c7d0;background:#fff}
+.membership-gate .flow-next{border-color:#d62f58;background:#d62f58;box-shadow:none}
+.membership-gate .forgot-link,.membership-gate .demo-link{color:#ae1940}
+.membership-gate .login-note{background:#fff0eb;color:#6d6070}
+.membership-gate .application-consent{color:#6d6070}
+.membership-gate .application-consent input{accent-color:#d62f58}
+.membership-gate .application-success>span{border-color:#f29bad;color:#d62f58;box-shadow:none}
+.membership-gate .application-success>small:first-of-type{color:#d62f58}
+.membership-gate .application-success h2{font-family:Arial,Helvetica,sans-serif;color:#352b3c}
+.membership-gate .application-success>p{color:#796b77}
+.membership-gate .application-success>div{border-color:#f0d9df;background:#fff8f5;color:#6d6070}
+.membership-gate .application-success code{background:#fff0eb;color:#ae1940}
+
+/* Keep auth screens in the same lilac and violet language as the app shell. */
+.membership-gate { background: radial-gradient(circle at 50% -10%, rgba(198,127,241,.22), transparent 38%), #fcf7fd; color: #28183e; }
+.membership-gate .login-card { border-color: #e2d1ed; background: #fff; box-shadow: 0 24px 70px rgba(81,39,108,.12); }
+.membership-gate .login-card>.eyebrow { color: #7d42ba; }
+.membership-gate .login-card h1 { color: #28183e; font-family: Georgia, "Times New Roman", serif; }
+.membership-gate .login-card h1 em { color: #8e43c5; }
+.membership-gate .auth-mode { border-color: #e4d5ef; background: #f4eafa; }
+.membership-gate .auth-mode button.active { color: #7138b3; }
+.membership-gate .google-login { border-color: #e3d5ed; }
+.membership-gate .flow-next { border-color: #8b3ec2; background: linear-gradient(110deg, #7138b3, #bd43d8); box-shadow: 0 12px 30px rgba(113,56,179,.24); }
+.membership-gate .forgot-link, .membership-gate .demo-link { color: #7138b3; }
+.membership-gate .login-note { background: #f3e8fb; color: #76677f; }
+.membership-gate .application-consent input { accent-color: #8b3ec2; }
+.membership-gate .flow-next { border-color: #8b3ec2 !important; background: linear-gradient(110deg, #7138b3, #bd43d8) !important; }
+.membership-gate .login-card .brand img { filter: sepia(1) saturate(7) hue-rotate(245deg) brightness(.9); }
+.membership-gate .login-hero { margin: 46px 0 24px; padding: 25px 22px; border-radius: 0 28px 0 28px; background: radial-gradient(circle at 90% 25%,rgba(211,159,243,.16),transparent 35%),linear-gradient(125deg,#513165,#28183e); color: #fff; }
+.membership-gate .login-hero .eyebrow { color: #f0d8fa; font-size: 12px; font-weight: 750; letter-spacing: 1.6px; text-transform: uppercase; }
+.membership-gate .login-card .login-hero h1 { margin: 18px 0 14px; color: #fff; font: 600 clamp(38px,10vw,54px)/.97 Georgia,"Times New Roman",serif; letter-spacing: -.04em; }
+.membership-gate .login-card .login-hero h1 em { color: #f3d8fa; }
+.membership-gate .login-hero p { margin: 0; color: #eadcf1; font-size: 14px; line-height: 1.5; }

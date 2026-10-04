@@ -1,0 +1,212 @@
+/* Support Ticket Board - Clean Minimalist Interface */
+
+.support-board > header nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.support-board > header nav button {
+  border: 1px solid var(--admin-border);
+  background: transparent;
+  color: var(--admin-text-muted);
+  border-radius: 999px;
+  padding: 6px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+
+.support-board > header nav button:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--admin-text);
+}
+
+.support-board > header nav button.active {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+}
+
+.support-board > header nav b {
+  min-width: 18px;
+  height: 18px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--admin-text);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 0 4px;
+}
+
+.support-admin-list {
+  display: grid;
+  gap: 12px;
+}
+
+.support-admin-list > article {
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  background: var(--admin-surface);
+  padding: 18px;
+  transition: border-color 0.14s ease;
+}
+
+.support-admin-list > article:hover {
+  border-color: var(--admin-border-hover);
+}
+
+.support-admin-list article > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.support-admin-list article header span small {
+  color: var(--admin-text-subtle);
+  font-size: 11.5px;
+}
+
+.support-admin-list h2 {
+  margin: 3px 0 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--admin-text);
+}
+
+.support-admin-list article > header i {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--admin-text-muted);
+  border: 1px solid var(--admin-border);
+  white-space: nowrap;
+}
+
+.support-admin-list article > header i[data-priority="high"],
+.support-admin-list article > header i[data-priority="urgent"] {
+  background: var(--admin-danger-soft);
+  color: #fca5a5;
+  border-color: rgba(248, 113, 113, 0.25);
+}
+
+.support-admin-thread {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0;
+  padding: 14px;
+  border-radius: 10px;
+  background: #0d0d10;
+  border: 1px solid var(--admin-border);
+}
+
+.support-admin-thread p {
+  margin: 0;
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: grid;
+  gap: 3px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.support-admin-thread p small {
+  color: var(--admin-text-subtle);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.support-admin-thread .member {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--admin-text);
+  border: 1px solid var(--admin-border);
+}
+
+.support-admin-thread .admin {
+  justify-self: end;
+  background: rgba(123, 24, 49, 0.2);
+  color: #f1dfdf;
+  border: 1px solid rgba(123, 24, 49, 0.35);
+}
+
+.support-admin-list form {
+  display: grid;
+  grid-template-columns: 140px 140px 1fr auto;
+  gap: 8px;
+  align-items: flex-end;
+  margin-top: 12px;
+}
+
+.support-admin-list form label {
+  display: grid;
+  gap: 4px;
+  color: var(--admin-text-subtle);
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+.support-admin-list input,
+.support-admin-list select {
+  height: 36px;
+  border: 1px solid var(--admin-border) !important;
+  border-radius: 8px;
+  background: #0d0d10 !important;
+  color: var(--admin-text);
+  padding: 0 10px;
+  font: inherit;
+  font-size: 12.5px;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+.support-admin-list input:focus,
+.support-admin-list select:focus {
+  border-color: var(--admin-border-focus) !important;
+}
+
+.support-admin-list form > button {
+  height: 36px;
+  border: 1px solid rgba(123, 24, 49, 0.4);
+  border-radius: 8px;
+  background: var(--admin-wine);
+  color: #ffffff;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.14s ease;
+  white-space: nowrap;
+}
+
+.support-admin-list form > button:hover {
+  opacity: 0.92;
+}
+
+@media (max-width: 800px) {
+  .support-admin-list form {
+    grid-template-columns: 1fr 1fr;
+  }
+  .support-admin-list form .reply {
+    grid-column: 1 / -1;
+  }
+  .support-admin-list form > button {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+}
+

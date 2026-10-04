@@ -1,0 +1,40 @@
+# Lovask müşteri ayarları
+# Bu dosyanın adını .env.local yapın ve yalnızca gerekli alanları doldurun.
+
+# 1) Supabase panelinden alın (zorunlu)
+NEXT_PUBLIC_SUPABASE_URL=https://PROJE-REF.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# 2) Site ve owner (zorunlu)
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+ADMIN_EMAILS=owner@example.com
+CRON_SECRET=
+
+# 3) İlk testte kapalı bırakın
+NEXT_PUBLIC_GOOGLE_AUTH_ENABLED=false
+
+# 4) Canlı AI kullanılacaksa en az birini doldurun (ilk testte boş olabilir)
+OPENAI_API_KEY=
+OPENROUTER_API_KEY=
+DEEPSEEK_API_KEY=
+GEMINI_API_KEY=
+AI_DEFAULT_PROVIDER=openai
+AI_FALLBACK_ORDER=openrouter,deepseek,gemini
+
+# 5) İsteğe bağlı: e-posta
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=bildirim@example.com
+RESEND_FROM_NAME=Marka Adı
+
+# 6) İsteğe bağlı: push bildirimleri
+NEXT_PUBLIC_VAPID_PUBLIC_KEY=
+VAPID_PRIVATE_KEY=
+VAPID_SUBJECT=mailto:owner@example.com
+
+# 7) İsteğe bağlı: Shopier ödeme
+SHOPIER_CLIENT_ID=
+SHOPIER_CLIENT_SECRET=
+SHOPIER_WEBHOOK_TOKEN=
+
+# Not: SUPABASE_SERVICE_ROLE_KEY anon/public key değildir; Supabase API ayarlarındaki service_role secret olmalıdır.

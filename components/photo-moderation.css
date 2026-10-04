@@ -1,0 +1,8 @@
+.reject-warning {
+  padding: 10px 12px;
+  border: 1px solid rgba(181, 122, 54, .34);
+  border-radius: 10px;
+  background: rgba(59, 43, 23, .28) !important;
+  color: #e5bd85 !important;
+  font-weight: 700;
+}

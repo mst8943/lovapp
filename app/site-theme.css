@@ -1,0 +1,210 @@
+/* Shared light presentation for every public and account route. */
+body.lovask-light {
+  --body: "Manrope Variable", "Manrope", sans-serif;
+  --display: "Manrope Variable", "Manrope", sans-serif;
+  --font-manrope: "Manrope Variable", "Manrope", sans-serif;
+  --ink: #352b3c;
+  --ink-2: #493c50;
+  --panel: #ffffff;
+  --wine: #d62f58;
+  --ruby: #d62f58;
+  --gold: #d62f58;
+  --champagne: #ae1940;
+  --pearl: #352b3c;
+  --muted: #796b77;
+  --line: #eee3e5;
+  margin: 0;
+  background: #fff8f5;
+  color: #352b3c;
+  color-scheme: light;
+}
+
+/* One locally served family, including legacy pages with explicit font shorthands. */
+body.lovask-light, body.lovask-light :where(*) {
+  font-family: var(--body) !important;
+}
+.lovask-light :is(h1, h2, h3, h4) { text-wrap: balance; }
+.lovask-light :is(p, label, a, button) { overflow-wrap: break-word; }
+.lovask-light :is(input, select, textarea) { min-width: 0; }
+.lovask-light :is(.legal-page, .blog-stage, .download-stage, .founding-page) h1 {
+  font-size: clamp(32px, 5vw, 64px); line-height: 1.12; letter-spacing: -.04em; font-weight: 750;
+}
+.lovask-light :is(.legal-page, .blog-stage, .download-stage, .founding-page) :is(h2,h3) { line-height: 1.25; }
+.lovask-light :is(.step-card h3, .install-steps-section h2, .release-signature strong) { color: #352b3c; }
+.lovask-light .blog-grid { gap: 24px; }
+@media(max-width:600px) {
+  .lovask-light .blog-grid { grid-template-columns: minmax(0,1fr); }
+  .lovask-light .blog-grid > * { grid-column: 1; }
+  .lovask-light :is(.field input,.field textarea,.field select) { font-size: 16px; }
+}
+
+.lovask-light :is(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid #d62f58;
+  outline-offset: 3px;
+}
+
+.lovask-light :is(input, select, textarea) {
+  color-scheme: light;
+}
+
+/* Password reset, invitation and account recovery. */
+.lovask-light .login-stage {
+  min-height: 100dvh;
+  background: radial-gradient(circle at 50% 0, rgba(214, 47, 88, .1), transparent 34%), #fff8f5;
+  color: #352b3c;
+}
+
+.lovask-light .login-card {
+  border-color: #eee3e5;
+  background: #fff;
+  color: #352b3c;
+  box-shadow: 0 24px 70px rgba(63, 35, 52, .13);
+}
+
+.lovask-light .login-card .eyebrow,
+.lovask-light .login-card h1 em { color: #d62f58; }
+.lovask-light .login-card h1 { color: #352b3c; }
+.lovask-light .login-card > p,
+.lovask-light .login-card .legal { color: #796b77; }
+.lovask-light .login-card .field > span { color: #6d6070; }
+.lovask-light .login-card :is(input, select, textarea) {
+  border-color: #d8c7d0;
+  background: #fff;
+  color: #352b3c;
+}
+.lovask-light .login-card .flow-next {
+  border-color: #d62f58;
+  background: #d62f58;
+  color: #fff;
+  box-shadow: none;
+}
+.lovask-light .login-card :is(.demo-link, .forgot-link) { color: #ae1940; }
+.lovask-light .login-card .login-note { border-color: #f0d9df; background: #fff0eb; color: #6d6070; }
+
+.lovask-light .recovery-stage {
+  background: radial-gradient(circle at top, #ffe1e7, #fff8f5 52%);
+  color: #352b3c;
+}
+.lovask-light .recovery-card {
+  border-color: #eee3e5;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(63, 35, 52, .13);
+}
+.lovask-light .recovery-card > svg,
+.lovask-light .recovery-card small { color: #d62f58; }
+.lovask-light .recovery-card p { color: #796b77; }
+.lovask-light .recovery-card button { background: #d62f58; color: #fff; }
+.lovask-light .recovery-error { color: #ae1940 !important; }
+
+/* Legal documents. */
+.lovask-light .legal-page {
+  background: radial-gradient(circle at 80px 80px, rgba(214, 47, 88, .1), transparent 330px), #fff8f5;
+  color: #352b3c;
+}
+.lovask-light .legal-page nav,
+.lovask-light .legal-page article header,
+.lovask-light .legal-page section,
+.lovask-light .legal-page footer { border-color: #eee3e5; }
+.lovask-light .legal-page :is(nav > a, footer a, article a),
+.lovask-light .legal-page article header small { color: #d62f58; }
+.lovask-light .legal-page article header p,
+.lovask-light .legal-page section p { color: #6d6070; }
+.lovask-light .legal-page h2 { color: #352b3c; }
+
+/* Blog index and articles. */
+.lovask-light .blog-stage {
+  background: radial-gradient(circle at 82% 5%, rgba(214, 47, 88, .1), transparent 28%), #fff8f5;
+  color: #352b3c;
+}
+.lovask-light .blog-nav { border-color: #eee3e5; }
+.lovask-light .blog-nav > a:last-child,
+.lovask-light .blog-kicker,
+.lovask-light .blog-card-meta span:first-child { color: #d62f58; }
+.lovask-light .blog-kicker::before { background: #d62f58; }
+.lovask-light :is(.blog-hero p, .blog-manifesto, .blog-card p, .article-lead, .article-byline, .article-back) { color: #796b77; }
+.lovask-light .blog-manifesto { border-color: #f29bad; }
+.lovask-light .blog-card-media,
+.lovask-light .article-cover { background: #fff0eb; }
+.lovask-light .blog-card-media::after { background: linear-gradient(transparent, rgba(53, 43, 60, .35)); }
+.lovask-light .blog-empty { border-color: #eee3e5; background: #fff; color: #796b77; }
+.lovask-light .blog-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+.lovask-light .blog-empty { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; overflow-wrap: anywhere; }
+.lovask-light .blog-empty strong,
+.lovask-light .article-content :is(h2, h3) { color: #352b3c; }
+.lovask-light .article-content { color: #5f5261; }
+.lovask-light .article-content a { color: #ae1940; text-decoration-color: #f29bad; }
+.lovask-light .article-content blockquote { border-color: #d62f58; color: #493c50; }
+.lovask-light .article-tags span { border-color: #f0d9df; background: #fff; color: #796b77; }
+
+/* Android download. */
+.lovask-light .download-stage { background: #fff8f5; color: #352b3c; }
+.lovask-light .download-ambient { opacity: .1; }
+.lovask-light .download-back { color: #6d6070; }
+.lovask-light .download-login-link,
+.lovask-light .apk-badge { border-color: #f29bad; background: #fff0eb; color: #ae1940; }
+.lovask-light .phone-glow { background: radial-gradient(circle, rgba(214, 47, 88, .22), transparent 70%); }
+.lovask-light .phone-circle { border-color: #f29bad; background: #fff; color: #d62f58; box-shadow: 0 16px 36px rgba(63, 35, 52, .13); }
+.lovask-light .download-hero h1 em { color: #d62f58; }
+.lovask-light .download-desc { color: #796b77; }
+.lovask-light .download-primary-btn { border-color: #d62f58; background: #d62f58; box-shadow: 0 14px 34px rgba(214, 47, 88, .2); }
+.lovask-light .download-primary-btn small { color: #fff; }
+.lovask-light .release-signature code { color: #6d6070; }
+.lovask-light .download-security-pill { color: #467d52; }
+.lovask-light .release-signature,
+.lovask-light .step-card,
+.lovask-light .download-perks-section { border-color: #eee3e5; background: #fff; }
+.lovask-light .release-signature > span + span,
+.lovask-light .perk-row + .perk-row { border-color: #eee3e5; }
+.lovask-light :is(.release-signature small, .step-card p, .perk-row, .download-footer) { color: #796b77; }
+.lovask-light .step-num { border-color: #f29bad; background: #ffe1e7; color: #ae1940; }
+.lovask-light .download-footer { border-color: #eee3e5; }
+.lovask-light .download-footer a { color: #6d6070; }
+
+/* Founding-member campaign. */
+.lovask-light .founding-page {
+  background: radial-gradient(circle at 82% 12%, rgba(214, 47, 88, .11), transparent 32%), #fff8f5;
+  color: #352b3c;
+}
+.lovask-light .founding-page :is(nav > a, footer a) { color: #6d6070; }
+.lovask-light .founding-kicker,
+.lovask-light .founding-copy h1 em { color: #d62f58; }
+.lovask-light .founding-copy > p,
+.lovask-light .founding-copy > small,
+.lovask-light .founding-benefits p,
+.lovask-light .founding-referral p { color: #796b77; }
+.lovask-light .founding-primary { border-color: #d62f58; background: #d62f58; box-shadow: 0 18px 42px rgba(214, 47, 88, .18); }
+.lovask-light .founding-ledger,
+.lovask-light .founding-referral { border-color: #eee3e5; background: #fff; box-shadow: 0 24px 70px rgba(63, 35, 52, .12); }
+.lovask-light .founding-ledger header { color: #796b77; }
+.lovask-light .founding-ledger header b,
+.lovask-light .founding-ledger li b,
+.lovask-light .founding-seal,
+.lovask-light .founding-referral > span { color: #d62f58; }
+.lovask-light .founding-progress { background: #f6dfdf; }
+.lovask-light .founding-progress i { background: #d62f58; }
+.lovask-light .founding-ledger li { color: #493c50; }
+.lovask-light .founding-ledger li b,
+.lovask-light .founding-seal { border-color: #f29bad; background: #fff0eb; }
+.lovask-light .founding-seal span { color: #796b77; }
+.lovask-light .founding-seal strong { color: #352b3c; }
+.lovask-light .founding-benefits article,
+.lovask-light .founding-page footer { border-color: #eee3e5; }
+
+/* Shared photo editor and safety dialogs. */
+.lovask-light :is(.safety-popover,.safety-dialog>div,.crop-studio) { border-color: #eee3e5; background: #fff; color: #352b3c; }
+.lovask-light .safety-popover button { color: #352b3c; }
+.lovask-light .safety-popover .danger { color: #b42343; }
+.lovask-light :is(.safety-dialog p,.crop-studio header small,.crop-studio p,.crop-cancel) { color: #6d6070; }
+.lovask-light :is(.safety-dialog select,.safety-dialog textarea,.crop-presets button,.crop-heic) { border-color: #d8c7d0; background: #fff8f5; color: #352b3c; }
+.lovask-light :is(.crop-presets button.active,.crop-apply) { border-color: #d62f58; background: #d62f58; color: #fff; }
+.lovask-light :is(.crop-backdrop,.safety-dialog) { background: #352b3c88; }
+
+/* Shared responsive guard for all pages. */
+@media (max-width: 600px) {
+  .lovask-light .login-stage { padding: 0; }
+  .lovask-light .login-card { min-height: 100dvh; border: 0; border-radius: 0; box-shadow: none; }
+  .lovask-light .blog-stage { overflow-x: hidden; }
+  .lovask-light .blog-grid { grid-template-columns: minmax(0,1fr); gap: 22px; }
+  .lovask-light .blog-empty { grid-column: 1 / -1 !important; padding-inline: 18px; }
+  .lovask-light .blog-empty strong { max-width: 100%; overflow-wrap: anywhere; }
+}

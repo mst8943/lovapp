@@ -1,0 +1,504 @@
+/* Applications Desk - Clean Minimalist Styles */
+
+.application-desk {
+  width: min(1400px, 100%);
+  margin: 0 auto;
+  padding: 32px clamp(20px, 4vw, 48px);
+  color: var(--admin-text);
+  box-sizing: border-box;
+}
+
+.application-desk > header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.application-desk > header small {
+  color: var(--admin-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 600;
+  display: block;
+}
+
+.application-desk h1 {
+  margin: 4px 0 0;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.application-desk > header p {
+  margin: 4px 0 0;
+  color: var(--admin-text-muted);
+  font-size: 13.5px;
+}
+
+.application-desk > header > span {
+  min-width: 80px;
+  padding: 10px 14px;
+  border: 1px solid var(--admin-border);
+  border-radius: 10px;
+  background: var(--admin-surface);
+  display: grid;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.application-desk > header > span small {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--admin-text-subtle);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.application-toolbar {
+  margin: 20px 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.application-toolbar > label {
+  min-width: 280px;
+  height: 38px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  background: var(--admin-surface);
+  color: var(--admin-text-subtle);
+  transition: border-color 0.14s ease;
+}
+
+.application-toolbar > label:focus-within {
+  border-color: var(--admin-border-focus);
+}
+
+.application-toolbar input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--admin-text);
+  font: inherit;
+  font-size: 13px;
+}
+
+.application-toolbar > div {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.application-toolbar button {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--admin-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--admin-text-muted);
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+
+.application-toolbar button:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--admin-text);
+}
+
+.application-toolbar button.active {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+}
+
+.application-admin-notice {
+  padding: 10px 14px;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  background: var(--admin-surface);
+  color: var(--admin-text-muted);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.application-workspace {
+  min-height: 580px;
+  display: grid;
+  grid-template-columns: 310px minmax(0, 1fr);
+  gap: 14px;
+}
+
+.application-workspace > aside {
+  max-height: 700px;
+  padding: 6px;
+  overflow-y: auto;
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  background: #0d0d10;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.application-workspace > aside > button {
+  width: 100%;
+  padding: 10px 10px;
+  display: grid;
+  grid-template-columns: 8px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: none;
+  color: var(--admin-text-muted);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.14s ease, border-color 0.14s ease;
+}
+
+.application-workspace > aside > button:hover {
+  background: var(--admin-surface);
+}
+
+.application-workspace > aside > button.active {
+  background: var(--admin-surface-active);
+  color: var(--admin-text);
+  border-color: var(--admin-border);
+}
+
+.application-workspace aside button > i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--admin-text-subtle);
+}
+
+.application-workspace aside i.submitted {
+  background: var(--admin-accent);
+}
+
+.application-workspace aside i.reviewing {
+  background: #60a5fa;
+}
+
+.application-workspace aside i.approved,
+.application-workspace aside i.invited {
+  background: var(--admin-success);
+}
+
+.application-workspace aside i.rejected {
+  background: var(--admin-danger);
+}
+
+.application-workspace aside span {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.application-workspace aside strong,
+.application-workspace aside small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.application-workspace aside strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--admin-text);
+}
+
+.application-workspace aside small {
+  color: var(--admin-text-subtle);
+  font-size: 11px;
+}
+
+.application-workspace aside em {
+  font-size: 10.5px;
+  font-style: normal;
+  color: var(--admin-text-subtle);
+}
+
+.application-workspace > aside > p {
+  padding: 18px;
+  color: var(--admin-text-subtle);
+  font-size: 13px;
+}
+
+.application-focus {
+  padding: 22px;
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  background: var(--admin-surface);
+}
+
+.application-focus > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.application-focus > header small {
+  color: var(--admin-accent);
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.application-focus h2 {
+  margin: 3px 0 0;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.application-focus > header p {
+  margin: 3px 0 0;
+  color: var(--admin-text-muted);
+  font-size: 13px;
+}
+
+.application-focus > header > i {
+  padding: 3px 9px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--admin-text-muted);
+  font-size: 11px;
+  font-style: normal;
+  border: 1px solid var(--admin-border);
+}
+
+.application-focus > header > i.approved,
+.application-focus > header > i.invited {
+  background: var(--admin-success-soft);
+  color: var(--admin-success);
+  border-color: rgba(74, 222, 128, 0.25);
+}
+
+.application-focus dl {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  margin: 18px 0;
+  overflow: hidden;
+  border: 1px solid var(--admin-border);
+  border-radius: 10px;
+  background: var(--admin-border);
+}
+
+.application-focus dl > div {
+  padding: 10px 12px;
+  background: #0d0d10;
+}
+
+.application-focus dt {
+  color: var(--admin-text-subtle);
+  font-size: 11px;
+}
+
+.application-focus dd {
+  margin: 3px 0 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--admin-text);
+}
+
+.instagram-review {
+  min-height: 38px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  background: #0d0d10;
+  color: #e0c4d0;
+  text-decoration: none;
+  font-size: 12.5px;
+}
+
+.instagram-review.empty {
+  color: var(--admin-text-subtle);
+}
+
+.application-focus > section {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-left: 2px solid var(--admin-accent);
+  background: rgba(216, 181, 108, 0.04);
+  border-radius: 0 8px 8px 0;
+}
+
+.application-focus > section small {
+  color: var(--admin-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.application-focus > section p {
+  margin: 5px 0 0;
+  color: var(--admin-text-muted);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.review-note {
+  display: grid;
+  gap: 5px;
+  margin-top: 14px;
+  color: var(--admin-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.review-note textarea {
+  min-height: 76px;
+  padding: 9px 11px;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  background: #0d0d10;
+  color: var(--admin-text);
+  resize: vertical;
+  font: inherit;
+  font-size: 13px;
+  outline: 0;
+}
+
+.review-note textarea:focus {
+  border-color: var(--admin-border-focus);
+}
+
+.application-decisions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.application-decisions button {
+  min-height: 36px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  background: var(--admin-surface-hover);
+  color: var(--admin-text);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.14s ease;
+}
+
+.application-decisions .approve,
+.application-decisions .invite {
+  border-color: rgba(74, 222, 128, 0.3);
+  background: var(--admin-success-soft);
+  color: #86efac;
+}
+
+.application-decisions .approve:hover,
+.application-decisions .invite:hover {
+  background: rgba(74, 222, 128, 0.2);
+}
+
+.application-decisions .reject {
+  border-color: rgba(248, 113, 113, 0.3);
+  background: var(--admin-danger-soft);
+  color: #fca5a5;
+}
+
+.application-decisions .reject:hover {
+  background: rgba(248, 113, 113, 0.2);
+}
+
+.application-decisions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.marketing-ok {
+  display: block;
+  margin-top: 10px;
+  color: var(--admin-success);
+  font-size: 12px;
+}
+
+.application-focus.empty {
+  display: grid;
+  place-items: center;
+  color: var(--admin-text-subtle);
+  font-size: 13px;
+}
+
+.notification-error {
+  display: block;
+  margin-top: 8px;
+  color: #f87171;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Responsive */
+@media (max-width: 950px) {
+  .application-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .application-workspace > aside {
+    max-height: 220px;
+  }
+
+  .application-focus dl {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .application-desk {
+    padding: 20px 14px;
+  }
+
+  .application-desk > header {
+    align-items: flex-start;
+  }
+
+  .application-desk h1 {
+    font-size: 24px;
+  }
+
+  .application-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .application-toolbar > label {
+    min-width: 0;
+  }
+
+  .application-focus {
+    padding: 16px;
+  }
+}
+

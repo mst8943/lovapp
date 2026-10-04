@@ -1,0 +1,15 @@
+.shopier-payment-link {
+  border-radius: 12px;
+  padding: 9px 12px;
+  background: #e0ba87;
+  color: #19120d;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+@media (max-width: 680px) {
+  .shopier-payment-link {
+    grid-column: 1 / -1;
+  }
+}

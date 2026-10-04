@@ -1,0 +1,283 @@
+/* System Health Panel - Clean Minimalist Interface */
+
+.health-panel > header p {
+  margin: 4px 0 0;
+  color: var(--admin-text-muted);
+  font-size: 13.5px;
+}
+
+.health-panel > header > button {
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  background: var(--admin-surface);
+  color: var(--admin-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.14s ease;
+}
+
+.health-panel > header > button:hover {
+  background: var(--admin-surface-hover);
+}
+
+.health-summary {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.health-summary span {
+  display: grid;
+  gap: 2px;
+}
+
+.health-summary strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.health-summary small {
+  color: var(--admin-text-subtle);
+  font-size: 12px;
+}
+
+.health-summary.healthy {
+  border-color: rgba(74, 222, 128, 0.25);
+  background: var(--admin-success-soft);
+  color: var(--admin-success);
+}
+
+.health-summary.warning {
+  border-color: rgba(251, 191, 36, 0.25);
+  background: var(--admin-warning-soft);
+  color: var(--admin-warning);
+}
+
+/* 4-Column Health Meters */
+.health-meters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.health-meter {
+  padding: 16px;
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  background: var(--admin-surface);
+}
+
+.health-meter > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.health-meter header span {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--admin-accent);
+}
+
+.health-meter header > i {
+  font-size: 20px;
+  font-weight: 600;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  color: var(--admin-text);
+}
+
+.health-meter h2 {
+  margin: 12px 0 2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--admin-text);
+}
+
+.health-meter p {
+  margin: 0;
+  color: var(--admin-text-subtle);
+  font-size: 12px;
+}
+
+.health-meter small {
+  color: var(--admin-text-subtle);
+  font-size: 11px;
+  display: block;
+}
+
+.health-meter > div {
+  height: 4px;
+  margin: 10px 0;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #27272a;
+}
+
+.health-meter > div i {
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background: var(--admin-success);
+}
+
+.health-meter.warning > div i {
+  background: var(--admin-warning);
+}
+
+.health-meter.danger > div i {
+  background: var(--admin-danger);
+}
+
+/* Detail Grid */
+.health-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.health-detail-grid > article,
+.health-detail-grid > form {
+  padding: 18px;
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  background: var(--admin-surface);
+  box-sizing: border-box;
+}
+
+.health-detail-grid > article > small,
+.health-detail-grid > form > small {
+  color: var(--admin-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.health-detail-grid dl {
+  margin: 10px 0 0;
+  display: grid;
+  gap: 8px;
+}
+
+.health-detail-grid dl > span,
+.health-detail-grid article:first-child dl {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  font-size: 12.5px;
+}
+
+.health-detail-grid dt {
+  color: var(--admin-text-muted);
+}
+
+.health-detail-grid dt em {
+  display: block;
+  color: var(--admin-text-subtle);
+  font-size: 10.5px;
+  font-style: normal;
+}
+
+.health-detail-grid dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--admin-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.health-detail-grid form p {
+  color: var(--admin-text-subtle);
+  font-size: 12px;
+  margin: 0 0 10px;
+  line-height: 1.4;
+}
+
+.health-detail-grid form label {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+  color: var(--admin-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.health-detail-grid input {
+  border: 1px solid var(--admin-border) !important;
+  border-radius: 8px;
+  background: #0d0d10 !important;
+  color: var(--admin-text);
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 12.5px;
+  outline: 0;
+}
+
+.health-detail-grid input:focus {
+  border-color: var(--admin-border-focus) !important;
+}
+
+.health-detail-grid form button {
+  width: 100%;
+  margin-top: 14px;
+  height: 36px;
+  border: 1px solid rgba(123, 24, 49, 0.4);
+  border-radius: 8px;
+  background: var(--admin-wine);
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.14s ease;
+}
+
+.health-detail-grid form button:hover {
+  opacity: 0.92;
+}
+
+.health-panel > footer {
+  margin-top: 14px;
+  color: var(--admin-text-subtle);
+  font-size: 11.5px;
+  text-align: right;
+}
+
+@media (max-width: 1100px) {
+  .health-meters {
+    grid-template-columns: 1fr 1fr;
+  }
+  .health-detail-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .health-detail-grid form {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .health-meters,
+  .health-detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .health-detail-grid form {
+    grid-column: auto;
+  }
+}
+

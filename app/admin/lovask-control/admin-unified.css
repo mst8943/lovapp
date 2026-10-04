@@ -1,0 +1,329 @@
+/* ==========================================================================
+   Admin Unified - Global Theme & Navigation Layout
+   ========================================================================== */
+
+:root {
+  --admin-bg: #0b0c0e;
+  --admin-surface: #14161a;
+  --admin-surface-hover: #1c1e24;
+  --admin-surface-2: #181a20;
+  --admin-border: rgba(255, 255, 255, 0.08);
+  --admin-border-hover: rgba(255, 255, 255, 0.14);
+  --admin-text: #f3f4f6;
+  --admin-text-muted: #9ca3af;
+  --admin-text-subtle: #6b7280;
+  --admin-primary: #2563eb;
+  --admin-primary-hover: #1d4ed8;
+  --admin-wine: #991b1b;
+  --admin-wine-hover: #b91c1c;
+  --admin-accent: #d8b56c;
+  --admin-success: #22c55e;
+  --admin-warning: #f59e0b;
+  --admin-danger: #ef4444;
+}
+
+/* Base Stage Layout */
+.admin-stage,
+.ops-stage {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  background: var(--admin-bg) !important;
+  color: var(--admin-text) !important;
+  font-family: var(--body) !important;
+  box-sizing: border-box;
+}
+
+/* Keep navigation in view while the workspace owns the page scroll. */
+.admin-stage,
+.ops-stage { display: block; }
+.admin-stage > .ops-nav,
+.ops-stage > .ops-nav {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 240px;
+  height: 100dvh;
+}
+.admin-stage > :not(.ops-nav),
+.ops-stage > :not(.ops-nav) {
+  margin-left: 240px;
+  min-width: 0;
+}
+.admin-stage > .admin-main,
+.ops-stage > .ops-content {
+  position: relative;
+  z-index: 1;
+  width: calc(100% - 240px);
+  min-height: 100dvh;
+  margin-top: 0;
+  padding-top: 24px;
+  visibility: visible;
+  opacity: 1;
+}
+
+/* One calm surface system; no isolated black cards. */
+.admin-stage,
+.ops-stage { background: #fff8f5 !important; color: #352b3c !important; }
+.admin-stage :is(.admin-panel, .admin-stat, .bot-kpi-card, .bots-panel, .studio-card),
+.ops-stage :is(.ops-row, .ops-card, .ops-content > section) {
+  background: #fff !important;
+  border-color: #eee3e5 !important;
+  color: #352b3c;
+}
+
+.admin-stage *,
+.ops-stage * {
+  box-sizing: border-box;
+}
+
+.admin-stage h1,
+.admin-stage h2,
+.admin-stage h3,
+.ops-stage h1,
+.ops-stage h2,
+.ops-stage h3,
+.admin-stage strong,
+.ops-stage strong,
+.admin-stage em,
+.ops-stage em,
+.admin-stage b,
+.ops-stage b {
+  font-family: var(--body) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Sidebar Navigation
+   -------------------------------------------------------------------------- */
+
+.admin-stage > .ops-nav,
+.ops-stage > .ops-nav,
+.ops-nav {
+  height: 100dvh;
+  position: sticky;
+  top: 0;
+  padding: 20px 14px 60px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: #0f1013;
+  border-right: 1px solid var(--admin-border);
+  box-sizing: border-box;
+  z-index: 20;
+  overflow-y: auto;
+}
+
+.ops-nav .brand {
+  margin: 4px 8px 24px;
+  display: flex;
+  align-items: center;
+}
+
+.ops-nav > a {
+  min-height: 36px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 6px;
+  color: var(--admin-text-muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ops-nav > a svg {
+  color: var(--admin-text-subtle);
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.ops-nav > a:hover {
+  background: var(--admin-surface-hover);
+  color: #f9fafb;
+}
+
+.ops-nav > a:hover svg {
+  color: #f9fafb;
+}
+
+.ops-nav > a.active {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.ops-nav > a.active svg {
+  color: #60a5fa;
+}
+
+/* Pending Badge in Sidebar */
+.ops-nav-badge {
+  margin-left: auto;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Footer Status in Sidebar */
+.ops-nav-status {
+  margin-top: auto;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ops-nav-status > i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--admin-success);
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+  flex-shrink: 0;
+}
+
+.ops-nav-status > span {
+  display: grid;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: #d1d5db;
+}
+
+.ops-nav-status small {
+  color: var(--admin-text-subtle);
+  font-size: 10px;
+}
+
+/* Return to Website Link */
+.ops-nav .ops-nav-return {
+  margin-top: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--admin-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.ops-nav .ops-nav-return:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   Mobile Navigation
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .admin-stage,
+  .ops-stage {
+    display: block;
+    grid-template-columns: 1fr;
+  }
+
+  .admin-stage > .ops-nav,
+  .ops-stage > .ops-nav {
+    position: sticky;
+    width: auto;
+    height: auto;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    padding: 8px 12px;
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--admin-border);
+    background: rgba(15, 16, 19, 0.95);
+    backdrop-filter: blur(12px);
+  }
+
+  .admin-stage > :not(.ops-nav),
+  .ops-stage > :not(.ops-nav) { margin-left: 0; }
+  .admin-stage > .admin-main,
+  .ops-stage > .ops-content { width: 100%; padding-top: 20px; }
+
+  .ops-nav .brand,
+  .ops-nav-status,
+  .ops-nav-return {
+    display: none !important;
+  }
+
+  .ops-nav > a {
+    flex: none;
+    min-height: 36px;
+    padding: 0 10px;
+  }
+}
+
+/* Keep the navigation in the first grid column; the content must start at the viewport top. */
+.admin-stage,
+.ops-stage {
+  display: grid !important;
+  grid-template-columns: 240px minmax(0, 1fr) !important;
+  min-height: 100dvh !important;
+  overflow: visible !important;
+  align-items: start !important;
+}
+.admin-stage > .ops-nav,
+.ops-stage > .ops-nav {
+  position: sticky !important;
+  inset: auto !important;
+  top: 0 !important;
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  width: auto !important;
+  height: 100dvh !important;
+  align-self: start !important;
+}
+.admin-stage > .admin-main,
+.ops-stage > .ops-content {
+  grid-column: 2 !important;
+  grid-row: 1 !important;
+  margin: 0 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  min-height: 100dvh !important;
+  padding-top: 24px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+@media (max-width: 900px) {
+  .admin-stage,
+  .ops-stage { display: block !important; }
+  .admin-stage > .ops-nav,
+  .ops-stage > .ops-nav {
+    position: sticky !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+  .admin-stage > .admin-main,
+  .ops-stage > .ops-content {
+    margin: 0 !important;
+    width: 100% !important;
+    padding-top: 20px !important;
+  }
+}

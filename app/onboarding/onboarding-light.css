@@ -1,0 +1,25 @@
+.flow-stage{background:#fff8f5;color:#352b3c;color-scheme:light}
+.flow-shell{border-color:#eee3e5;background:#fff;box-shadow:0 24px 70px rgba(63,35,52,.12)}
+.flow-header .brand img{filter:sepia(1) saturate(5) hue-rotate(295deg) brightness(.8)}
+.flow-header .icon-button{border-color:#eee3e5;background:#fff;color:#352b3c}
+.step-count,.step-track small{color:#796b77}
+.step-track i{background:#f6dfdf}
+.step-track .active i{background:#d62f58}
+.step-track .active small,.flow-content .eyebrow{color:#d62f58}
+.flow-content h1{font-family:Arial,Helvetica,sans-serif;font-size:clamp(39px,9vw,53px);color:#352b3c}
+.flow-content>p{color:#796b77}
+.flow-content .field>span{color:#6d6070}
+.flow-content .field input,.flow-content .field select,.flow-content .field textarea{border-color:#d8c7d0;background:#fff;color:#352b3c}
+.flow-content .field input:focus,.flow-content .field select:focus,.flow-content .field textarea:focus{border-color:#d62f58;box-shadow:0 0 0 3px rgba(214,47,88,.08)}
+.photo-slot{border-color:#f29bad;background:#fff0eb;color:#ae1940}
+.photo-slot.filled{border-color:#d62f58;background:#ffe1e7}
+.flow-tip{background:#fff0eb;color:#6d6070}.flow-tip svg{color:#d62f58}
+.intent-grid button{border-color:#eee3e5;background:#fff;color:#352b3c}
+.intent-grid button.selected{border-color:#f29bad;background:#ffe1e7;color:#ae1940}
+.preference-check{border-color:#eee3e5;background:#fff8f5;color:#352b3c}
+.preference-check input{accent-color:#d62f58}
+.selection-count,.flow-feedback{color:#796b77}
+.flow-next{border-color:#d62f58;background:#d62f58;box-shadow:none}
+.back-button{color:#6d6070}
+@media(max-width:599px){.flow-stage{padding:0}.flow-shell{border:0;box-shadow:none}}
+.step-track { grid-template-columns: repeat(6,1fr) !important; }

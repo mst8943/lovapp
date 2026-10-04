@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="tr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lovask · Orbit mobil tasarım</title>
+<style>
+@font-face{font-family:Manrope;src:url(assets/fonts/Manrope.ttf)}
+@font-face{font-family:Cormorant;src:url(assets/fonts/CormorantGaramond.ttf)}
+*{box-sizing:border-box}body{margin:0;background:#f5f3f8;color:#281f38;font:14px/1.6 Manrope,sans-serif}
+header{padding:48px 6vw 32px;border-bottom:1px solid #e5dfeb}small{color:#674189;letter-spacing:2px;font-weight:700}
+h1{font:56px/1.05 Cormorant,serif;margin:14px 0}p{max-width:680px;color:#756b80}
+main{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:40px 28px;padding:40px 6vw}
+figure{margin:0}a{color:inherit}a:focus-visible{outline:3px solid #674189;outline-offset:8px}
+img{display:block;width:100%;height:auto;border-radius:28px;border:1px solid #e5dfeb;box-shadow:0 12px 32px #261c3510}
+figcaption{padding:14px 4px;font-weight:700}footer{padding:24px 6vw 48px;color:#756b80}
+</style>
+<header><small>LOVASK · ORBIT</small><h1>Aynı anda. Aynı histe.</h1><p>Mevcut Flutter uygulamasına uygulanan yeni mobil tasarım. Aşağıdaki görüntüler uygulamanın widget testlerinden alınmıştır; profil, mesaj ve fiyat içerikleri test verisidir. Görüntüye dokunarak tam boyutunu açabilirsin.</p></header>
+<main>
+<figure><a href="test/goldens/home.png"><img src="test/goldens/home.png" alt="Keşfet ekranı ve alt navigasyon"></a><figcaption>Keşfet</figcaption></figure>
+<figure><a href="test/goldens/explore-loaded.png"><img src="test/goldens/explore-loaded.png" alt="Profil galerisi" loading="lazy"></a><figcaption>Keşif alanı</figcaption></figure>
+<figure><a href="test/goldens/likes.png"><img src="test/goldens/likes.png" alt="Beğeniler ve Noir erişimi" loading="lazy"></a><figcaption>Beğeniler</figcaption></figure>
+<figure><a href="test/goldens/inbox.png"><img src="test/goldens/inbox.png" alt="Mesaj kutusu" loading="lazy"></a><figcaption>Mesajlar</figcaption></figure>
+<figure><a href="test/goldens/chat.png"><img src="test/goldens/chat.png" alt="Birebir sohbet" loading="lazy"></a><figcaption>Sohbet</figcaption></figure>
+<figure><a href="test/goldens/profile.png"><img src="test/goldens/profile.png" alt="Kişisel profil" loading="lazy"></a><figcaption>Profil</figcaption></figure>
+<figure><a href="test/goldens/profile-detail.png"><img src="test/goldens/profile-detail.png" alt="Profil detayları" loading="lazy"></a><figcaption>Profil detay</figcaption></figure>
+<figure><a href="test/goldens/preferences.png"><img src="test/goldens/preferences.png" alt="Keşfet filtreleri" loading="lazy"></a><figcaption>Filtreler</figcaption></figure>
+<figure><a href="test/goldens/noir.png"><img src="test/goldens/noir.png" alt="Noir üyelik ve ödeme seçenekleri" loading="lazy"></a><figcaption>Lovask Noir</figcaption></figure>
+<figure><a href="test/goldens/onboarding.png"><img src="test/goldens/onboarding.png" alt="Profil oluşturmanın ilk adımı" loading="lazy"></a><figcaption>Onboarding</figcaption></figure>
+<figure><a href="test/goldens/settings.png"><img src="test/goldens/settings.png" alt="Gizlilik ve hesap ayarları" loading="lazy"></a><figcaption>Ayarlar</figcaption></figure>
+<figure><a href="test/goldens/login.png"><img src="test/goldens/login.png" alt="Giriş ve kayıt" loading="lazy"></a><figcaption>Giriş</figcaption></figure>
+</main><footer>Görsel dil ve bileşenler: <a href="DESIGN.md">Tasarım sistemi</a></footer>
+</html>

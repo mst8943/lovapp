@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "tr.com.lovask.app",
+      "sha256_cert_fingerprints": [
+        "33:C6:AB:7B:C3:40:35:54:04:E0:A9:0F:41:6C:C8:B4:67:33:9D:CE:21:52:98:13:1D:68:42:19:E6:00:E4:E2"
+      ]
+    }
+  }
+]

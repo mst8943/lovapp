@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lovask Test & QA Doğrulama Raporu</title>
+  <style>
+    :root {
+      --bg-main: #0b0f17;
+      --bg-card: #131b26;
+      --bg-card-hover: #1a2434;
+      --bg-header: #0e1622;
+      --border-color: #223044;
+      --border-focus: #3b82f6;
+      --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-faint: #64748b;
+      
+      --status-pass-bg: rgba(16, 185, 129, 0.15);
+      --status-pass-text: #34d399;
+      --status-pass-border: #10b981;
+
+      --status-fail-bg: rgba(239, 68, 68, 0.15);
+      --status-fail-text: #f87171;
+      --status-fail-border: #ef4444;
+
+      --status-block-bg: rgba(245, 158, 11, 0.15);
+      --status-block-text: #fbbf24;
+      --status-block-border: #f59e0b;
+
+      --status-na-bg: rgba(100, 116, 139, 0.15);
+      --status-na-text: #cbd5e1;
+      --status-na-border: #64748b;
+
+      --sev-crit-text: #fda4af;
+      --sev-crit-bg: rgba(225, 29, 72, 0.2);
+      --sev-high-text: #fed7aa;
+      --sev-high-bg: rgba(234, 88, 12, 0.2);
+      --sev-med-text: #bae6fd;
+      --sev-med-bg: rgba(2, 132, 199, 0.2);
+      --sev-low-text: #e2e8f0;
+      --sev-low-bg: rgba(71, 85, 105, 0.2);
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-stack);
+      line-height: 1.5;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+    }
+
+    .brand-badge {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      border-radius: var(--radius-sm);
+    }
+
+    .meta-info {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .meta-item strong {
+      color: var(--text-main);
+    }
+
+    .disclaimer-banner {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      font-size: 13.5px;
+      color: #fcd34d;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #ffffff;
+    }
+
+    .stat-card.pass .stat-value { color: var(--status-pass-text); }
+    .stat-card.fail .stat-value { color: var(--status-fail-text); }
+    .stat-card.block .stat-value { color: var(--status-block-text); }
+    .stat-card.na .stat-value { color: var(--status-na-text); }
+    .stat-card.time .stat-value { color: #60a5fa; }
+
+    .controls-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .search-box {
+      flex: 1 1 240px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: #090d14;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      padding: 9px 12px;
+      font-size: 13.5px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--border-focus);
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .select-input {
+      background: #090d14;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      padding: 8px 12px;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .select-input:focus {
+      border-color: var(--border-focus);
+    }
+
+    .reset-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 8px 14px;
+      font-size: 13px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .reset-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-main);
+      border-color: #475569;
+    }
+
+    .filter-feedback {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      background: var(--bg-header);
+      padding: 12px 16px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    tbody tr.main-row {
+      transition: background-color 0.15s;
+    }
+
+    tbody tr.main-row:hover {
+      background-color: var(--bg-card-hover);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .badge-status-geşti {
+      background: var(--status-pass-bg);
+      color: var(--status-pass-text);
+      border: 1px solid var(--status-pass-border);
+    }
+
+    .badge-status-başarısız {
+      background: var(--status-fail-bg);
+      color: var(--status-fail-text);
+      border: 1px solid var(--status-fail-border);
+    }
+
+    .badge-status-engelli {
+      background: var(--status-block-bg);
+      color: var(--status-block-text);
+      border: 1px solid var(--status-block-border);
+    }
+
+    .badge-status-uygulanamaz {
+      background: var(--status-na-bg);
+      color: var(--status-na-text);
+      border: 1px solid var(--status-na-border);
+    }
+
+    .badge-surface {
+      background: rgba(59, 130, 246, 0.12);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      padding: 2px 7px;
+      font-size: 11px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+    }
+
+    .badge-sev-kritik { background: var(--sev-crit-bg); color: var(--sev-crit-text); }
+    .badge-sev-yüksek { background: var(--sev-high-bg); color: var(--sev-high-text); }
+    .badge-sev-orta { background: var(--sev-med-bg); color: var(--sev-med-text); }
+    .badge-sev-düşük { background: var(--sev-low-bg); color: var(--sev-low-text); }
+
+    .test-title {
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+
+    .test-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .expand-btn {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      padding: 4px 8px;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .expand-btn:hover, .expand-btn:focus-visible {
+      background: var(--border-color);
+      color: #ffffff;
+      outline: 2px solid var(--border-focus);
+    }
+
+    .detail-row {
+      display: none;
+      background: #090d14;
+    }
+
+    .detail-row.open {
+      display: table-row;
+    }
+
+    .detail-container {
+      padding: 16px 20px;
+      border-left: 3px solid var(--border-focus);
+    }
+
+    .detail-section {
+      margin-bottom: 14px;
+    }
+
+    .detail-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .detail-title {
+      font-size: 11.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .error-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: #fca5a5;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .steps-list {
+      list-style-type: decimal;
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      color: #cbd5e1;
+    }
+
+    .log-box {
+      background: #05080c;
+      border: 1px solid #1a2332;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: #94a3b8;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 11.5px;
+      overflow-x: auto;
+      max-height: 200px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .evidence-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 12.5px;
+      margin-top: 6px;
+    }
+
+    .evidence-link:hover {
+      text-decoration: underline;
+    }
+
+    .empty-state {
+      padding: 40px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-faint);
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      header { padding: 16px; flex-direction: column; align-items: flex-start; }
+      .controls-panel { flex-direction: column; align-items: stretch; }
+      .filter-group { flex-direction: column; align-items: stretch; }
+      .filter-feedback { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div>
+      <div class="brand-title">
+        <span id="reportHeaderTitle">Lovask Test & QA Doğrulama Raporu</span>
+        <span class="brand-badge" id="reportHeaderBadge">QA Şablonu</span>
+      </div>
+      <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;" id="reportHeaderDesc">
+        Web, Flutter Mobil, Admin ve API Yüzeyleri Test Koşum Çıktısı
+      </div>
+    </div>
+    <div class="meta-info">
+      <div class="meta-item">Tarih: <strong id="reportDate">-</strong></div>
+      <div class="meta-item">Ortam: <strong id="reportEnv">-</strong></div>
+      <div class="meta-item">Sürüm: <strong id="reportVersion">-</strong></div>
+    </div>
+  </header>
+
+  <!-- Demo Disclaimer controlled strictly by run.isDemo -->
+  <div class="disclaimer-banner" id="demoBanner">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+      <line x1="12" y1="9" x2="12" y2="13"></line>
+      <line x1="12" y1="17" x2="12.01" y2="17"></line>
+    </svg>
+    <div>
+      <strong>DİKKAT: TEMSİLİ VERİ (MOCK DATA)</strong> — Bu rapordaki test sonuçları ve süreler, rapor görünümünü ve filtreleme işlevlerini doğrulamak amacıyla temsili olarak oluşturulmuştur.
+    </div>
+  </div>
+
+  <!-- Overall Stat Cards (Calculated from all results) -->
+  <div class="summary-grid">
+    <div class="stat-card">
+      <div class="stat-label">Toplam Test</div>
+      <div class="stat-value" id="statTotal">0</div>
+    </div>
+    <div class="stat-card pass">
+      <div class="stat-label">Geçti</div>
+      <div class="stat-value" id="statPass">0</div>
+    </div>
+    <div class="stat-card fail">
+      <div class="stat-label">Başarısız</div>
+      <div class="stat-value" id="statFail">0</div>
+    </div>
+    <div class="stat-card block">
+      <div class="stat-label">Engelli</div>
+      <div class="stat-value" id="statBlock">0</div>
+    </div>
+    <div class="stat-card na">
+      <div class="stat-label">Uygulanamaz</div>
+      <div class="stat-value" id="statNA">0</div>
+    </div>
+    <div class="stat-card time">
+      <div class="stat-label">Toplam Süre</div>
+      <div class="stat-value" id="statTime">0s</div>
+    </div>
+  </div>
+
+  <!-- Filter & Search Controls -->
+  <div class="controls-panel">
+    <div class="search-box">
+      <input type="text" id="searchInput" class="search-input" placeholder="Test başlığı, ID, modül veya hata ara..." aria-label="Test ara">
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label" for="filterSurface">Yüzey:</label>
+      <select id="filterSurface" class="select-input">
+        <option value="">Tümü</option>
+        <option value="Web">Web</option>
+        <option value="Mobil">Mobil</option>
+        <option value="API">API</option>
+        <option value="Admin">Admin</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label" for="filterStatus">Durum:</label>
+      <select id="filterStatus" class="select-input">
+        <option value="">Tümü</option>
+        <option value="GEÇTİ">GEÇTİ</option>
+        <option value="BAŞARISIZ">BAŞARISIZ</option>
+        <option value="ENGELLİ">ENGELLİ</option>
+        <option value="UYGULANAMAZ">UYGULANAMAZ</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label" for="filterSeverity">Önem:</label>
+      <select id="filterSeverity" class="select-input">
+        <option value="">Tümü</option>
+        <option value="Kritik">Kritik</option>
+        <option value="Yüksek">Yüksek</option>
+        <option value="Orta">Orta</option>
+        <option value="Düşük">Düşük</option>
+      </select>
+    </div>
+
+    <button id="resetFilters" class="reset-btn" type="button">Filtreleri Sıfırla</button>
+
+    <div class="filter-feedback" id="filterFeedback">0 / 0 Test Gösteriliyor</div>
+  </div>
+
+  <!-- Results Table -->
+  <div class="table-container">
+    <table id="testTable">
+      <thead>
+        <tr>
+          <th>Test ID</th>
+          <th>Yüzey</th>
+          <th>Modül</th>
+          <th>Test Başlığı</th>
+          <th>Önem</th>
+          <th>Durum</th>
+          <th>Süre</th>
+          <th>İşlem</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div id="noResults" class="empty-state" style="display: none;">
+      Arama kriterlerinize uygun test sonucu bulunamadı.
+    </div>
+  </div>
+
+  <footer>
+    Lovask Bağımsız Test Raporlama Şablonu &bull; Güvenli HTML / XSS Korumalı
+  </footer>
+</div>
+
+<script>
+  let activeResults = [];
+  let activeRun = {};
+
+  function formatDuration(ms) {
+    if (typeof ms !== "number" || isNaN(ms) || ms < 0) return "0ms";
+    if (ms < 1000) return ms + "ms";
+    if (ms < 60000) return (ms / 1000).toFixed(1) + "s";
+    const minutes = Math.floor(ms / 60000);
+    const seconds = Math.round((ms % 60000) / 1000);
+    return minutes + "m " + seconds + "s";
+  }
+
+  function sanitizeEvidenceUrl(url) {
+    if (!url || typeof url !== "string") return null;
+    const trimmed = url.trim();
+    if (trimmed.startsWith("/") || trimmed.startsWith("./") || /^https?:\/\//i.test(trimmed)) {
+      return trimmed;
+    }
+    return null;
+  }
+
+  function getStatusBadgeClass(status) {
+    switch (String(status).toUpperCase()) {
+      case "GEÇTİ": return "badge-status-geşti";
+      case "BAŞARISIZ": return "badge-status-başarısız";
+      case "ENGELLİ": return "badge-status-engelli";
+      case "UYGULANAMAZ": return "badge-status-uygulanamaz";
+      default: return "";
+    }
+  }
+
+  function getSeverityBadgeClass(sev) {
+    switch (String(sev).toLowerCase()) {
+      case "kritik": return "badge-sev-kritik";
+      case "yüksek": return "badge-sev-yüksek";
+      case "orta": return "badge-sev-orta";
+      case "düşük": return "badge-sev-düşük";
+      default: return "";
+    }
+  }
+
+  function renderReport(data) {
+    activeRun = data?.run || {};
+    activeResults = Array.isArray(data?.results) ? data.results : [];
+
+    // Header metadata
+    document.getElementById("reportHeaderTitle").textContent = activeRun.title || "Lovask Test & QA Doğrulama Raporu";
+    document.getElementById("reportDate").textContent = activeRun.date || "-";
+    document.getElementById("reportEnv").textContent = activeRun.environment || "-";
+    document.getElementById("reportVersion").textContent = activeRun.version || "-";
+
+    // Demo banner visibility
+    const demoBanner = document.getElementById("demoBanner");
+    demoBanner.style.display = activeRun.isDemo === true ? "flex" : "none";
+
+    // Calculate overall stats from all results
+    document.getElementById("statTotal").textContent = String(activeResults.length);
+    document.getElementById("statPass").textContent = String(activeResults.filter(r => r.status === "GEÇTİ").length);
+    document.getElementById("statFail").textContent = String(activeResults.filter(r => r.status === "BAŞARISIZ").length);
+    document.getElementById("statBlock").textContent = String(activeResults.filter(r => r.status === "ENGELLİ").length);
+    document.getElementById("statNA").textContent = String(activeResults.filter(r => r.status === "UYGULANAMAZ").length);
+
+    const totalDurationMs = activeResults.reduce((acc, curr) => acc + (Number(curr.durationMs) || 0), 0);
+    document.getElementById("statTime").textContent = formatDuration(totalDurationMs);
+
+    applyFilters();
+  }
+
+  function renderFilteredTable(filtered) {
+    const tableBody = document.getElementById("tableBody");
+    const noResults = document.getElementById("noResults");
+    const filterFeedback = document.getElementById("filterFeedback");
+
+    tableBody.innerHTML = "";
+    filterFeedback.textContent = filtered.length + " / " + activeResults.length + " Test Gösteriliyor";
+
+    if (filtered.length === 0) {
+      noResults.style.display = "block";
+      return;
+    }
+    noResults.style.display = "none";
+
+    filtered.forEach((test) => {
+      const rowId = "row-" + test.id;
+      const detailId = "detail-" + test.id;
+      const btnId = "btn-" + test.id;
+
+      // Main Row
+      const tr = document.createElement("tr");
+      tr.className = "main-row";
+      tr.id = rowId;
+
+      // 1. Test ID
+      const tdId = document.createElement("td");
+      tdId.style.fontFamily = "monospace";
+      tdId.style.fontWeight = "700";
+      tdId.style.color = "#93c5fd";
+      tdId.textContent = test.id;
+      tr.appendChild(tdId);
+
+      // 2. Surface
+      const tdSurface = document.createElement("td");
+      const surfaceBadge = document.createElement("span");
+      surfaceBadge.className = "badge-surface";
+      surfaceBadge.textContent = test.surface;
+      tdSurface.appendChild(surfaceBadge);
+      tr.appendChild(tdSurface);
+
+      // 3. Module
+      const tdModule = document.createElement("td");
+      tdModule.style.color = "var(--text-muted)";
+      tdModule.textContent = test.module;
+      tr.appendChild(tdModule);
+
+      // 4. Title & Desc
+      const tdTitle = document.createElement("td");
+      const titleDiv = document.createElement("div");
+      titleDiv.className = "test-title";
+      titleDiv.textContent = test.title;
+      const descDiv = document.createElement("div");
+      descDiv.className = "test-desc";
+      descDiv.textContent = test.desc || "";
+      tdTitle.appendChild(titleDiv);
+      if (test.desc) tdTitle.appendChild(descDiv);
+      tr.appendChild(tdTitle);
+
+      // 5. Severity
+      const tdSev = document.createElement("td");
+      const sevBadge = document.createElement("span");
+      sevBadge.className = "badge " + getSeverityBadgeClass(test.severity);
+      sevBadge.textContent = test.severity;
+      tdSev.appendChild(sevBadge);
+      tr.appendChild(tdSev);
+
+      // 6. Status
+      const tdStatus = document.createElement("td");
+      const statusBadge = document.createElement("span");
+      statusBadge.className = "badge " + getStatusBadgeClass(test.status);
+      statusBadge.textContent = test.status;
+      tdStatus.appendChild(statusBadge);
+      tr.appendChild(tdStatus);
+
+      // 7. Duration
+      const tdDuration = document.createElement("td");
+      tdDuration.style.fontFamily = "monospace";
+      tdDuration.style.color = "var(--text-muted)";
+      tdDuration.textContent = formatDuration(test.durationMs);
+      tr.appendChild(tdDuration);
+
+      // 8. Action button with accessible attributes
+      const tdAction = document.createElement("td");
+      const expandBtn = document.createElement("button");
+      expandBtn.id = btnId;
+      expandBtn.type = "button";
+      expandBtn.className = "expand-btn";
+      expandBtn.setAttribute("aria-expanded", "false");
+      expandBtn.setAttribute("aria-controls", detailId);
+      expandBtn.textContent = "Detay ";
+      const iconSpan = document.createElement("span");
+      iconSpan.textContent = "▼";
+      expandBtn.appendChild(iconSpan);
+
+      expandBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleDetail(test.id);
+      });
+      tr.appendChild(tdAction);
+      tdAction.appendChild(expandBtn);
+
+      // Expandable Detail Row
+      const detailTr = document.createElement("tr");
+      detailTr.id = detailId;
+      detailTr.className = "detail-row";
+
+      const detailTd = document.createElement("td");
+      detailTd.colSpan = 8;
+      const detailContainer = document.createElement("div");
+      detailContainer.className = "detail-container";
+
+      // Error Section
+      if (test.error) {
+        const errSec = document.createElement("div");
+        errSec.className = "detail-section";
+        const errTitle = document.createElement("div");
+        errTitle.className = "detail-title";
+        errTitle.style.color = "#f87171";
+        errTitle.textContent = "Hata Açıklaması";
+        const errBox = document.createElement("div");
+        errBox.className = "error-box";
+        errBox.textContent = test.error; // Plain text
+        errSec.appendChild(errTitle);
+        errSec.appendChild(errBox);
+        detailContainer.appendChild(errSec);
+      }
+
+      // Steps Section
+      if (Array.isArray(test.steps) && test.steps.length > 0) {
+        const stepSec = document.createElement("div");
+        stepSec.className = "detail-section";
+        const stepTitle = document.createElement("div");
+        stepTitle.className = "detail-title";
+        stepTitle.textContent = "Test Adımları";
+        const stepOl = document.createElement("ol");
+        stepOl.className = "steps-list";
+        test.steps.forEach((stepText) => {
+          const stepLi = document.createElement("li");
+          stepLi.textContent = stepText; // Plain text
+          stepOl.appendChild(stepLi);
+        });
+        stepSec.appendChild(stepTitle);
+        stepSec.appendChild(stepOl);
+        detailContainer.appendChild(stepSec);
+      }
+
+      // Log Section
+      if (test.logs) {
+        const logSec = document.createElement("div");
+        logSec.className = "detail-section";
+        const logTitle = document.createElement("div");
+        logTitle.className = "detail-title";
+        logTitle.textContent = "Konsol ve Yürütme Logları";
+        const logPre = document.createElement("pre");
+        logPre.className = "log-box";
+        logPre.textContent = test.logs; // Plain text prevents script execution
+        logSec.appendChild(logTitle);
+        logSec.appendChild(logPre);
+        detailContainer.appendChild(logSec);
+      }
+
+      // Evidence link if safe
+      const safeUrl = sanitizeEvidenceUrl(test.evidenceUrl);
+      if (safeUrl) {
+        const evSec = document.createElement("div");
+        evSec.className = "detail-section";
+        const evLink = document.createElement("a");
+        evLink.className = "evidence-link";
+        evLink.href = safeUrl;
+        evLink.target = "_blank";
+        evLink.rel = "noopener noreferrer";
+        evLink.textContent = "Bağlantılı Kanıt Dosyasını Aç (" + safeUrl + ")";
+        evSec.appendChild(evLink);
+        detailContainer.appendChild(evSec);
+      }
+
+      detailTd.appendChild(detailContainer);
+      detailTr.appendChild(detailTd);
+
+      tableBody.appendChild(tr);
+      tableBody.appendChild(detailTr);
+    });
+  }
+
+  function toggleDetail(testId) {
+    const detailRow = document.getElementById("detail-" + testId);
+    const btn = document.getElementById("btn-" + testId);
+    if (!detailRow || !btn) return;
+
+    const isOpen = detailRow.classList.contains("open");
+    if (isOpen) {
+      detailRow.classList.remove("open");
+      btn.setAttribute("aria-expanded", "false");
+      btn.innerHTML = 'Detay <span>▼</span>';
+    } else {
+      detailRow.classList.add("open");
+      btn.setAttribute("aria-expanded", "true");
+      btn.innerHTML = 'Kapat <span>▲</span>';
+    }
+  }
+
+  function applyFilters() {
+    const searchInput = document.getElementById("searchInput");
+    const filterSurface = document.getElementById("filterSurface");
+    const filterStatus = document.getElementById("filterStatus");
+    const filterSeverity = document.getElementById("filterSeverity");
+
+    const query = (searchInput.value || "").toLowerCase().trim();
+    const surface = filterSurface.value;
+    const status = filterStatus.value;
+    const severity = filterSeverity.value;
+
+    const filtered = activeResults.filter(test => {
+      const matchSearch = !query || 
+        String(test.id).toLowerCase().includes(query) ||
+        String(test.title).toLowerCase().includes(query) ||
+        String(test.desc || "").toLowerCase().includes(query) ||
+        String(test.module).toLowerCase().includes(query) ||
+        String(test.error || "").toLowerCase().includes(query) ||
+        String(test.logs || "").toLowerCase().includes(query);
+
+      const matchSurface = !surface || test.surface === surface;
+      const matchStatus = !status || test.status === status;
+      const matchSeverity = !severity || test.severity === severity;
+
+      return matchSearch && matchSurface && matchStatus && matchSeverity;
+    });
+
+    renderFilteredTable(filtered);
+  }
+
+  // Event Listeners for Filters
+  document.getElementById("searchInput").addEventListener("input", applyFilters);
+  document.getElementById("filterSurface").addEventListener("change", applyFilters);
+  document.getElementById("filterStatus").addEventListener("change", applyFilters);
+  document.getElementById("filterSeverity").addEventListener("change", applyFilters);
+
+  document.getElementById("resetFilters").addEventListener("click", () => {
+    document.getElementById("searchInput").value = "";
+    document.getElementById("filterSurface").value = "";
+    document.getElementById("filterStatus").value = "";
+    document.getElementById("filterSeverity").value = "";
+    applyFilters();
+  });
+
+  // Default Mock Dataset (Temsili Veri)
+  const defaultMockRun = {
+    title: "Lovask Test & QA Doğrulama Raporu",
+    environment: "Lokal / Staging",
+    version: "v1.7.4 (Build 174)",
+    date: "2026-09-29",
+    isDemo: true
+  };
+
+  const defaultMockResults = [
+    {
+      id: "TC-AUTH-01",
+      surface: "Web",
+      module: "Kimlik Doğrulama",
+      title: "Kullanıcı e-posta ve şifre ile giriş akışı",
+      desc: "Doğru kimlik bilgileriyle oturum açılır, session cookie kaydedilir ve keşfet sayfasına yönlendirilir.",
+      severity: "Kritik",
+      status: "GEÇTİ",
+      durationMs: 1420,
+      error: null,
+      steps: [
+        "1. /login sayfasına gidildi.",
+        "2. E-posta ve şifre alanları dolduruldu.",
+        "3. 'Giriş Yap' butonuna tıklandı."
+      ],
+      logs: "[INFO] Navigating to http://127.0.0.1:3000/login\n[INFO] Cookie 'sb-access-token' set successfully.\n[PASS] Status code 200 matches expected.",
+      evidenceUrl: "/artifacts/test-audit/login.png"
+    },
+    {
+      id: "TC-DISC-02",
+      surface: "Mobil",
+      module: "Keşfet",
+      title: "Kart kaydırma ve eşleşme modalı açılışı",
+      desc: "Kullanıcı kartı sağa kaydırdığında karşılıklı eşleşme varsa MatchSheet animasyonla açılır.",
+      severity: "Kritik",
+      status: "GEÇTİ",
+      durationMs: 2840,
+      error: null,
+      steps: [
+        "1. DiscoveryScreen widget'ı mock verilerle yüklendi.",
+        "2. Sağa doğru swipe jesti uygulandı.",
+        "3. MatchSheet modalının ekranda varlığı doğrulandı."
+      ],
+      logs: "[DEBUG] Swiping offset: (320.0, 0.0)\n[DEBUG] MatchEvent received from stream: {isMatch: true}\n[PASS] MatchSheet rendered."
+    },
+    {
+      id: "TC-CHAT-03",
+      surface: "Mobil",
+      module: "Sohbet / Ses",
+      title: "Sesli mesaj mikrofon izni ve kayıt başlatma",
+      desc: "Mikrofon butonuna basıldığında donanım izni istenir ve ses dalgası animasyonu başlar.",
+      severity: "Yüksek",
+      status: "BAŞARISIZ",
+      durationMs: 910,
+      error: "PlatformException(PERMISSION_DENIED, Mikrofon erişim izni kullanıcı tarafından reddedildi, null)",
+      steps: [
+        "1. ChatScreen ekranında ses kayıt butonuna uzun basıldı.",
+        "2. İzin denetimi tetiklendi.",
+        "3. İzin reddedilince fallback modalı yerine unhandled platform exception oluştu."
+      ],
+      logs: "[ERROR] Failed to initialize AudioRecorder\nPlatformException(PERMISSION_DENIED, RecordAudio permission not granted)\n   at AudioRecorder.start (audio_recorder.dart:42)\n   at ChatScreen.onVoicePress (chat_screen.dart:118)"
+    },
+    {
+      id: "TC-NOIR-04",
+      surface: "API",
+      module: "Noir / Ödeme",
+      title: "Shopier ödeme webhook HMAC doğrulama ve paket tanımlama",
+      desc: "Geçerli Shopier webhook çağrısında HMAC imzası doğrulanır ve kullanıcı anında VIP statüsüne yükseltilir.",
+      severity: "Kritik",
+      status: "BAŞARISIZ",
+      durationMs: 1150,
+      error: "AssertionError [ERR_ASSERTION]: Expected status 200, received 401 Unauthorized (Invalid Signature).",
+      steps: [
+        "1. /api/shopier/webhook uç noktasına mock POST isteği atıldı.",
+        "2. Gövdeye sipariş payload'u yerleştirildi.",
+        "3. Hesaplanan HMAC hash başlıkta iletildi."
+      ],
+      logs: "[DEBUG] Sending POST to /api/shopier/webhook with signature: d41d8cd98f00b204e9800998ecf8427e\n[ERROR] Signature mismatch between client and SHOPIER_SECRET_KEY"
+    },
+    {
+      id: "TC-SEC-05",
+      surface: "Web",
+      module: "Güvenlik & XSS Testi",
+      title: "Kullanıcı profil biyografi alanında XSS enjeksiyon denemesi",
+      desc: "Zararlı script etiketleri ve onerror event handler'ları filtrelenmeli veya kaçış karakterine dönüştürülmelidir.",
+      severity: "Kritik",
+      status: "GEÇTİ",
+      durationMs: 620,
+      error: null,
+      steps: [
+        "1. Profil düzenleme alanına XSS payload'u yazıldı.",
+        "2. Kaydet butonuna basıldı.",
+        "3. Sayfa yenilendiğinde scriptin çalışmadığı teyit edildi."
+      ],
+      logs: "[SECURITY_AUDIT] Tested payload: <img src=x onerror=alert(1)> and ' OR 1=1; --\n[PASS] Output sanitized properly as plain text."
+    },
+    {
+      id: "TC-BOTS-06",
+      surface: "Admin",
+      module: "Bot Yönetimi",
+      title: "Toplu bot persona tohumlama ve gecikme zamanlayıcısı",
+      desc: "Admin panelinden bot personası oluşturulur ve mesajlaşma gecikme aralıkları tanımlanır.",
+      severity: "Yüksek",
+      status: "ENGELLİ",
+      durationMs: 230,
+      error: "Bağımlılık Engeli: Supabase yerel tohumlama servisi yanıt vermiyor (Connection Refused on port 54321).",
+      steps: [
+        "1. /admin/lovask-control/bots sayfasına gidildi.",
+        "2. 'Yeni Bot Persona Ekle' butonuna tıklandı."
+      ],
+      logs: "[WARN] Service localhost:54321 unreachable. Test marked as BLOCKED."
+    },
+    {
+      id: "TC-PUSH-07",
+      surface: "Mobil",
+      module: "Bildirimler",
+      title: "FCM bildiriminin cihaz arka plandayken uyandırma testi",
+      desc: "Uygulama arka plandayken gelen karşılıklı beğeni bildirim tepsisinde başlık ve içerikle belirir.",
+      severity: "Yüksek",
+      status: "ENGELLİ",
+      durationMs: 440,
+      error: "Donanım / Ekipman Engeli: Test cihazında (Xiaomi MIUI) batarya optimizasyonu arka plan ağ erişimini kesti.",
+      steps: [
+        "1. Test cihazı kilit ekranına alındı.",
+        "2. Push sunucusundan FCM yüksek öncelikli bildirim yollandı."
+      ],
+      logs: "[WARN] FCM token exists but client broadcast receiver was frozen by vendor OS."
+    },
+    {
+      id: "TC-APKD-08",
+      surface: "Admin",
+      module: "Sistem Ayarları",
+      title: "APK indirme uç noktası MIME türü ve dosya başlığı kontrolü",
+      desc: "/api/mobile/apk çağrıldığında application/vnd.android.package-archive başlığı ve geçerli dosya boyutu döner.",
+      severity: "Orta",
+      status: "GEÇTİ",
+      durationMs: 580,
+      error: null,
+      steps: [
+        "1. GET /api/mobile/apk isteği gönderildi.",
+        "2. Content-Disposition başlığı 'attachment; filename=\"lovask-current.apk\"' olarak doğrulandı."
+      ],
+      logs: "[INFO] Response headers verified:\n  Content-Type: application/vnd.android.package-archive\n  Content-Length: 59405784\n[PASS] Valid APK stream."
+    },
+    {
+      id: "TC-SEOO-09",
+      surface: "Web",
+      module: "Blog & SEO",
+      title: "robots.txt ve sitemap.xml geçerlilik denetimi",
+      desc: "Arama motoru dizinleme kuralları ve dinamik sitemap XML şemasına uygun biçimde döner.",
+      severity: "Düşük",
+      status: "GEÇTİ",
+      durationMs: 310,
+      error: null,
+      steps: [
+        "1. /robots.txt çekildi ve 'Disallow: /admin/' kuralı arandı.",
+        "2. /sitemap.xml çekildi ve kök etiket 'urlset' varlığı doğrulandı."
+      ],
+      logs: "[PASS] robots.txt contains 4 rules.\n[PASS] sitemap.xml valid XML structure."
+    },
+    {
+      id: "TC-IOSP-10",
+      surface: "Mobil",
+      module: "Ödeme",
+      title: "Apple Pay ile Noir üyelik satın alma",
+      desc: "iOS platformunda yerel In-App Purchase / Apple Pay üzerinden abonelik başlatma akışı.",
+      severity: "Orta",
+      status: "UYGULANAMAZ",
+      durationMs: 0,
+      error: "Mevcut sürüm yalnızca Android APK ve Türkiye pazarı Papara/Shopier web ödeme altyapısını kapsamaktadır. iOS IAP henüz planlama aşamasındadır.",
+      steps: [
+        "Kapsam dışı olarak etiketlendi."
+      ],
+      logs: "[INFO] Skipped: Target platform is Android-only for v1.7.4."
+    }
+  ];
+
+  // Auto-render default mock data on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    renderReport({
+      run: defaultMockRun,
+      results: defaultMockResults
+    });
+  });
+</script>
+
+</body>
+</html>

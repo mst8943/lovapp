@@ -1,0 +1,75 @@
+.manual-noir {
+  margin-top: 16px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--admin-border, rgba(255, 255, 255, 0.08));
+  border-radius: var(--admin-radius-md, 10px);
+  background: var(--admin-surface, #121215);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.manual-noir > small {
+  color: var(--admin-accent, #d8b56c);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.manual-noir > div {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.manual-noir button {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(216, 181, 108, 0.25);
+  border-radius: var(--admin-radius-sm, 8px);
+  background: rgba(216, 181, 108, 0.08);
+  color: var(--admin-accent, #d8b56c);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.manual-noir button:hover:not(:disabled) {
+  background: rgba(216, 181, 108, 0.18);
+  border-color: rgba(216, 181, 108, 0.4);
+}
+
+.manual-noir button:disabled {
+  opacity: 0.45;
+  cursor: wait;
+}
+
+.manual-noir .revoke {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+}
+
+.manual-noir .revoke:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ffffff;
+}
+
+.manual-noir p {
+  margin: 0;
+  color: var(--admin-text-secondary, #9ca3af);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@media (max-width: 520px) {
+  .manual-noir > div {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+

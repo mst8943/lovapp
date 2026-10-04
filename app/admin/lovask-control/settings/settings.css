@@ -1,0 +1,209 @@
+/* Brand & System Settings */
+.brand-settings {
+  max-width: 720px;
+}
+
+.brand-settings > header p {
+  margin: 6px 0 20px;
+  color: var(--admin-text-secondary, #9ca3af);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Setup Checks List */
+.setup-checks {
+  margin-bottom: 24px;
+  display: grid;
+  gap: 8px;
+}
+
+.setup-checks h2 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--admin-text, #f3f4f6);
+  letter-spacing: -0.01em;
+}
+
+.setup-check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--admin-border, rgba(255, 255, 255, 0.08));
+  border-radius: var(--admin-radius-sm, 8px);
+  background: var(--admin-surface, #121215);
+  transition: border-color 0.15s ease;
+}
+
+.setup-check i {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.setup-check.ready i {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.setup-check div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.setup-check strong {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--admin-text, #f3f4f6);
+}
+
+.setup-check small {
+  color: var(--admin-warning, #f59e0b);
+  font-size: 11px;
+}
+
+.setup-check.ready small {
+  color: var(--admin-success, #10b981);
+}
+
+/* Settings Form */
+.brand-settings form {
+  padding: 20px;
+  border: 1px solid var(--admin-border, rgba(255, 255, 255, 0.08));
+  border-radius: var(--admin-radius-lg, 12px);
+  background: var(--admin-surface, #121215);
+  display: grid;
+  gap: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Brand Live Preview */
+.brand-preview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgba(216, 181, 108, 0.18);
+  border-radius: var(--admin-radius-md, 10px);
+  background: rgba(216, 181, 108, 0.04);
+}
+
+.brand-preview img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px;
+}
+
+.brand-preview div {
+  display: grid;
+  gap: 2px;
+}
+
+.brand-preview small {
+  color: var(--admin-accent, #d8b56c);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.brand-preview strong {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--admin-text, #f3f4f6);
+  line-height: 1.2;
+}
+
+.brand-preview span {
+  color: var(--admin-text-muted, #6b7280);
+  font-size: 12px;
+}
+
+/* Form Inputs */
+.brand-settings label {
+  display: grid;
+  gap: 6px;
+  color: var(--admin-text-secondary, #9ca3af);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.brand-settings input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--admin-border, rgba(255, 255, 255, 0.08));
+  border-radius: var(--admin-radius-sm, 8px);
+  background: var(--admin-bg, #09090b);
+  color: var(--admin-text, #f3f4f6);
+  font-size: 13px;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.brand-settings input:focus {
+  border-color: var(--admin-accent, #d8b56c);
+  box-shadow: 0 0 0 2px rgba(216, 181, 108, 0.15);
+}
+
+.brand-settings label small {
+  color: var(--admin-text-muted, #6b7280);
+  font-size: 11px;
+}
+
+/* Footer & Actions */
+.brand-settings footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--admin-border, rgba(255, 255, 255, 0.08));
+  margin-top: 4px;
+}
+
+.brand-settings footer span {
+  color: var(--admin-success, #10b981);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.brand-settings footer button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+@media (max-width: 700px) {
+  .brand-settings {
+    padding: 16px 12px;
+  }
+  .brand-settings form {
+    padding: 14px;
+  }
+  .brand-settings footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .brand-settings footer button {
+    justify-content: center;
+  }
+}
+

@@ -1,0 +1,13 @@
+import type { Metadata } from "next";
+import { LegalDocument } from "@/components/legal-document";
+import "../legal.css";
+
+export const metadata: Metadata = { title: "Gizlilik ve Aydınlatma", description: "Lovask kişisel verilerin işlenmesine ilişkin aydınlatma metni." };
+export default function PrivacyPage() { return <LegalDocument eyebrow="KVKK aydınlatma metni" title="Gizlilik, açık ve anlaşılır olmalı.">
+  <section><h2>1. Veri sorumlusu ve iletişim</h2><p>Lovask, üyelik başvurusu ve hizmetin sunulması sırasında işlenen kişisel veriler bakımından veri sorumlusudur. Gizlilik taleplerini <a href="mailto:destek@lovask.com.tr">destek@lovask.com.tr</a> adresine iletebilirsin.</p></section>
+  <section><h2>2. Hangi verileri işleriz?</h2><p>Başvuruda kimlik ve iletişim bilgilerini, şehir, meslek, sektör, isteğe bağlı Instagram kullanıcı adı ve başvuru notunu; üyelikte profil, tercih, fotoğraf, eşleşme, mesaj, güvenlik ve işlem kayıtlarını işleriz. Kampanya bağlantılarında kaynak, UTM ve referans kodunu ölçeriz. Android cihaz kimliğinin sunucuda oluşturulan özetini, 3 günlük Noir hediyesini cihaz başına bir kez vermek için saklarız. Analitik olaylara e-posta, telefon veya mesaj içeriği koymayız.</p></section>
+  <section><h2>3. Amaç ve hukuki sebep</h2><p>Verileri başvuruyu değerlendirmek, hesabı kurmak, eşleştirme ve mesajlaşma hizmetini sunmak, güvenliği sağlamak, kötüye kullanımı önlemek, destek vermek ve hukuki yükümlülükleri yerine getirmek için işleriz. Pazarlama iletileri yalnızca ayrı ve isteğe bağlı onayınla gönderilir; bu onayı geri çekebilirsin.</p></section>
+  <section><h2>4. Paylaşım ve saklama</h2><p>Veriler, hizmet için gerekli olduğu ölçüde barındırma, kimlik doğrulama, e-posta/SMS, ödeme ve güvenlik sağlayıcılarıyla sözleşmeli olarak paylaşılabilir; hukuken zorunluysa yetkili makamlarla paylaşılır. Başvuru ve hesap verileri amaç, zamanaşımı ve yasal saklama süreleri sona erdiğinde silinir, anonimleştirilir veya erişime kapatılır.</p></section>
+  <section><h2>5. Hakların</h2><p>KVKK kapsamındaki bilgi alma, düzeltme, silme/yok etme, işlemeye itiraz ve zararın giderilmesini talep etme haklarını kullanabilirsin. Talebinde hesabındaki e-posta adresini ve isteğini açıkça belirtmen yeterlidir; kimlik doğrulaması isteyebiliriz.</p></section>
+  <section><h2>6. Çerezler ve güvenlik</h2><p>Oturumun çalışması, güvenlik doğrulaması ve tercihlerin için zorunlu çerezler kullanılabilir. Erişim kontrolü, hız sınırlama ve güvenlik kayıtları uygularız; buna rağmen hiçbir internet aktarımının mutlak güvenli olduğu garanti edilemez.</p></section>
+</LegalDocument>; }
