@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+# Runs on the live server. Usage: bash remote-deploy.sh /tmp/lovask-release.tgz <label>
+# Builds in a separate stage directory first; live files change only after a
+# passing build, and a failed health check restores the previous release.
+set -euo pipefail
+
+ARCHIVE="$1"
+LABEL="${2:-release-$(date +%Y%m%d-%H%M)}"
+# Overrides exist only for rehearsing the script away from the live server.
+APP="${LOVASK_APP:-/var/www/lovask}"
+STAGE="${LOVASK_STAGE_ROOT:-/var/www}/lovask-stage-$LABEL"
+BACKUP="$APP/.deploy-backups/pre-$LABEL"
+PORT="${LOVASK_PORT:-3005}"
+PUBLIC_URL="${LOVASK_PUBLIC_URL:-https://lovask.com.tr}"
+export PATH="/root/.hermes/node/bin:$PATH"
+
+log() { printf '\n==> %s\n' "$*"; }
+fail() { printf '\nHATA: %s\n' "$*" >&2; exit 1; }
+
+log "Ön kontroller"
+[ -f "$ARCHIVE" ] || fail "Arşiv yok: $ARCHIVE"
+[ -f "$APP/package.json" ] || fail "$APP/package.json bulunamadı"
+[ -d "$APP/node_modules" ] || fail "$APP/node_modules bulunamadı"
+command -v npm >/dev/null || fail "npm bulunamadı (PATH: $PATH)"
+if [ -n "${LOVASK_RESTART_CMD:-}" ]; then
+  restart() { bash -c "$LOVASK_RESTART_CMD"; }
+  SERVICE="override"
+elif systemctl cat lovask.service >/dev/null 2>&1; then
+  restart() { systemctl restart lovask.service; }
+  SERVICE="lovask.service"
+elif command -v pm2 >/dev/null && pm2 describe lovask >/dev/null 2>&1; then
+  restart() { pm2 restart lovask --update-env; }
+  SERVICE="pm2:lovask"
+else
+  fail "lovask.service veya pm2 'lovask' süreci bulunamadı"
+fi
+echo "Servis: $SERVICE · Node: $(node -v)"
+[ -e "$BACKUP" ] && fail "Yedek klasörü zaten var: $BACKUP (farklı etiket kullan)"
+
+FILES=$(tar -tzf "$ARCHIVE" | grep -v '/$')
+echo "$FILES" | sed 's/^/  · /'
+
+log "Aşama klasörü hazırlanıyor: $STAGE"
+rm -rf "$STAGE"
+mkdir -p "$STAGE"
+tar -C "$APP" --exclude=./node_modules --exclude=./.next --exclude=./.deploy-backups --exclude='./.next-*' -cf - . | tar -C "$STAGE" -xf -
+# Turbopack rejects a node_modules symlink outside the project root; hardlinks are fast and cheap.
+cp -al "$APP/node_modules" "$STAGE/node_modules"
+tar -C "$STAGE" -xzf "$ARCHIVE"
+
+log "Aşama derlemesi"
+(cd "$STAGE" && npm run build) || fail "Aşama derlemesi başarısız; canlıya dokunulmadı. Klasör: $STAGE"
+
+log "Yedek alınıyor: $BACKUP"
+mkdir -p "$BACKUP"
+EXISTING=$(cd "$APP" && for f in $FILES; do [ -e "$f" ] && echo "$f"; done || true)
+NEWFILES=$(cd "$APP" && for f in $FILES; do [ -e "$f" ] || echo "$f"; done || true)
+if [ -n "$EXISTING" ]; then (cd "$APP" && tar -cf "$BACKUP/source.tar" $EXISTING); fi
+printf '%s\n' "$NEWFILES" > "$BACKUP/new-files.txt"
+cp -a "$APP/.next" "$BACKUP/next"
+
+rollback() {
+  log "GERİ DÖNÜLÜYOR"
+  rm -rf "$APP/.next-pre-$LABEL"
+  [ -f "$BACKUP/source.tar" ] && tar -C "$APP" -xf "$BACKUP/source.tar"
+  while read -r f; do [ -n "$f" ] && rm -f "$APP/$f"; done < "$BACKUP/new-files.txt"
+  rm -rf "$APP/.next" && cp -a "$BACKUP/next" "$APP/.next"
+  restart
+  fail "Sağlık kontrolü geçmedi; önceki sürüm geri yüklendi. Yedek: $BACKUP"
+}
+
+log "Yayına alınıyor"
+tar -C "$APP" -xzf "$ARCHIVE"
+rm -rf "$APP/.next.incoming"
+mv "$STAGE/.next" "$APP/.next.incoming"
+mv "$APP/.next" "$APP/.next-pre-$LABEL"
+mv "$APP/.next.incoming" "$APP/.next"
+# Runtime links (e.g. sharp) were built against the stage copy of node_modules.
+for link in "$APP/.next/node_modules"/*; do
+  [ -L "$link" ] || continue
+  target=$(readlink "$link")
+  ln -sfn "${target/#$STAGE/$APP}" "$link"
+  [ -e "$link" ] || rollback
+done
+restart
+
+log "Sağlık kontrolü"
+check() { curl -fsS -o /dev/null --max-time 10 "$1"; }
+# A manifest under the new BUILD_ID proves the restarted process serves this build, not a stale one.
+BUILD_ID=$(cat "$APP/.next/BUILD_ID")
+ok=0
+for i in $(seq 1 30); do
+  if check "http://127.0.0.1:$PORT/_next/static/$BUILD_ID/_buildManifest.js" && check "http://127.0.0.1:$PORT/" && check "http://127.0.0.1:$PORT/login" && check "http://127.0.0.1:$PORT/api/auth/register"; then ok=1; break; fi
+  sleep 2
+done
+[ "$ok" = 1 ] || rollback
+for path in / /login /download /noir /api/auth/register; do
+  code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "$PUBLIC_URL$path")
+  echo "  $path -> $code"
+  [ "$code" = 200 ] || rollback
+done
+apk=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' --max-time 15 "$PUBLIC_URL/api/download/android")
+echo "  /api/download/android -> $apk"
+
+rm -rf "$STAGE" "$APP/.next-pre-$LABEL"
+log "Tamam. Servis: $SERVICE · Geri dönüş yedeği: $BACKUP (source.tar, new-files.txt, next)"

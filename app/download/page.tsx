@@ -31,7 +31,7 @@ export default async function DownloadPage({ searchParams }: { searchParams: Pro
         <section className="download-hero">
           <div className="apk-badge">
             <Sparkles size={14} />
-            <span>Resmî İmzalı Android Sürümü · v1.9.10</span>
+            <span>Resmî İmzalı Android Sürümü · v1.9.11</span>
           </div>
 
           <div className="apk-phone-preview">
@@ -77,7 +77,7 @@ export default async function DownloadPage({ searchParams }: { searchParams: Pro
         </section>
 
         <section className="release-signature" aria-label="Sürüm doğrulama bilgileri">
-          <span><small>SÜRÜM</small><strong>1.9.10</strong></span>
+          <span><small>SÜRÜM</small><strong>1.9.11</strong></span>
           <span><small>PAKET</small><strong>tr.com.lovask.app</strong></span>
           <span><small>SHA-256</small><code title="ED37C2BD4AC447AB94F95F91B7B1323131EFDD7FF6CB2B296587464B6D599ED4">ED37C2BD…599ED4</code></span>
         </section>

@@ -458,7 +458,7 @@ export function LandingPage() {
             >
               <Download size={19} />
               <span>
-                <small>Android v1.9.10 · ücretsiz indirme</small>APK’yı ücretsiz
+                <small>Android v1.9.11 · ücretsiz indirme</small>APK’yı ücretsiz
                 indir
               </span>
             </a>
