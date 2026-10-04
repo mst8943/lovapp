@@ -17,11 +17,11 @@ export PATH="/root/.hermes/node/bin:$PATH"
 log() { printf '\n==> %s\n' "$*"; }
 fail() { printf '\nHATA: %s\n' "$*" >&2; exit 1; }
 
-log "Ön kontroller"
-[ -f "$ARCHIVE" ] || fail "Arşiv yok: $ARCHIVE"
-[ -f "$APP/package.json" ] || fail "$APP/package.json bulunamadı"
-[ -d "$APP/node_modules" ] || fail "$APP/node_modules bulunamadı"
-command -v npm >/dev/null || fail "npm bulunamadı (PATH: $PATH)"
+log "On kontroller"
+[ -f "$ARCHIVE" ] || fail "Arsiv yok: $ARCHIVE"
+[ -f "$APP/package.json" ] || fail "$APP/package.json bulunamadi"
+[ -d "$APP/node_modules" ] || fail "$APP/node_modules bulunamadi"
+command -v npm >/dev/null || fail "npm bulunamadi (PATH: $PATH)"
 if [ -n "${LOVASK_RESTART_CMD:-}" ]; then
   restart() { bash -c "$LOVASK_RESTART_CMD"; }
   SERVICE="override"
@@ -32,15 +32,15 @@ elif command -v pm2 >/dev/null && pm2 describe lovask >/dev/null 2>&1; then
   restart() { pm2 restart lovask --update-env; }
   SERVICE="pm2:lovask"
 else
-  fail "lovask.service veya pm2 'lovask' süreci bulunamadı"
+  fail "lovask.service veya pm2 'lovask' sureci bulunamadi"
 fi
-echo "Servis: $SERVICE · Node: $(node -v)"
-[ -e "$BACKUP" ] && fail "Yedek klasörü zaten var: $BACKUP (farklı etiket kullan)"
+echo "Servis: $SERVICE - Node: $(node -v)"
+[ -e "$BACKUP" ] && fail "Yedek klasoru zaten var: $BACKUP (farkli etiket kullan)"
 
 FILES=$(tar -tzf "$ARCHIVE" | grep -v '/$')
-echo "$FILES" | sed 's/^/  · /'
+echo "$FILES" | sed 's/^/  - /'
 
-log "Aşama klasörü hazırlanıyor: $STAGE"
+log "Asama klasoru hazirlaniyor: $STAGE"
 rm -rf "$STAGE"
 mkdir -p "$STAGE"
 tar -C "$APP" --exclude=./node_modules --exclude=./.next --exclude=./.deploy-backups --exclude='./.next-*' -cf - . | tar -C "$STAGE" -xf -
@@ -48,10 +48,10 @@ tar -C "$APP" --exclude=./node_modules --exclude=./.next --exclude=./.deploy-bac
 cp -al "$APP/node_modules" "$STAGE/node_modules"
 tar -C "$STAGE" -xzf "$ARCHIVE"
 
-log "Aşama derlemesi"
-(cd "$STAGE" && npm run build) || fail "Aşama derlemesi başarısız; canlıya dokunulmadı. Klasör: $STAGE"
+log "Asama derlemesi"
+(cd "$STAGE" && npm run build) || fail "Asama derlemesi basarisiz; canliya dokunulmadi. Klasor: $STAGE"
 
-log "Yedek alınıyor: $BACKUP"
+log "Yedek aliniyor: $BACKUP"
 mkdir -p "$BACKUP"
 EXISTING=$(cd "$APP" && for f in $FILES; do [ -e "$f" ] && echo "$f"; done || true)
 NEWFILES=$(cd "$APP" && for f in $FILES; do [ -e "$f" ] || echo "$f"; done || true)
@@ -60,16 +60,16 @@ printf '%s\n' "$NEWFILES" > "$BACKUP/new-files.txt"
 cp -a "$APP/.next" "$BACKUP/next"
 
 rollback() {
-  log "GERİ DÖNÜLÜYOR"
+  log "GERI DONULUYOR"
   rm -rf "$APP/.next-pre-$LABEL"
   [ -f "$BACKUP/source.tar" ] && tar -C "$APP" -xf "$BACKUP/source.tar"
   while read -r f; do [ -n "$f" ] && rm -f "$APP/$f"; done < "$BACKUP/new-files.txt"
   rm -rf "$APP/.next" && cp -a "$BACKUP/next" "$APP/.next"
   restart
-  fail "Sağlık kontrolü geçmedi; önceki sürüm geri yüklendi. Yedek: $BACKUP"
+  fail "Saglik kontrolu gecmedi; onceki surum geri yuklendi. Yedek: $BACKUP"
 }
 
-log "Yayına alınıyor"
+log "Yayina aliniyor"
 tar -C "$APP" -xzf "$ARCHIVE"
 rm -rf "$APP/.next.incoming"
 mv "$STAGE/.next" "$APP/.next.incoming"
@@ -84,7 +84,7 @@ for link in "$APP/.next/node_modules"/*; do
 done
 restart
 
-log "Sağlık kontrolü"
+log "Saglik kontrolu"
 check() { curl -fsS -o /dev/null --max-time 10 "$1"; }
 # A manifest under the new BUILD_ID proves the restarted process serves this build, not a stale one.
 BUILD_ID=$(cat "$APP/.next/BUILD_ID")
@@ -103,4 +103,4 @@ apk=$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' --max-time 15 "$PUB
 echo "  /api/download/android -> $apk"
 
 rm -rf "$STAGE" "$APP/.next-pre-$LABEL"
-log "Tamam. Servis: $SERVICE · Geri dönüş yedeği: $BACKUP (source.tar, new-files.txt, next)"
+log "Tamam. Servis: $SERVICE - Geri donus yedegi: $BACKUP (source.tar, new-files.txt, next)"
