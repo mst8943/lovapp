@@ -41,7 +41,7 @@ if (-not $files.Count) { throw 'Gonderilecek dosya yok.' }
 Write-Host '==> Gonderilecek dosyalar'
 $files | ForEach-Object { Write-Host "  - $_" }
 
-$archive = Join-Path $env:TEMP "lovask-$label.tgz"
+$archive = Join-Path ([System.IO.Path]::GetTempPath()) "lovask-$label.tgz"
 tar -czf $archive @files
 if ($LASTEXITCODE -ne 0) { throw 'Arsiv olusturulamadi.' }
 
