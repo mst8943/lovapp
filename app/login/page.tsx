@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { Brand } from "@/components/brand";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowRight,
@@ -210,14 +210,7 @@ function LoginContent() {
           mode === "apply" ? "login-card application-card" : "login-card"
         }
       >
-        <Image
-          className="login-wordmark"
-          src="/lovask-discovery-logo.png"
-          alt="Lovask"
-          width={150}
-          height={39}
-          priority
-        />
+        <Brand className="brand login-wordmark" />
         <div className="login-hero">
           <small className="eyebrow">Bir karşılaşma yeter</small>
           <h1>

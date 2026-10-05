@@ -5,6 +5,8 @@ import { Coffee, Footprints, Ticket, Plus, Check, SlidersHorizontal, X, ChevronL
 import type { Profile } from "@/lib/demo-data";
 import { resolvePresence } from "@/lib/presence";
 import { useDialog } from "@/lib/use-dialog";
+import { CommunityEvents } from "@/components/community-events";
+import { PrivateDatePlans } from "@/components/private-date-plans";
 import "./community.css";
 
 type Story = { id: string; profileId: string; name: string; url: string; own: boolean; seen: boolean };
@@ -139,7 +141,7 @@ export function MeetingView({ onSelect }: { onSelect: (profile: Profile) => void
   const load = useCallback(async () => { try { setData(await communityRequest("/api/meetings")); setError(""); } catch (e) { setError((e as Error).message); } }, []);
   useEffect(() => { const start = setTimeout(() => void load(), 0); const timer = setInterval(() => { if (document.visibilityState === "visible") void load(); }, 30_000); return () => { clearTimeout(start); clearInterval(timer); }; }, [load]);
   const choose = async (id?: string) => { setBusy(true); try { await communityRequest("/api/meetings", id ? "POST" : "DELETE", id ? { optionId: id } : undefined); await load(); } catch (e) { setError((e as Error).message); } finally { setBusy(false); } };
-  return <section className="screen meeting-screen"><header><img src="/logo_l_extra_thick.png" alt="" width="44" height="44"/><h1>Buluşma</h1></header><h2>Bugün ne yapmak istersin?</h2><p>Bir plan seç. Aynı planı seçen uygun üyelerle tanış. Seçimin 24 saat geçerli.</p>
+  return <section className="screen meeting-screen"><header><img src="/logo_l_extra_thick.png" alt="" width="44" height="44"/><h1>Buluşma</h1></header><CommunityEvents/><PrivateDatePlans/><h2>Bugün ne yapmak istersin?</h2><p>Bir plan seç. Aynı planı seçen uygun üyelerle tanış. Seçimin 24 saat geçerli.</p>
     {error ? <p role="alert">{error} <button onClick={() => void load()}>Yeniden dene</button></p> : null}
     {!data && !error ? <p role="status">Planlar yükleniyor…</p> : null}
     {data?.options.length === 0 ? <p>Şu anda açık bir buluşma planı yok.</p> : null}

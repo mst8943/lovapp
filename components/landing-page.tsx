@@ -18,12 +18,15 @@ import {
 } from "lucide-react";
 import "./landing-page.css";
 import "./landing-page-light.css";
+import { readBrandSettings } from "@/lib/branding";
+import { Brand } from "@/components/brand";
 
-export function LandingPage() {
+export async function LandingPage() {
+  const brand = await readBrandSettings();
   return (
     <main className="landing-stage">
       <header className="landing-nav">
-        <BrandMark />
+        <Brand brandName={brand.brand_name} logoUrl={brand.logo_url} className="landing-nav-brand" />
         <nav aria-label="Sayfa menüsü">
           <Link href="#nasil-calisir">Nasıl çalışır?</Link>
           <Link href="#noir">Noir</Link>
@@ -47,7 +50,7 @@ export function LandingPage() {
           </h1>
           <p>
             Ne aradığını söyle. Seni gerçekten merak eden insanlarla tanış.
-            Lovask, ilk bakışı dürüst bir sohbete dönüştürür. Daha rahat keşif ve
+            {brand.brand_name}, ilk bakışı dürüst bir sohbete dönüştürür. Daha rahat keşif ve
             anlık bildirimler için Android uygulamamızı indir.
           </p>
           <div className="landing-actions">
@@ -72,14 +75,14 @@ export function LandingPage() {
           </div>
         </div>
 
-        <div className="landing-encounter" aria-label="Lovask profil deneyimi">
+        <div className="landing-encounter" aria-label={`${brand.brand_name} profil deneyimi`}>
           <div className="landing-thread" aria-hidden="true">
             <Heart size={18} fill="currentColor" />
           </div>
           <article className="landing-person landing-person-one">
             <Image
               src="/hero_woman.webp"
-              alt="Lovask üyesi kadın profili"
+              alt={`${brand.brand_name} üyesi kadın profili`}
               fill
               priority
               sizes="(max-width: 760px) 64vw, 32vw"
@@ -93,7 +96,7 @@ export function LandingPage() {
           <article className="landing-person landing-person-two">
             <Image
               src="/hero_man.webp"
-              alt="Lovask üyesi erkek profili"
+              alt={`${brand.brand_name} üyesi erkek profili`}
               fill
               priority
               sizes="(max-width: 760px) 54vw, 27vw"
@@ -373,13 +376,13 @@ export function LandingPage() {
       >
         <div
           className="landing-phone-stage"
-          aria-label="Lovask Android uygulaması ekranları"
+          aria-label={`${brand.brand_name} Android uygulaması ekranları`}
         >
           <div className="landing-phone landing-phone-messages">
             <i />
             <Image
               src="/landing/messages.png"
-              alt="Lovask mesajlar ekranı"
+              alt={`${brand.brand_name} mesajlar ekranı`}
               fill
               sizes="220px"
             />
@@ -388,7 +391,7 @@ export function LandingPage() {
             <i />
             <Image
               src="/landing/discover.png"
-              alt="Lovask keşfet ekranı"
+              alt={`${brand.brand_name} keşfet ekranı`}
               fill
               sizes="280px"
             />
@@ -397,17 +400,17 @@ export function LandingPage() {
             <i />
             <Image
               src="/landing/profile.png"
-              alt="Lovask profil ekranı"
+              alt={`${brand.brand_name} profil ekranı`}
               fill
               sizes="220px"
             />
           </div>
           <span className="landing-phone-seal">
-            <Heart size={17} fill="currentColor" /> Lovask
+            <Heart size={17} fill="currentColor" /> {brand.brand_name}
           </span>
         </div>
         <div className="landing-app-copy">
-          <p>Lovask Android</p>
+          <p>{brand.brand_name} Android</p>
           <h2 id="app-title">
             Bağlantılarını
             <br />
@@ -439,7 +442,7 @@ export function LandingPage() {
               <div>
                 <strong>Tam ekran deneyim</strong>
                 <small>
-                  Tarayıcı çubuğu olmadan, Lovask için tasarlanan görünüm.
+                  Tarayıcı çubuğu olmadan, {brand.brand_name} için tasarlanan görünüm.
                 </small>
               </div>
             </li>
@@ -472,25 +475,16 @@ export function LandingPage() {
       </section>
 
       <footer className="landing-footer">
-        <BrandMark />
-        <p>Gerçek bir bağ, açık bir niyetle başlar.</p>
+        <Brand brandName={brand.brand_name} logoUrl={brand.logo_url} className="landing-nav-brand" />
+        <p>{brand.tagline}</p>
         <nav aria-label="Site bağlantıları">
           <Link href="/privacy">Gizlilik</Link>
           <Link href="/terms">Koşullar</Link>
           <Link href="/community-guidelines">Topluluk</Link>
-          <a href="mailto:destek@lovask.com.tr">Destek</a>
+          <a href={`mailto:${brand.support_email}`}>Destek</a>
         </nav>
-        <small>© {new Date().getFullYear()} Lovask</small>
+        <small>© {new Date().getFullYear()} {brand.brand_name}</small>
       </footer>
     </main>
-  );
-}
-
-function BrandMark() {
-  return (
-    <Link href="/" className="landing-nav-brand" aria-label="Lovask ana sayfa">
-      <span>l</span>
-      <b>lovask</b>
-    </Link>
   );
 }

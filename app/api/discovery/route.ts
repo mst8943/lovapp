@@ -1,7 +1,7 @@
 import { after, NextResponse } from "next/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import { loadDiscoveryProfiles } from "@/lib/discovery";
+import { loadDiscoveryProfiles, selectDailyPick } from "@/lib/discovery";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { sendPushToProfile } from "@/lib/push";
@@ -29,13 +29,16 @@ export async function GET(request: Request) {
     return NextResponse.json({ superLike: superLike.data ?? null, likeAllowance: likeAllowance.data ?? null, quest }, { headers: { "Cache-Control": "private, no-store" } });
   }
   try {
-    const [profiles, superLike, likeAllowance] = await Promise.all([
+    const [profiles, viewer, superLike, likeAllowance] = await Promise.all([
       loadDiscoveryProfiles(session, admin),
+      admin.from("profiles").select("id,relationship_goal,city").eq("user_id", user.id).eq("kind", "human").maybeSingle(),
       session.rpc("get_super_like_allowance"),
       getLikeAllowance(session, admin, user.id),
     ]);
     if (superLike.error || likeAllowance.error) throw new Error("like allowance unavailable");
-    return NextResponse.json({ profiles, superLike: superLike.data ?? null, likeAllowance: likeAllowance.data ?? null }, { headers: { "Cache-Control": "private, no-store" } });
+    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+    const dailyPick = viewer.data?.id ? selectDailyPick(profiles, viewer.data, today) : null;
+    return NextResponse.json({ profiles, dailyPick, superLike: superLike.data ?? null, likeAllowance: likeAllowance.data ?? null }, { headers: { "Cache-Control": "private, no-store" } });
   } catch {
     return NextResponse.json({ error: "Keşfet kartları yüklenemedi." }, { status: 503 });
   }

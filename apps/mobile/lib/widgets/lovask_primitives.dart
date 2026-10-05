@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../brand_settings.dart';
 import '../models.dart';
 import '../theme.dart';
 import 'lovask_motion.dart';
@@ -462,33 +463,42 @@ class LovaskWordmark extends StatelessWidget {
   const LovaskWordmark({super.key, this.color = pearl});
   final Color color;
   @override
-  Widget build(BuildContext context) => Semantics(
-    label: 'Lovask',
-    excludeSemantics: true,
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ClipRect(
-          child: Align(
-            alignment: Alignment.centerLeft,
-            widthFactor: .285,
-            child: Image.asset('assets/lovask-discovery-logo.png', height: 34),
+  Widget build(BuildContext context) =>
+      ValueListenableBuilder<AppBrandSettings>(
+        valueListenable: AppBrandSettings.value,
+        builder: (context, brand, _) => Semantics(
+          label: brand.name,
+          excludeSemantics: true,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 34,
+                height: 34,
+                child: Image.network(
+                  brand.resolvedLogoUrl,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) => Image.asset(
+                    'assets/lovask-discovery-logo.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 7),
+              Text(
+                brand.name,
+                style: TextStyle(
+                  fontFamily: 'CormorantGaramond',
+                  fontSize: 30,
+                  letterSpacing: -.8,
+                  fontWeight: FontWeight.w700,
+                  color: color,
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(width: 7),
-        Text(
-          'Lovask',
-          style: TextStyle(
-            fontFamily: 'CormorantGaramond',
-            fontSize: 30,
-            letterSpacing: -.8,
-            fontWeight: FontWeight.w700,
-            color: color,
-          ),
-        ),
-      ],
-    ),
-  );
+      );
 }
 
 class LovaskHero extends StatelessWidget {
@@ -713,7 +723,7 @@ class LovaskPortrait extends StatelessWidget {
                                     color: const Color(0xFF22C55E).withValues(alpha: 0.7),
                                     blurRadius: 5,
                                     spreadRadius: 1,
-                                  )
+                                  ),
                                 ]
                               : null,
                         ),

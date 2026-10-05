@@ -1,5 +1,14 @@
 # Lovask proje devri
 
+## 2026-10-06 yerel satış özellikleri ve APK dağıtım engeli
+
+- Yerel kaynakta admin kullanıcı/bot sekmeleri ile insan/bot ve son 7/30 gün aktif insan sayıları eklendi. Kullanıcıya dönük web/Android metinlerinde bot ayrımı eklenmedi.
+- Kaydedilmiş marka adı, slogan, destek e-postası ve logo web metadata/açılış, ortak marka bileşeni ve Android'in belirgin yüzeylerine bağlandı. Bazı hukuki/ürün ve sabit bildirim metinleri hâlâ Lovask adını kullanır; tam beyaz etiket dönüşümü değildir.
+- Web ve Android keşfine ortak ilişki hedefi veya şehir verisiyle açıklanan günlük uyum kartı eklendi; mevcut keşif sırası ve kaydırma/geri alma akışı korunur. Günlük gösterim cihazdaki yerel kayıtla sınırlanır; cihazlar arası tek seçim garantisi yoktur.
+- Etkinlik/katılım, özel buluşma planı/gönüllü durum/geri bildirim, Noir paket ve onaylı brüt gelir yönetimi, kupon taslakları ve zamanlanmış kampanya kartı yerel kaynakta hazırlandı. Kuponlar tahsilatta uygulanmaz; ödeme sağlayıcısı bağlantısı bekletildi. Bunların veritabanı geçişleri `072_community_events.sql`–`075_app_campaigns.sql` **üretime uygulanmadı**; web/API ve yeni Android kaynakları canlıya yayımlanmadı.
+- Yerel `npm run verify` geçti (önceden bulunan 7 lint uyarısı); `flutter analyze --no-pub lib` temiz. Yeni veritabanı akışları henüz çalışan bir veritabanında uçtan uca denenmedi.
+- Önceki 1.9.11 (39) imzalı APK'nin yerel SHA-256 özeti `91196A9A08DA1E97AD40289FA569971EECE9F2518ED8EB1D6EA312E0AC1FE0ED`. `lovask-apk.tgz` SCP ile sunucunun `/tmp` klasörüne aktarıldı; SSH parola isteminden sonra `Connection closed by 129.121.139.23 port 22` ve çıkış kodu 255 verdi. İstenen hata kuralı nedeniyle yeniden denenmedi. Canlı `/api/download/android` hâlâ `v=38`; `apk-20261004` başarı çıktısı veya `/var/www/lovask/.deploy-backups/pre-apk-20261004` yedeği doğrulanmadı. Aşağıdaki **Web canlıda (APK hariç)** maddesi bu yüzden tamamlandı olarak değiştirilmedi.
+
 ## 2026-10-04 genel denetim: Google girişi, admin yerleşimi, gerçek zamanlı akış
 
 - Google: Açık kayıt açıkken yeni kullanıcı "Google ile giriş yap"a basınca hesap oluşturulup siliniyor ve "başvuru gerekli" hatası veriliyordu. Web `/auth/callback` ve mobil `/api/auth/mobile-oauth` artık açık kayıtta iki akışta da üyeliği onaylıyor. Başarısız denemede yalnızca o denemenin oluşturduğu (yalnız Google kimlikli, 10 dakikadan yeni) hesap siliniyor. İstemci Supabase yetkilendirme adresine doğru yönleniyor; Supabase Google sağlayıcısı ve yönlendirme izin listesi (`https://lovask.com.tr/**`, `lovask://auth-callback`) panelden ayrıca doğrulanmalı.
@@ -152,6 +161,9 @@
 - Proje dışı kaynak yedeği: `C:\MAMP\htdocs\lovask-pre-release-20260930`. Geçici mükerrer dosya silmesi otomatik güvenlik incelemesinde reddedildi; envanter `artifacts/release/cleanup-inventory.txt`.
 
 ## Son aşamada yapılacaklar
+
+- APK 1.9.11 (39) dağıtımı SSH bağlantısı parola sonrasında kapandığı için durdu. Sunucu SSH nedenini inceleyip kullanıcı talimatıyla aynı `remote-deploy.sh` adımını yeniden planla; başarılı yayın, `v=39` yönlendirmesi, CDN SHA-256 eşleşmesi ve `/var/www/lovask/.deploy-backups/pre-apk-20261004` yedeği doğrulanmadan APK canlı sayılmamalı.
+- Yerel satış özellikleri için 072–075 veritabanı geçişlerini incele ve uygun yedek/test sürecinden sonra üretime uygula; etkinlik/özel plan/kampanya akışlarını gerçek hesapla uçtan uca doğrula. Yeni Android kaynaklarını yeni sürüm numarasıyla mevcut imzalama anahtarıyla derleyip ancak sonra yayımla. Kupon tahsilatı ödeme sağlayıcısı seçilene kadar taslak kalır.
 
 - Telegram'daki `/lovask` komutunu owner hesabından gerçek mesajla dene; gerçek bir destek talebine yanıtı ve Shopier panelinde doğrulanmış gerçek ödemeyi Noir açılarak uçtan uca doğrula. OpenRouter hesap bakiyesinin Telegram'da görünmesi istenirse yönetim anahtarını sunucu ortamına güvenli biçimde ekle.
 

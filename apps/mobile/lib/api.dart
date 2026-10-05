@@ -56,6 +56,7 @@ class LovaskApi {
   }
 
   Future<Map<String, dynamic>> registrationMode() => _get('/api/auth/register');
+  Future<Map<String, dynamic>> branding() => _get('/api/branding');
   Future<void> requestPasswordReset(String email) async {
     await _post('/api/auth/recovery', {'event': 'forgot_password', 'email': email});
   }
@@ -104,10 +105,41 @@ class LovaskApi {
     'LOVASK_API_URL',
     defaultValue: 'https://lovask.com.tr',
   );
+  String? dailyPickProfileId;
+  String? dailyPickReason;
+  String? _dailyPickStorageKey;
+
+  Future<void> markDailyPickSeen() async {
+    final key = _dailyPickStorageKey;
+    if (key == null) return;
+    dailyPickProfileId = null;
+    dailyPickReason = null;
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      await preferences.setBool(key, true);
+    } catch (_) {
+      // The swipe is already committed; local preference storage is optional.
+    }
+  }
 
   // Discovery
   Future<List<DiscoveryProfile>> discovery() async {
     final data = await _get('/api/discovery');
+    final pick = data['dailyPick'] as Map<String, dynamic>?;
+    final day = pick?['day'] as String?;
+    final viewerId = pick?['viewerId'] as String?;
+    _dailyPickStorageKey = day != null && viewerId != null
+        ? 'lovask-daily-pick:$viewerId:$day'
+        : null;
+    var seen = false;
+    if (_dailyPickStorageKey != null) {
+      try {
+        final preferences = await SharedPreferences.getInstance();
+        seen = preferences.getBool(_dailyPickStorageKey!) ?? false;
+      } catch (_) {}
+    }
+    dailyPickProfileId = seen ? null : pick?['profileId'] as String?;
+    dailyPickReason = seen ? null : pick?['reason'] as String?;
     final list = data['profiles'] as List<dynamic>? ?? const [];
     return list
         .whereType<Map<String, dynamic>>()
@@ -151,6 +183,14 @@ class LovaskApi {
   Future<Map<String, dynamic>> viewStory(String id) =>
       _patch('/api/stories', {'id': id});
   Future<Map<String, dynamic>> meetings() => _get('/api/meetings');
+  Future<Map<String, dynamic>> events() => _get('/api/events');
+  Future<Map<String, dynamic>> respondEvent(String id, bool attend) =>
+      _post('/api/events', {'eventId': id, 'attend': attend});
+  Future<Map<String, dynamic>> datePlans() => _get('/api/date-plans');
+  Future<Map<String, dynamic>> campaign() => _get('/api/campaign');
+  Future<Map<String, dynamic>> trackCampaignClick(String id) => _post('/api/campaign', {'id': id});
+  Future<Map<String, dynamic>> createDatePlan(Map<String, dynamic> data) => _post('/api/date-plans', data);
+  Future<Map<String, dynamic>> updateDatePlan(Map<String, dynamic> data) => _patch('/api/date-plans', data);
   Future<Map<String, dynamic>> chooseMeeting(String id) =>
       _post('/api/meetings', {'optionId': id});
   Future<Map<String, dynamic>> cancelMeeting() => _delete('/api/meetings');

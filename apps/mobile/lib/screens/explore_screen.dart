@@ -7,6 +7,7 @@ import '../widgets/lovask_primitives.dart';
 import 'preferences_screen.dart';
 import '../widgets/discovery_header.dart';
 import '../widgets/story_strip.dart';
+import '../widgets/campaign_card.dart';
 import 'profile_detail_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
@@ -136,6 +137,7 @@ class _ExploreScreenState extends State<ExploreScreen>
                 ),
                 const SizedBox(height: 4),
                 StoryStrip(api: api),
+                CampaignCard(api: api),
               ],
             ),
           ),

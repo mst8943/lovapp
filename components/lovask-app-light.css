@@ -418,7 +418,7 @@
   .app-stage .app-shell { height: 100dvh; border-radius: 0; }
   .desktop-sidebar { position: absolute; z-index: 35; inset: 0 auto 0 0; width: 238px; padding: 35px 20px 18px; display: flex; flex-direction: column; border-right: 1px solid var(--line); background: #fff; }
   .sidebar-brand { width: 100%; margin: 0 8px 48px; padding: 0; display: flex; align-items: center; gap: 9px; border: 0; background: none; color: var(--ink); text-align: left; }
-  .sidebar-brand .brand { width: 36px; margin: 0; }
+  .sidebar-brand .brand { width: auto; margin: 0; }
   .sidebar-brand .brand img { width: 34px; height: 29px; filter: sepia(1) saturate(5) hue-rotate(295deg) brightness(.8); }
   .sidebar-brand > span { font-size: 23px; font-weight: 700; letter-spacing: -.8px; }
   .sidebar-brand small { display: block; margin-top: 2px; color: var(--muted); font-size: 8px; font-weight: 500; letter-spacing: 2px; }
