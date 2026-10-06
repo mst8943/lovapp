@@ -16,18 +16,22 @@ export async function GET(request: Request) {
   if (!validDate(start) || !validDate(end) || (source && source.length > 80) || (start && end && start > end)) {
     return NextResponse.json({ error: "Tarih veya kaynak filtresi geçersiz." }, { status: 400 });
   }
-  const [campaigns, codes, metrics, productFunnel] = await Promise.all([
+  const [campaigns, codes, metrics, productFunnel, humans, bots, activeHumans7, activeHumans30] = await Promise.all([
     auth.admin.from("growth_campaigns").select("id,slug,name,city,member_limit,is_active,starts_at,ends_at").order("created_at"),
     auth.admin.from("referral_codes").select("id,code,kind,label,is_active,max_activations,owner_profile_id,campaign_id,created_at").order("created_at", { ascending: false }),
     auth.admin.rpc("admin_growth_metrics", { start_at: start ? `${start}T00:00:00+03:00` : null, end_at: end ? new Date(Date.parse(`${end}T00:00:00+03:00`) + 86_400_000).toISOString() : null, source_filter: source }),
     auth.admin.rpc("product_funnel_counts", { since_date: new Date(Date.now() - 30 * 24 * 60 * 60_000).toISOString() }),
+    auth.admin.from("profiles").select("id", { count: "exact", head: true }).eq("kind", "human").is("deleted_at", null),
+    auth.admin.from("profiles").select("id", { count: "exact", head: true }).eq("kind", "bot").is("deleted_at", null),
+    auth.admin.from("profile_presence").select("profile_id,profiles!inner(id)", { count: "exact", head: true }).eq("profiles.kind", "human").is("profiles.deleted_at", null).gte("last_seen_at", new Date(Date.now() - 7 * 24 * 60 * 60_000).toISOString()),
+    auth.admin.from("profile_presence").select("profile_id,profiles!inner(id)", { count: "exact", head: true }).eq("profiles.kind", "human").is("profiles.deleted_at", null).gte("last_seen_at", new Date(Date.now() - 30 * 24 * 60 * 60_000).toISOString()),
   ]);
-  if (campaigns.error || codes.error || metrics.error || productFunnel.error || !metrics.data) {
-    console.error("admin growth query failed", campaigns.error ?? codes.error ?? metrics.error ?? productFunnel.error);
+  if (campaigns.error || codes.error || metrics.error || productFunnel.error || humans.error || bots.error || activeHumans7.error || activeHumans30.error || !metrics.data) {
+    console.error("admin growth query failed", campaigns.error ?? codes.error ?? metrics.error ?? productFunnel.error ?? humans.error ?? bots.error ?? activeHumans7.error ?? activeHumans30.error);
     return NextResponse.json({ error: "Büyüme verileri alınamadı." }, { status: 503 });
   }
   const result = metrics.data as { totals: Record<string, number>; sources: unknown[]; campaignCounts: Record<string, { members: number; applications: number }>; codeCounts: Record<string, number> };
-  return NextResponse.json({ campaigns: (campaigns.data ?? []).map((campaign) => ({ ...campaign, ...result.campaignCounts[campaign.id] })), sources: result.sources, codes: (codes.data ?? []).map((code) => ({ ...code, activations: result.codeCounts[code.id] ?? 0 })), productFunnel: productFunnel.data ?? [], totals: result.totals }, { headers: { "Cache-Control": "private, no-store" } });
+  return NextResponse.json({ campaigns: (campaigns.data ?? []).map((campaign) => ({ ...campaign, ...result.campaignCounts[campaign.id] })), sources: result.sources, codes: (codes.data ?? []).map((code) => ({ ...code, activations: result.codeCounts[code.id] ?? 0 })), productFunnel: productFunnel.data ?? [], totals: { ...result.totals, humanProfiles: humans.count ?? 0, botProfiles: bots.count ?? 0, activeHumans7: activeHumans7.count ?? 0, activeHumans30: activeHumans30.count ?? 0 } }, { headers: { "Cache-Control": "private, no-store" } });
 }
 
 export async function POST(request: Request) {

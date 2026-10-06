@@ -6586,3 +6586,181 @@ end;
 $$;
 revoke all on function public.approve_noir_payment_telegram(uuid,text,numeric) from public;
 grant execute on function public.approve_noir_payment_telegram(uuid,text,numeric) to service_role;
+
+
+-- ===== 072_community_events.sql =====
+-- Curated in-person events. Only an authenticated human profile can RSVP.
+create table public.community_events (
+  id uuid primary key default gen_random_uuid(),
+  title text not null check (char_length(title) between 4 and 100),
+  description text not null check (char_length(description) between 10 and 1000),
+  city text not null check (char_length(city) between 2 and 80),
+  venue text not null check (char_length(venue) between 2 and 160),
+  starts_at timestamptz not null,
+  ends_at timestamptz not null,
+  capacity integer not null check (capacity between 2 and 500),
+  status text not null default 'draft' check (status in ('draft', 'published', 'cancelled')),
+  created_by uuid references auth.users(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  check (ends_at > starts_at)
+);
+
+create table public.community_event_rsvps (
+  event_id uuid not null references public.community_events(id) on delete cascade,
+  profile_id uuid not null references public.profiles(id) on delete cascade,
+  status text not null check (status in ('going', 'cancelled')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  primary key (event_id, profile_id)
+);
+
+create index community_events_public_list on public.community_events(starts_at) where status = 'published';
+create index community_event_rsvps_count on public.community_event_rsvps(event_id) where status = 'going';
+
+alter table public.community_events enable row level security;
+alter table public.community_event_rsvps enable row level security;
+create policy "scheduled events are visible" on public.community_events
+  for select to authenticated using (status in ('published', 'cancelled'));
+create policy "members see own event response" on public.community_event_rsvps
+  for select to authenticated using (
+    exists (select 1 from public.profiles p where p.id = profile_id and p.user_id = auth.uid() and p.kind = 'human')
+  );
+revoke insert, update, delete on public.community_events from anon, authenticated;
+revoke insert, update, delete on public.community_event_rsvps from anon, authenticated;
+
+create or replace function public.respond_to_community_event(event_uuid uuid, attend boolean)
+returns void language plpgsql security definer set search_path = '' as $$
+declare
+  selected_event public.community_events%rowtype;
+  member_id uuid;
+  attendee_count integer;
+begin
+  if auth.uid() is null then raise exception 'authentication_required'; end if;
+  select id into member_id from public.profiles
+    where user_id = auth.uid() and kind = 'human' and deleted_at is null and onboarding_completed = true;
+  if member_id is null then raise exception 'profile_required'; end if;
+  select * into selected_event from public.community_events where id = event_uuid for update;
+  if not found then raise exception 'event_unavailable'; end if;
+  if attend then
+    if selected_event.status <> 'published' or selected_event.starts_at <= now() then
+      raise exception 'event_unavailable';
+    end if;
+    if not exists (select 1 from public.community_event_rsvps where event_id = event_uuid and profile_id = member_id and status = 'going') then
+      select count(*) into attendee_count from public.community_event_rsvps where event_id = event_uuid and status = 'going';
+      if attendee_count >= selected_event.capacity then raise exception 'event_full'; end if;
+    end if;
+  end if;
+  insert into public.community_event_rsvps(event_id, profile_id, status, updated_at)
+  values (event_uuid, member_id, case when attend then 'going' else 'cancelled' end, now())
+  on conflict (event_id, profile_id) do update set status = excluded.status, updated_at = now();
+end;
+$$;
+revoke all on function public.respond_to_community_event(uuid, boolean) from public, anon;
+grant execute on function public.respond_to_community_event(uuid, boolean) to authenticated;
+
+
+-- ===== 073_private_date_plans.sql =====
+-- Private date plans and voluntary check-ins. Sharing is initiated by the member's device.
+create table public.private_date_plans (
+  id uuid primary key default gen_random_uuid(),
+  profile_id uuid not null references public.profiles(id) on delete cascade,
+  venue text not null check (char_length(venue) between 2 and 160),
+  city text not null check (char_length(city) between 2 and 80),
+  starts_at timestamptz not null,
+  expected_end_at timestamptz not null,
+  status text not null default 'scheduled' check (status in ('scheduled', 'checked_in', 'completed', 'cancelled')),
+  checked_in_at timestamptz,
+  feedback_rating integer check (feedback_rating between 1 and 5),
+  feedback_note text check (char_length(feedback_note) <= 500),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  check (expected_end_at > starts_at)
+);
+create index private_date_plans_owner_timeline on public.private_date_plans(profile_id, starts_at desc);
+alter table public.private_date_plans enable row level security;
+create policy "members see own date plans" on public.private_date_plans
+  for select to authenticated using (
+    exists (select 1 from public.profiles p where p.id = profile_id and p.user_id = auth.uid() and p.kind = 'human')
+  );
+revoke insert, update, delete on public.private_date_plans from anon, authenticated;
+
+
+-- ===== 074_noir_coupon_offers.sql =====
+-- Coupon definitions are drafts until a compatible checkout provider is connected.
+create table public.noir_coupon_offers (
+  id uuid primary key default gen_random_uuid(),
+  code text unique not null check (code ~ '^[A-Z0-9-]{4,32}$'),
+  label text not null check (char_length(label) between 2 and 120),
+  plan_slug text not null references public.premium_plans(slug) on update cascade,
+  discount_percent integer not null check (discount_percent between 1 and 90),
+  max_redemptions integer check (max_redemptions between 1 and 100000),
+  starts_at timestamptz,
+  ends_at timestamptz,
+  is_active boolean not null default false,
+  created_by uuid references auth.users(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  check (ends_at is null or starts_at is null or ends_at > starts_at)
+);
+alter table public.noir_coupon_offers enable row level security;
+revoke all on public.noir_coupon_offers from anon, authenticated;
+
+create or replace function public.admin_noir_revenue_summary()
+returns jsonb language plpgsql security definer set search_path = '' as $$
+declare result jsonb;
+begin
+  if auth.role() <> 'service_role' then raise exception 'service_role_required'; end if;
+  select jsonb_build_object(
+    'approvedOrders', count(*),
+    'approvedTry', coalesce(sum(amount) filter (where currency = 'TRY'), 0),
+    'last30Try', coalesce(sum(amount) filter (where currency = 'TRY' and coalesce(reviewed_at, created_at) >= now() - interval '30 days'), 0),
+    'byMonth', (
+      select coalesce(jsonb_agg(jsonb_build_object('month', month, 'amount', amount, 'orders', orders) order by month desc), '[]'::jsonb)
+      from (
+        select to_char(date_trunc('month', coalesce(reviewed_at, created_at) at time zone 'Europe/Istanbul'), 'YYYY-MM') as month,
+          sum(amount) as amount, count(*) as orders
+        from public.payment_orders
+        where status = 'approved' and currency = 'TRY'
+          and coalesce(reviewed_at, created_at) >= now() - interval '6 months'
+        group by 1
+      ) monthly
+    )
+  ) into result from public.payment_orders where status = 'approved';
+  return result;
+end;
+$$;
+revoke all on function public.admin_noir_revenue_summary() from public, anon, authenticated;
+grant execute on function public.admin_noir_revenue_summary() to service_role;
+
+
+-- ===== 075_app_campaigns.sql =====
+-- Scheduled in-app campaign card with opt-in click measurement.
+create table public.app_campaigns (
+  id uuid primary key default gen_random_uuid(),
+  title text not null check (char_length(title) between 4 and 100),
+  body text not null check (char_length(body) between 10 and 280),
+  cta_label text not null check (char_length(cta_label) between 2 and 40),
+  cta_path text not null check (cta_path ~ '^/[^/]'),
+  starts_at timestamptz not null,
+  ends_at timestamptz not null,
+  is_active boolean not null default false,
+  created_by uuid references auth.users(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  check (ends_at > starts_at)
+);
+create index app_campaigns_schedule on public.app_campaigns(starts_at, ends_at) where is_active;
+create table public.app_campaign_clicks (
+  campaign_id uuid not null references public.app_campaigns(id) on delete cascade,
+  profile_id uuid not null references public.profiles(id) on delete cascade,
+  click_date date not null,
+  created_at timestamptz not null default now(),
+  primary key (campaign_id, profile_id, click_date)
+);
+alter table public.app_campaigns enable row level security;
+alter table public.app_campaign_clicks enable row level security;
+create policy "active campaigns are visible" on public.app_campaigns
+  for select to authenticated using (is_active and starts_at <= now() and ends_at > now());
+revoke insert, update, delete on public.app_campaigns from anon, authenticated;
+revoke all on public.app_campaign_clicks from anon, authenticated;

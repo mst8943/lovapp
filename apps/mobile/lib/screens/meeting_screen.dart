@@ -4,6 +4,7 @@ import '../api.dart';
 import '../models.dart';
 import '../theme.dart';
 import '../widgets/lovask_primitives.dart';
+import '../widgets/date_plans_section.dart';
 import 'profile_detail_screen.dart';
 
 class MeetingScreen extends StatefulWidget {
@@ -17,8 +18,12 @@ class MeetingScreen extends StatefulWidget {
 class _MeetingScreenState extends State<MeetingScreen>
     with WidgetsBindingObserver {
   Map<String, dynamic>? data;
+  List<Map<String, dynamic>> events = [];
   String? error;
+  String? eventError;
   bool busy = false, fetching = false;
+  bool eventsFetching = false;
+  String? eventBusyId;
   Timer? timer;
   @override
   void initState() {
@@ -54,6 +59,7 @@ class _MeetingScreenState extends State<MeetingScreen>
 
   Future<void> load() async {
     if (fetching) return;
+    unawaited(loadEvents());
     fetching = true;
     try {
       final result = await widget.api.meetings();
@@ -70,6 +76,44 @@ class _MeetingScreenState extends State<MeetingScreen>
     } finally {
       fetching = false;
     }
+  }
+
+  Future<void> loadEvents() async {
+    if (eventsFetching) return;
+    eventsFetching = true;
+    try {
+      final result = await widget.api.events();
+      if (mounted) {
+        setState(() {
+          events = (result['events'] as List? ?? []).whereType<Map<String, dynamic>>().toList();
+          eventError = null;
+        });
+      }
+    } catch (_) {
+      if (mounted) setState(() => eventError = 'Etkinlikler yüklenemedi.');
+    } finally {
+      eventsFetching = false;
+    }
+  }
+
+  Future<void> respondEvent(Map<String, dynamic> event) async {
+    if (eventBusyId != null) return;
+    final id = event['id'] as String;
+    setState(() => eventBusyId = id);
+    try {
+      await widget.api.respondEvent(id, event['attending'] != true);
+      await loadEvents();
+    } catch (cause) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(cause.toString())));
+    } finally {
+      if (mounted) setState(() => eventBusyId = null);
+    }
+  }
+
+  String eventDate(String value) {
+    final date = DateTime.parse(value).toLocal();
+    String two(int part) => part.toString().padLeft(2, '0');
+    return '${two(date.day)}.${two(date.month)}.${date.year} · ${two(date.hour)}:${two(date.minute)}';
   }
 
   Future<void> choose(String? id) async {
@@ -131,6 +175,31 @@ class _MeetingScreenState extends State<MeetingScreen>
             style: TextStyle(color: muted, height: 1.5),
           ),
           const SizedBox(height: 20),
+          Text('Yaklaşan etkinlikler', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 10),
+          if (eventError != null) TextButton.icon(onPressed: loadEvents, icon: const Icon(Icons.refresh), label: Text(eventError!)),
+          if (events.isEmpty && eventError == null) const Text('Şu anda planlanmış bir etkinlik yok. Yeni buluşmalar burada duyurulacak.', style: TextStyle(color: muted)),
+          for (final event in events) Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: LovaskSurface(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('${eventDate(event['starts_at'] as String)} · ${event['city']}', style: const TextStyle(color: champagne, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 8),
+              Text(event['title'] as String, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
+              const SizedBox(height: 7),
+              Text(event['description'] as String, style: const TextStyle(color: Colors.white)),
+              const SizedBox(height: 7),
+              Text(event['venue'] as String, style: const TextStyle(color: muted)),
+              const SizedBox(height: 10),
+              Text(event['status'] == 'cancelled' ? 'Etkinlik iptal edildi' : '${event['goingCount']}/${event['capacity']} katılımcı', style: const TextStyle(color: champagne)),
+              if (event['status'] == 'published') Align(alignment: Alignment.centerRight, child: FilledButton(
+                onPressed: eventBusyId != null || (event['attending'] != true && ((event['goingCount'] as int) >= (event['capacity'] as int) || !DateTime.parse(event['starts_at'] as String).isAfter(DateTime.now()))) ? null : () => respondEvent(event),
+                child: Text(event['attending'] == true ? 'Katılımımı iptal et' : !DateTime.parse(event['starts_at'] as String).isAfter(DateTime.now()) ? 'Etkinlik başladı' : (event['goingCount'] as int) >= (event['capacity'] as int) ? 'Kontenjan doldu' : 'Katılacağım'),
+              )),
+            ])),
+          ),
+          const SizedBox(height: 20),
+          DatePlansSection(api: widget.api),
+          const SizedBox(height: 24),
           if (data == null && error == null)
             const Center(child: CircularProgressIndicator()),
           if (error != null)

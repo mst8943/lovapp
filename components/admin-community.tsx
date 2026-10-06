@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { useAdminRole } from "./admin-role-context";
 import { communityRequest, type MeetingOption } from "./community";
+import { AdminEvents } from "./admin-events";
 import "./admin-community.css";
 
 type CommunityData = { stories: { id: string; url?: string; profiles: { display_name: string }; expires_at: string }[]; options: MeetingOption[]; intents: { profile_id: string; option_id: string; profiles: { display_name: string }; expires_at: string }[] };
@@ -15,6 +16,7 @@ export function AdminCommunity() {
   return <section className="ops-content community-admin"><header><div><small>Ortak içerik yönetimi</small><h1>Hikayeler ve Buluşma</h1></div><button onClick={() => void load()}>Yenile</button></header>
     <p>Değişiklikler web ve Android uygulamasında geçerlidir. Son 200 aktif içerik gösterilir.</p><Link href="/admin/lovask-control/reports">Hikaye ve profil şikâyetlerini incele →</Link>
     {notice ? <p className="ops-notice" role="status">{notice}</p> : null}
+    <AdminEvents />
     {!data ? <p>Veriler yükleniyor…</p> : <>
       <h2>Buluşma seçenekleri</h2>
       {role === "owner" ? <><div className="admin-meeting-options">{data.options.map((option) => <OptionForm key={`${option.id}-${option.label}-${option.active}-${option.sort_order}`} option={option} busy={busy} save={mutate}/>)}</div><h3>Yeni seçenek</h3><OptionForm busy={busy} save={mutate}/></> : <p>Seçenekleri yalnızca yönetici düzenleyebilir.</p>}

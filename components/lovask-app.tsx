@@ -57,6 +57,7 @@ import {
   useState,
 } from "react";
 import { Brand } from "@/components/brand";
+import { CampaignBanner } from "@/components/campaign-banner";
 import { readJson } from "@/lib/http-json";
 import { SafetyMenu } from "@/components/safety-menu";
 import { PremiumNotice } from "@/components/premium-notice";
@@ -997,12 +998,9 @@ function DesktopSidebar({
         type="button"
         className="sidebar-brand"
         onClick={() => onChange("swipe")}
-        aria-label="Lovask ana ekran"
+        aria-label="Ana ekran"
       >
         <Brand />
-        <span>
-          lovask<small>TANIŞMA ALANI</small>
-        </span>
       </button>
       <small className="sidebar-label">SANA ÖZEL</small>
       <nav aria-label="Ana menü">
@@ -1312,6 +1310,7 @@ function ExploreView({
             onFilter={() => setPreferencesOpen(true)}
           />
           <StoryStrip live={liveMode} />
+          {liveMode ? <CampaignBanner /> : null}
         </>
       )}
       {likesOnly ? (
@@ -1577,6 +1576,18 @@ function ExploreSection({
   );
 }
 
+type DailyPick = { profileId: string; reason: string; day: string; viewerId: string };
+
+function dailyPickStorageKey(pick: DailyPick) {
+  return `lovask-daily-pick:${pick.viewerId}:${pick.day}`;
+}
+
+function visibleDailyPick(pick: DailyPick | null | undefined) {
+  if (!pick) return null;
+  try { return localStorage.getItem(dailyPickStorageKey(pick)) ? null : pick; }
+  catch { return pick; }
+}
+
 function DiscoverView({
   profiles,
   liveMode,
@@ -1627,6 +1638,7 @@ function DiscoverView({
   const [superNoteOpen, setSuperNoteOpen] = useState(false);
   const [superNote, setSuperNote] = useState("");
   const [notice, setNotice] = useState<string | null>(null);
+  const [dailyPick, setDailyPick] = useState<DailyPick | null>(null);
   const profile = deckProfiles[index];
   useEffect(() => {
     if (!liveMode) return;
@@ -1645,6 +1657,7 @@ function DiscoverView({
         if (cancelled) return;
         setPreferences(preferenceData.preferences);
         setAllProfiles(deckData.profiles);
+        setDailyPick(visibleDailyPick(deckData.dailyPick));
         setDeckProfiles(
           filterProfiles(
             deckData.profiles,
@@ -1781,6 +1794,10 @@ function DiscoverView({
         return;
       }
       setDecidedIds((current) => new Set(current).add(decidedProfile.id));
+      if (dailyPick?.profileId === decidedProfile.id) {
+        try { localStorage.setItem(dailyPickStorageKey(dailyPick), decidedProfile.id); } catch {}
+        setDailyPick(null);
+      }
       setIndex((current) => current + 1);
       if (typeof result.questProgress === "number")
         onQuestProgress(result.questProgress, result.xpAwarded);
@@ -1870,6 +1887,7 @@ function DiscoverView({
       response,
       {} as {
         profiles?: Profile[];
+        dailyPick?: DailyPick | null;
         error?: string;
         superLike?: SuperLikeAllowance;
       },
@@ -1877,6 +1895,7 @@ function DiscoverView({
     if (!response.ok || !result.profiles)
       throw new Error(result.error ?? "Keşfet kartları yenilenemedi.");
     const incoming = result.profiles ?? [];
+    setDailyPick(visibleDailyPick(result.dailyPick));
     setAllProfiles(incoming);
     setDeckProfiles(
       filterProfiles(incoming, nextPreferences, new Set(), viewer.city),
@@ -1955,6 +1974,7 @@ function DiscoverView({
         onBoost={onBoost}
       />
       <StoryStrip live={liveMode} />
+      {liveMode ? <CampaignBanner compact /> : null}
       <div className="deck" aria-live="polite">
         {profile ? (
           <>
@@ -1964,6 +1984,7 @@ function DiscoverView({
               <SwipeCard
                 key={`${profile.id}-${index}`}
                 profile={profile}
+                dailyPickReason={dailyPick?.profileId === profile.id ? dailyPick.reason : undefined}
                 disabled={processing}
                 onDecision={decide}
                 onOpen={() => openProfile(profile)}
@@ -2701,11 +2722,13 @@ function filterProfiles(
 
 function SwipeCard({
   profile,
+  dailyPickReason,
   disabled,
   onDecision,
   onOpen,
 }: {
   profile: Profile;
+  dailyPickReason?: string;
   disabled: boolean;
   onDecision: (direction: "left" | "right") => void;
   onOpen: () => void;
@@ -2770,6 +2793,7 @@ function SwipeCard({
         unoptimized={photos[photoIndex].startsWith("http")}
       />
       <div className="photo-vignette" />
+      {dailyPickReason ? <div className="daily-pick-label"><strong>Günün uyumu</strong><span>{dailyPickReason}</span></div> : null}
       {photos.length > 1 ? (
         <span className="card-photo-progress" aria-hidden="true">
           {photos.map((_, index) => (
@@ -2902,14 +2926,7 @@ function ProfileDetail({
             <ArrowLeft size={20} strokeWidth={2.4} />
           </button>
           <div className="detail-nav-logo">
-            <Image
-              src="/lovask-discovery-logo.png"
-              alt="Lovask"
-              width={92}
-              height={24}
-              style={{ objectFit: "contain" }}
-              priority
-            />
+            <Brand className="brand detail-brand" />
           </div>
           <SafetyMenu profile={profile} onBlocked={onClose} />
         </div>

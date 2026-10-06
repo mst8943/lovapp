@@ -170,6 +170,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen>
     setState(() => _deciding = true);
 
     try {
+      final wasDailyPick = api.dailyPickProfileId == target.id;
       final departure = _cardKey.currentState?.dismiss(direction);
       departure?.then((_) {
         if (!mounted || !_deciding || _currentIndex != index) return;
@@ -209,6 +210,7 @@ class _DiscoveryScreenState extends State<DiscoveryScreen>
       if (res['matched'] == true) {
         _showMatchDialog(target);
       }
+      if (wasDailyPick) unawaited(api.markDailyPickSeen());
     } catch (error) {
       if (mounted) {
         final wasAdvanced = _currentIndex != index;
@@ -831,6 +833,31 @@ class _DiscoveryScreenState extends State<DiscoveryScreen>
             onPhotoError: _retryExpiredPhoto,
           ),
         ),
+        if (api.dailyPickProfileId == currentProfile.id && api.dailyPickReason != null)
+          Positioned(
+            top: 12,
+            left: 12,
+            right: 12,
+            child: IgnorePointer(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xE61B151D),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: gold.withValues(alpha: .65)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Günün uyumu', style: TextStyle(color: champagne, fontWeight: FontWeight.w800, fontSize: 13)),
+                    const SizedBox(height: 3),
+                    Text(api.dailyPickReason!, style: const TextStyle(color: Colors.white, fontSize: 12, height: 1.3)),
+                  ],
+                ),
+              ),
+            ),
+          ),
         Positioned(left: 0, right: 0, bottom: 14, child: _buildActionRow()),
       ],
     );

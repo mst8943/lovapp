@@ -60,6 +60,32 @@ export async function loadDiscoveryProfiles(session: SupabaseClient, admin: Supa
   return hydrateProfiles(rows, admin, viewer.id);
 }
 
+export function selectDailyPick(profiles: Profile[], viewer: { id: string; relationship_goal: string | null; city: string | null }, day: string) {
+  const hash = (value: string) => value.split("").reduce((result, char) => (result * 31 + char.charCodeAt(0)) >>> 0, 7);
+  const scored = profiles.map((profile) => ({
+    profile,
+    sameGoal: Boolean(viewer.relationship_goal && profile.relationshipGoal === viewer.relationship_goal),
+    sameCity: Boolean(viewer.city && profile.city?.toLocaleLowerCase("tr-TR") === viewer.city.toLocaleLowerCase("tr-TR")),
+  })).filter((candidate) => candidate.sameGoal || candidate.sameCity);
+  scored.sort((a, b) => Number(b.sameGoal) * 2 + Number(b.sameCity) - Number(a.sameGoal) * 2 - Number(a.sameCity)
+    || hash(`${viewer.id}:${day}:${b.profile.id}`) - hash(`${viewer.id}:${day}:${a.profile.id}`));
+  const selected = scored[0];
+  if (!selected) return null;
+  const goals: Record<string, string> = {
+    marriage: "evlilik",
+    serious: "ciddi ilişki",
+    dating: "flört",
+    short_term: "kısa süreli ilişki",
+    friendship: "arkadaşlık",
+  };
+  const reason = selected.sameGoal
+    ? selected.profile.relationshipGoal === "unsure"
+      ? "İkiniz de ilişki hedefiniz konusunda henüz karar vermemişsiniz."
+      : `İkiniz de ${goals[selected.profile.relationshipGoal ?? ""] ?? "benzer bir ilişki"} arıyorsunuz.`
+    : `İkiniz de ${selected.profile.city} şehrindesiniz.`;
+  return { profileId: selected.profile.id, reason, day, viewerId: viewer.id };
+}
+
 export async function loadMatchProfiles(session: SupabaseClient, admin: SupabaseClient) {
   const { rows, viewerId } = await loadMatchRows(session, admin);
   return hydrateProfiles(rows, admin, viewerId);

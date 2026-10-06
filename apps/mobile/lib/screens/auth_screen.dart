@@ -5,6 +5,7 @@ import '../api.dart';
 import '../widgets/lovask_primitives.dart';
 import 'application_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../brand_settings.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key, this.api});
@@ -379,7 +380,17 @@ class _AuthScreenState extends State<AuthScreen>
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const LovaskWordmark(),
-                  const SizedBox(height: 28),
+                  ValueListenableBuilder<AppBrandSettings>(
+                    valueListenable: AppBrandSettings.value,
+                    builder: (context, brand, _) => Padding(
+                      padding: const EdgeInsets.only(top: 3),
+                      child: Text(
+                        brand.tagline,
+                        style: const TextStyle(color: muted, fontSize: 12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                   LovaskHero(
                     eyebrow: _applicationRequired
                         ? 'DAVETLE TANIŞ'

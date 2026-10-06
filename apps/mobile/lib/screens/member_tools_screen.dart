@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../api.dart';
 import '../theme.dart';
 import '../widgets/lovask_primitives.dart';
+import '../brand_settings.dart';
 
 class MemberToolsScreen extends StatefulWidget {
   const MemberToolsScreen({super.key, required this.section, this.api});
@@ -129,20 +130,23 @@ class _MemberToolsScreenState extends State<MemberToolsScreen> {
         'Yeni destek talebi',
         style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
       ),
-      TextButton.icon(
-        onPressed: () async {
-          final opened = await launchUrl(
-            Uri(scheme: 'mailto', path: 'destek@lovask.com.tr'),
-          );
-          if (!opened && mounted) {
-            setState(
-              () => error =
-                  'E-posta uygulaması açılamadı. Lütfen destek@lovask.com.tr adresine yaz.',
+      ValueListenableBuilder<AppBrandSettings>(
+        valueListenable: AppBrandSettings.value,
+        builder: (context, brand, _) => TextButton.icon(
+          onPressed: () async {
+            final opened = await launchUrl(
+              Uri(scheme: 'mailto', path: brand.supportEmail),
             );
-          }
-        },
-        icon: const Icon(Icons.mail_outline, size: 18),
-        label: const Text('destek@lovask.com.tr'),
+            if (!opened && mounted) {
+              setState(
+                () => error =
+                    'E-posta uygulaması açılamadı. Lütfen ${brand.supportEmail} adresine yaz.',
+              );
+            }
+          },
+          icon: const Icon(Icons.mail_outline, size: 18),
+          label: Text(brand.supportEmail),
+        ),
       ),
       const SizedBox(height: 16),
       TextField(

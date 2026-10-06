@@ -7,10 +7,10 @@ Lovask; web, Android ve yönetim panelinden oluşan, kendi sunucunuzda çalışt
 | | |
 | --- | --- |
 | Web sayfası | 35 (17'si yönetim paneli) |
-| API uç noktası | 79 |
-| Veritabanı | 71 sıralı migration, 84 tablo, 6.300+ satır SQL |
-| Satır düzeyi güvenlik | 81 tabloda RLS, 85 erişim politikası |
-| Web ve API kodu | 25.000+ satır TypeScript |
+| API uç noktası | 85 |
+| Veritabanı | 75 sıralı migration, 90 tablo, 6.500+ satır SQL |
+| Satır düzeyi güvenlik | 87 tabloda RLS, 89 erişim politikası |
+| Web ve API kodu | 26.000+ satır TypeScript |
 | Android uygulaması | 18 ekran, 16.000+ satır Flutter/Dart, sürüm 1.9.11 (39) |
 | Test ve denetim betiği | 45 uçtan uca/duman/denetim betiği, 7 Flutter testi, 15 QA raporu (`docs/qa/`) |
 
@@ -21,7 +21,7 @@ flowchart LR
   W[Web / PWA] --> N
   A[Android - Flutter] --> N
   Y[Yönetim paneli] --> N
-  N[Next.js 16 - sayfalar ve 79 API] --> S[(Supabase: Postgres, Auth, Storage, Realtime)]
+  N[Next.js 16 - sayfalar ve 85 API] --> S[(Supabase: Postgres, Auth, Storage, Realtime)]
   N --> AI[Yapay zekâ: OpenAI, DeepSeek, Gemini, OpenRouter]
   N --> P[Push: Firebase ve Web Push]
   N --> O[Ödeme: Shopier, Lemon Squeezy]
@@ -36,10 +36,10 @@ Tüm liste yönetim panelindeki **Platform özeti** sayfasında canlı kurulum d
 
 - **Keşif ve eşleşme:** kart kaydırma, süper beğeni, geri alma, Boost, beğenenler ve ziyaretçiler, çevrimiçi durum
 - **Sohbet:** gerçek zamanlı mesajlaşma, sesli ve fotoğraflı mesaj, AI Wingman
-- **Topluluk:** 24 saatlik hikâyeler, buluşma planları, sesli biyografi
-- **Gelir:** Noir VIP üyelik, Shopier ve Lemon Squeezy, dekont ve Telegram üzerinden onay, davet ve referans
+- **Topluluk:** 24 saatlik hikâyeler, buluşma planları, yüz yüze etkinlikler, özel buluşma planları, sesli biyografi
+- **Gelir:** Noir VIP üyelik, Shopier ve Lemon Squeezy, dekont ve Telegram üzerinden onay, gelir özeti, kupon teklifleri (ödeme sağlayıcısı bağlanana kadar taslak), davet ve referans
 - **Güven:** fotoğraf moderasyonu, selfie doğrulama, şikâyet ve engelleme, Turnstile, hız sınırı, 30 günlük hesap kurtarma
-- **Büyüme:** büyüme paneli, indirme takibi, blog ve SEO, PWA
+- **Büyüme:** büyüme paneli, zamanlanmış uygulama içi kampanya kartı, indirme takibi, blog ve SEO, PWA
 - **Yönetim:** dört rollü panel (sahip, moderatör, destek, bot editörü), bot stüdyosu, başvuru akışı, canlı destek, sistem sağlığı
 - **Mobil:** Android uygulaması, push bildirimleri, Google ile giriş
 

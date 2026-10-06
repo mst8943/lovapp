@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Check, ExternalLink, LoaderCircle, Search, X } from "lucide-react";
 
 type Mode = "users" | "payments" | "reports" | "photos";
@@ -15,21 +15,23 @@ const config = {
 } as const;
 
 export function AdminOperations({ mode }: { mode: Mode }) {
-  const meta = config[mode]; const [rows, setRows] = useState<Row[]>([]); const [loading, setLoading] = useState(true); const [notice, setNotice] = useState(""); const [query, setQuery] = useState(""); const [selected, setSelected] = useState<Row | null>(null);
+  const meta = config[mode]; const [rows, setRows] = useState<Row[]>([]); const [loading, setLoading] = useState(true); const [notice, setNotice] = useState(""); const [query, setQuery] = useState(""); const [kind, setKind] = useState<"human" | "bot">("human"); const [selected, setSelected] = useState<Row | null>(null); const requestId = useRef(0);
   const load = useCallback(async () => {
+    const currentRequest = ++requestId.current;
     setLoading(true); setNotice("");
-    try { const response = await fetch(`${meta.endpoint}${mode === "users" && query ? `?q=${encodeURIComponent(query)}` : ""}`, { cache: "no-store" }); const body = await response.json().catch(() => ({})); if (!response.ok) throw new Error(body.error); setRows(body[meta.key] ?? []); }
-    catch (error) { setNotice(error instanceof Error ? error.message : "Veriler yüklenemedi."); }
-    finally { setLoading(false); }
-  }, [meta.endpoint, meta.key, mode, query]);
-  useEffect(() => { const timer = window.setTimeout(() => { void load(); }, 0); return () => window.clearTimeout(timer); }, [load]);
+    try { const params = new URLSearchParams(); if (mode === "users") { params.set("kind", kind); if (query) params.set("q", query); } const response = await fetch(`${meta.endpoint}${mode === "users" ? `?${params}` : ""}`, { cache: "no-store" }); const body = await response.json().catch(() => ({})); if (!response.ok) throw new Error(body.error); if (currentRequest === requestId.current) setRows(body[meta.key] ?? []); }
+    catch (error) { if (currentRequest === requestId.current) setNotice(error instanceof Error ? error.message : "Veriler yüklenemedi."); }
+    finally { if (currentRequest === requestId.current) setLoading(false); }
+  }, [meta.endpoint, meta.key, mode, query, kind]);
+  const invalidateRequests = useCallback(() => { requestId.current++; }, []);
+  useEffect(() => { const timer = window.setTimeout(() => { void load(); }, 0); return () => { window.clearTimeout(timer); invalidateRequests(); }; }, [load, invalidateRequests]);
   const mutate = async (payload: Row) => {
     setNotice(""); const response = await fetch(meta.endpoint, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); const body = await response.json().catch(() => ({}));
     if (!response.ok) return setNotice(body.error ?? "İşlem tamamlanamadı."); setSelected(null); setNotice("İşlem kaydedildi."); await load();
   };
   const search = (event: FormEvent) => { event.preventDefault(); void load(); };
   return <section className="ops-content">
-    <header><div><small>{meta.eyebrow}</small><h1>{meta.title}</h1></div>{mode === "users" ? <form onSubmit={search}><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="İsimle ara" /><button>Ara</button></form> : null}</header>
+    <header><div><small>{meta.eyebrow}</small><h1>{meta.title}</h1></div>{mode === "users" ? <><nav aria-label="Profil türü"><button type="button" aria-pressed={kind === "human"} onClick={() => { setSelected(null); setKind("human"); }}>Kullanıcılar</button><button type="button" aria-pressed={kind === "bot"} onClick={() => { setSelected(null); setKind("bot"); }}>Botlar</button></nav><form onSubmit={search}><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="İsimle ara" /><button>Ara</button></form></> : null}</header>
     {notice ? <p className="ops-notice" role="status">{notice}</p> : null}
     {loading ? <div className="ops-empty"><LoaderCircle className="spin" /> Yükleniyor</div> : rows.length === 0 ? <div className="ops-empty">{meta.empty}</div> : <div className={`ops-list ${mode}`}>{rows.map((row) => <OperationRow key={String(row.id)} mode={mode} row={row} onSelect={() => setSelected(row)} onMutate={mutate} />)}</div>}
     {selected && mode === "users" ? <UserDetail profileId={String(selected.id)} onClose={() => setSelected(null)} /> : null}
@@ -37,7 +39,7 @@ export function AdminOperations({ mode }: { mode: Mode }) {
 }
 
 function OperationRow({ mode, row, onSelect, onMutate }: { mode: Mode; row: Row; onSelect: () => void; onMutate: (payload: Row) => Promise<void> }) {
-  if (mode === "users") return <button className="ops-row user-row" onClick={onSelect}><Avatar src={row.image} /><span><strong>{String(row.display_name)}</strong><small>{String(row.email ?? row.phone ?? "İletişim bilgisi kısıtlı")}</small></span><span><b>Seviye {String(row.level)}</b><small>{formatDate(row.lastSeenAt)}</small></span><Status active={isNoir(row.noirUntil)} label={isNoir(row.noirUntil) ? "Noir" : "Ücretsiz"} /></button>;
+  if (mode === "users") { const details = <><Avatar src={row.image} /><span><strong>{String(row.display_name)}</strong><small>{row.kind === "bot" ? "Bot profili" : String(row.email ?? row.phone ?? "İletişim bilgisi kısıtlı")}</small></span><span><b>{row.kind === "bot" ? "Bot" : `Seviye ${String(row.level)}`}</b><small>{formatDate(row.lastSeenAt)}</small></span><Status active={isNoir(row.noirUntil)} label={row.kind === "bot" ? "Bot" : isNoir(row.noirUntil) ? "Noir" : "Ücretsiz"} /></>; return row.kind === "bot" ? <article className="ops-row" aria-label="Bot profili">{details}</article> : <button className="ops-row user-row" onClick={onSelect}>{details}</button>; }
   if (mode === "payments") { const profile = row.profiles as { display_name?: string } | null; const plan = row.premium_plans as { name?: string } | null; return <article className="ops-row payment-row"><span><strong>{profile?.display_name ?? "Kullanıcı"}</strong><small>{String(row.email ?? "")} · {String(row.payment_reference)}</small><small>{providerLabel(String(row.provider))}</small></span><span><b>{plan?.name ?? "Noir"}</b><small>{Number(row.amount).toLocaleString("tr-TR")} {String(row.currency)}</small>{row.sender_full_name ? <small>Gönderen: {String(row.sender_full_name)} · {formatShortDate(row.payment_date)}</small> : null}{row.external_reference ? <small>İşlem no: {String(row.external_reference)}</small> : null}</span><Status active={row.status === "approved"} label={statusLabel(String(row.status))} /><div className="row-actions">{row.proofUrl ? <a href={String(row.proofUrl)} target="_blank" rel="noreferrer"><ExternalLink size={15} /> Dekont</a> : <small>Dekont yok</small>}{row.status === "under_review" ? <><button onClick={() => void onMutate({ action: "approve", orderId: row.id })}><Check size={15} /> Onayla ve üyeliği aç</button><button className="danger" onClick={() => { const reason = window.prompt("Red nedeni"); if (reason) void onMutate({ action: "reject", orderId: row.id, reason }); }}><X size={15} /> Reddet</button></> : null}</div></article>; }
   if (mode === "reports") { const reporter = row.reporter as { display_name?: string } | null; const reported = row.reported as { display_name?: string } | null; return <article className="ops-row"><span><strong>{reported?.display_name ?? "Profil"}</strong><small>{reasonLabel(String(row.reason))} · Bildiren: {reporter?.display_name ?? "—"}</small></span><p>{String(row.details ?? "Açıklama eklenmedi.")}</p><Status active={row.status === "resolved"} label={statusLabel(String(row.status))} /><div className="row-actions">{row.status === "open" ? <button onClick={() => void onMutate({ reportId: row.id, status: "reviewing" })}>İncele</button> : null}<button onClick={() => void onMutate({ reportId: row.id, status: "resolved", resolution: "İnceleme tamamlandı." })}><Check size={15} /> Tamamla</button><button className="danger" onClick={() => void onMutate({ reportId: row.id, status: "rejected" })}><X size={15} /> Reddet</button></div></article>; }
   const profile = row.profiles as { display_name?: string } | null; return <article className="photo-review"><div>{row.url ? <Image src={String(row.url)} alt="İncelenen profil fotoğrafı" fill sizes="280px" unoptimized /> : null}</div><span><strong>{profile?.display_name ?? "Profil"}</strong><small>{formatDate(row.created_at)}</small><Status active={row.moderation_status === "approved"} label={statusLabel(String(row.moderation_status))} /></span><div className="row-actions"><button onClick={() => void onMutate({ photoId: row.id, status: "approved" })}><Check size={15} /> Onayla</button><button className="danger" onClick={() => { const reason = window.prompt("Red nedeni"); if (reason) void onMutate({ photoId: row.id, status: "rejected", reason }); }}><X size={15} /> Reddet</button></div></article>;

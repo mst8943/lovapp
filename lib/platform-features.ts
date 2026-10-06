@@ -27,6 +27,8 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
       { name: "Hikâyeler", detail: "24 saat sonra kaybolan paylaşımlar, tam ekran izleyici.", href: "/admin/lovask-control/community" },
       { name: "Buluşma planları", detail: "Ortak plan seçen üyeler birbirini görür.", href: "/admin/lovask-control/community" },
       { name: "Sesli biyografi", detail: "Profile kısa ses tanıtımı ekleme." },
+      { name: "Yüz yüze etkinlikler", detail: "Yöneticinin yayınladığı etkinliklere kontenjanlı katılım kaydı.", href: "/admin/lovask-control/community" },
+      { name: "Özel buluşma planları", detail: "Eşleşmeler arasında kişiye özel plan önerme ve yanıtlama." },
     ],
   },
   {
@@ -35,6 +37,7 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
       { name: "Noir VIP üyelik", detail: "Haftalık ve aylık paketler, ayrıcalık yönetimi.", href: "/admin/lovask-control/payments" },
       { name: "Shopier ve Lemon Squeezy", detail: "Ödeme bağlantıları ve webhook doğrulaması." },
       { name: "Dekont ve Telegram onayı", detail: "Havale ödemelerini panelden veya Telegram'dan onaylama." },
+      { name: "Gelir özeti ve kupon teklifleri", detail: "Onaylı sipariş ve aylık gelir özeti; kuponlar uyumlu ödeme sağlayıcısı bağlanana kadar taslak kalır.", href: "/admin/lovask-control/payments" },
       { name: "Davet ve referans", detail: "Kişisel davet kodları, kaynak takibi.", href: "/admin/lovask-control/growth" },
     ],
   },
@@ -53,6 +56,7 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
     features: [
       { name: "Büyüme paneli", detail: "Kayıt kaynakları, dönüşüm ve indirme takibi.", href: "/admin/lovask-control/growth" },
       { name: "Blog ve SEO", detail: "Zengin metin editörü, site haritası, yapılandırılmış veri.", href: "/admin/lovask-control/blog" },
+      { name: "Uygulama içi kampanya kartı", detail: "Zamanlanmış duyuru kartı, isteğe bağlı tıklama ölçümü.", href: "/admin/lovask-control/growth" },
       { name: "PWA ve Android indirme", detail: "Ana ekrana eklenebilir web uygulaması, imzalı APK dağıtımı." },
     ],
   },

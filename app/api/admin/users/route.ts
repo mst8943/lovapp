@@ -5,7 +5,8 @@ export async function GET(request: Request) {
   const auth = await requireAdmin(["owner", "support", "moderator"]);
   if (auth instanceof NextResponse) return auth;
   const query = new URL(request.url).searchParams.get("q")?.trim().slice(0, 80) ?? "";
-  let profilesQuery = auth.admin.from("profiles").select("id,user_id,display_name,birth_date,created_at,xp,level,is_discoverable,onboarding_completed").eq("kind", "human").order("created_at", { ascending: false }).limit(100);
+  const kind = new URL(request.url).searchParams.get("kind") === "bot" ? "bot" : "human";
+  let profilesQuery = auth.admin.from("profiles").select("id,kind,user_id,display_name,birth_date,created_at,xp,level,is_discoverable,onboarding_completed").eq("kind", kind).order("created_at", { ascending: false }).limit(100);
   if (query) profilesQuery = profilesQuery.ilike("display_name", `%${query.replace(/[%_]/g, "")}%`);
   const { data: profiles, error } = await profilesQuery;
   if (error) return NextResponse.json({ error: "Kullanıcılar yüklenemedi." }, { status: 500 });
@@ -29,5 +30,5 @@ export async function GET(request: Request) {
     const path = variants?.["480"] ?? photo?.storage_path; const signed = path ? await auth.admin.storage.from("profiles").createSignedUrl(path, 600) : null;
     return { ...profile, email: canSeeContact && profile.user_id ? authMap.get(profile.user_id) ?? null : null, phone: canSeeContact ? privateMap.get(profile.id) ?? null : null, noirUntil: entitlementMap.get(profile.id) ?? null, lastSeenAt: presenceMap.get(profile.id) ?? null, image: signed?.data?.signedUrl ?? null, birth_date: undefined, user_id: undefined };
   }));
-  return NextResponse.json({ users: rows, canSeeContact }, { headers: { "Cache-Control": "private, no-store" } });
+  return NextResponse.json({ users: rows, kind, canSeeContact }, { headers: { "Cache-Control": "private, no-store" } });
 }

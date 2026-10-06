@@ -17,6 +17,7 @@ import 'screens/profile_hub_screen.dart';
 import 'screens/recovery_screen.dart';
 import 'theme.dart';
 import 'services/notification_manager.dart';
+import 'brand_settings.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +43,7 @@ Future<void> main() async {
   if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
     unawaited(LovaskApi().recordFirstOpen().catchError((_) {}));
   }
+  unawaited(AppBrandSettings.load(() => LovaskApi().branding()));
   runApp(const LovaskApp());
 }
 
@@ -78,20 +80,23 @@ class _LovaskAppState extends State<LovaskApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigator,
-      debugShowCheckedModeBanner: false,
-      title: 'Lovask',
-      theme: buildLovaskTheme(),
-      builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark.copyWith(
-          statusBarColor: Colors.transparent,
-          systemNavigationBarColor: ink,
-          systemNavigationBarIconBrightness: Brightness.dark,
+    return ValueListenableBuilder<AppBrandSettings>(
+      valueListenable: AppBrandSettings.value,
+      builder: (context, brand, _) => MaterialApp(
+        navigatorKey: navigator,
+        debugShowCheckedModeBanner: false,
+        title: brand.name,
+        theme: buildLovaskTheme(),
+        builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.dark.copyWith(
+            statusBarColor: Colors.transparent,
+            systemNavigationBarColor: ink,
+            systemNavigationBarIconBrightness: Brightness.dark,
+          ),
+          child: ColoredBox(color: ink, child: child!),
         ),
-        child: ColoredBox(color: ink, child: child!),
+        home: const AuthGate(),
       ),
-      home: const AuthGate(),
     );
   }
 }
