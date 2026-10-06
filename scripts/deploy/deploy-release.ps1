@@ -52,9 +52,9 @@ tar -czf $archive @files
 if ($LASTEXITCODE -ne 0) { throw 'Arsiv olusturulamadi.' }
 
 Write-Host "==> Sunucuya yukleniyor ($Server) - sifre sorulursa girin"
-scp $archive "${Server}:/tmp/lovask-$label.tgz"
+scp -O $archive "${Server}:/tmp/lovask-$label.tgz"
 if ($LASTEXITCODE -ne 0) { throw 'Arsiv yuklenemedi.' }
-scp (Join-Path $PSScriptRoot 'remote-deploy.sh') "${Server}:/tmp/lovask-remote-deploy.sh"
+scp -O (Join-Path $PSScriptRoot 'remote-deploy.sh') "${Server}:/tmp/lovask-remote-deploy.sh"
 if ($LASTEXITCODE -ne 0) { throw 'Yayin betigi yuklenemedi.' }
 
 Write-Host '==> Sunucuda asama derlemesi ve yayin'
