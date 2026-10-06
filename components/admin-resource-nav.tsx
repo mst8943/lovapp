@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Banknote, Bot, Camera, ChartNoAxesCombined, ClipboardList, FileText, HeartPulse, LayoutDashboard, LifeBuoy, MessageSquareText, MessageSquareWarning, Settings2, Users } from "lucide-react";
+import { Banknote, Bot, Camera, ChartNoAxesCombined, ClipboardList, FileText, HeartPulse, LayoutDashboard, LifeBuoy, MessageSquareText, MessageSquareWarning, Settings2, Sparkles, Users } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { useAdminRole } from "@/components/admin-role-context";
 import { useCallback, useEffect, useState } from "react";
@@ -32,6 +32,7 @@ export function AdminResourceNav() {
     <div className="ops-nav-status"><i /><span>Yönetim alanı<small>Canlı bağlantı etkin</small></span></div>
     <Link className="ops-nav-return" href="/">Uygulamaya dön</Link>
     {role === "owner" ? <Link className={active === "growth" ? "active" : ""} href="/admin/lovask-control/growth"><ChartNoAxesCombined size={17}/> Büyüme</Link> : null}
+    {role === "owner" ? <Link className={active === "platform" ? "active" : ""} href="/admin/lovask-control/platform"><Sparkles size={17}/> Platform özeti</Link> : null}
     {role === "owner" ? <Link className={active === "settings" ? "active" : ""} href="/admin/lovask-control/settings"><Settings2 size={17}/> Ayarlar</Link> : null}
   </aside>;
 }

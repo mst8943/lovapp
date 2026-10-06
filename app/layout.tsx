@@ -4,6 +4,14 @@ import "./globals.css";
 import "./site-theme.css";
 import { PwaRegister } from "@/components/pwa-register";
 
+const supabaseOrigin = (() => {
+  try {
+    return process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin : null;
+  } catch {
+    return null;
+  }
+})();
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://lovask.com.tr"),
   title: { default: "Lovask — Tesadüften fazlası", template: "%s · Lovask" },
@@ -41,8 +49,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="tr" suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://jagqvyfnychnoxarebgv.supabase.co" />
-        <link rel="dns-prefetch" href="https://jagqvyfnychnoxarebgv.supabase.co" />
+        {supabaseOrigin ? <link rel="preconnect" href={supabaseOrigin} /> : null}
+        {supabaseOrigin ? <link rel="dns-prefetch" href={supabaseOrigin} /> : null}
       </head>
       <body className="lovask-light" suppressHydrationWarning>
         {children}

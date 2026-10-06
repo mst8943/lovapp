@@ -1,0 +1,16 @@
+node_modules
+.next
+.git
+.env
+.env.*
+!.env.example
+*.log
+*.apk
+*.zip
+*.tgz
+artifacts
+tmp
+apps/mobile/build
+apps/mobile/.dart_tool
+apps/mobile/android/build
+apps/mobile/android/.gradle

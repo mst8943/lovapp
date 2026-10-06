@@ -4,6 +4,10 @@ Next.js, Supabase ve yapay zekâ altyapısıyla hazırlanmış, mobil öncelikli
 
 ## Müşteri için hızlı kurulum
 
+> En kısa yol: `docs/KURULUM.md` rehberi. `npm run setup` ayarları hazırlar, `npm run doctor` eksikleri gösterir, `docker compose --env-file .env.local up -d --build` siteyi HTTPS ve bot zamanlayıcısıyla birlikte başlatır, `npm run rebrand -- --domain alanadiniz.com` alan adını değiştirir.
+
+Elle kurulum adımları:
+
 1. Proje dosyalarını VPS'e yükleyin.
 2. Node.js 22 veya daha yeni bir sürüm kurulu olduğundan emin olun.
 3. Bağımlılıkları kurun: `npm ci`

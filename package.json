@@ -9,6 +9,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "verify": "npm run lint && npm run typecheck && npm run build",
+    "setup": "node scripts/setup.mjs",
+    "doctor": "node scripts/doctor.mjs",
     "test:full": "node scripts/test-full.mjs",
     "test:a11y": "node scripts/audit-accessibility.mjs",
     "test:public": "node scripts/audit-public.mjs",
@@ -18,7 +20,9 @@
     "optimize:images": "node scripts/optimize-public-images.mjs",
     "test:seo": "node scripts/smoke-blog-seo.mjs",
     "package:handoff": "python zip_project.py",
-    "build:install-sql": "node scripts/build-install-sql.mjs"
+    "build:install-sql": "node scripts/build-install-sql.mjs",
+    "rebrand": "node scripts/rebrand.mjs",
+    "audit:handoff": "python zip_project.py --audit"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",

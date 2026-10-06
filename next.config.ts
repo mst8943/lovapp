@@ -1,5 +1,13 @@
 import type { NextConfig } from "next";
 
+const supabaseHost = (() => {
+  try {
+    return process.env.NEXT_PUBLIC_SUPABASE_URL ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname : null;
+  } catch {
+    return null;
+  }
+})();
+
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["localhost", "127.0.0.1", "192.168.1.113"],
   serverExternalPackages: ["sharp"],
@@ -11,20 +19,12 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 604800, // 7 days cache
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "jagqvyfnychnoxarebgv.supabase.co",
-        port: "",
-        pathname: "/storage/v1/object/sign/profiles/**",
-      },
-      {
-        protocol: "https",
-        hostname: "jagqvyfnychnoxarebgv.supabase.co",
-        port: "",
-        pathname: "/storage/v1/object/public/blog-covers/**",
-      },
-    ],
+    remotePatterns: supabaseHost
+      ? [
+          { protocol: "https", hostname: supabaseHost, port: "", pathname: "/storage/v1/object/sign/profiles/**" },
+          { protocol: "https", hostname: supabaseHost, port: "", pathname: "/storage/v1/object/public/blog-covers/**" },
+        ]
+      : [],
   },
   poweredByHeader: false,
   async headers() {

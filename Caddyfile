@@ -1,0 +1,5 @@
+# Automatic HTTPS: set DOMAIN in .env.local (a real domain pointing to this server; "localhost" works for a local trial).
+{$DOMAIN:localhost} {
+	encode zstd gzip
+	reverse_proxy app:3000
+}
