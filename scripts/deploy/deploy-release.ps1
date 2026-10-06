@@ -4,7 +4,7 @@
 # Ships only the files changed since -Base, so live-only server edits are left untouched.
 param(
   [string]$Server = 'root@129.121.139.23',
-  [string]$Base = '31b5ef6',
+  [string]$Base = '37a2539',
   [switch]$SkipApk
 )
 $ErrorActionPreference = 'Stop'

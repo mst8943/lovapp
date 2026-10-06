@@ -1,4 +1,10 @@
-﻿## 2026-10-06 canlı yayın tamamlandı
+﻿## 2026-10-06 kurulum paketi ve Platform sayfası: canlıya bekliyor
+
+- Canlı doğrulandı (HTTPS): ana sayfa, /login, /download, /noir, /api/auth/register 200; /api/download/android v=39; canlı APK SHA-256 depodaki `public/lovask.apk` ile aynı.
+- Kurulum paketi, sızıntı tarayıcısı ve `/admin/lovask-control/platform` sayfası (canlıda şu an 404) git'te `claude/lucid-ramanujan-63p7o8` dalında; **sunucuya yayınlanmadı**. Bulut oturumundan 22. porta erişilemedi.
+- Yayın için Windows'ta `scripts\deploy\deploy-release.ps1 -SkipApk` (Base artık 37a2539, yalnızca fark gider). `next.config.ts` ve `app/layout.tsx` Supabase adresini ortamdan okur: sunucudaki `.env.production.local` içinde `NEXT_PUBLIC_SUPABASE_URL` tanımlı olmalı, aksi halde fotoğraflar yüklenmez.
+
+## 2026-10-06 canlı yayın tamamlandı
 
 - 1.9.11 (39) Android APK ve yerel satış özellikleri pk-20261006 etiketiyle canlıya alındı.
 - Canlı APK SHA-256: EEFEF62DD936781E66DE3E274515C20CBF8FD2D06B246BB83E8A656AA14AB414.

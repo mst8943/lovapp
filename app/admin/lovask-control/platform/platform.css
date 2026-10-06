@@ -9,12 +9,18 @@
 .platform-check.ready i { background: #e3f6ea; color: #15803d; }
 .platform-check small { display: block; color: #8a7f90; margin-top: 2px; }
 .platform-groups { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
-.platform-group { border: 1px solid #eee3e5; border-radius: 14px; background: #fff; padding: 16px 18px; }
+.platform-group { border: 1px solid #eee3e5; border-top: 3px solid #d8b56c; border-radius: 14px; background: #fff; padding: 16px 18px; transition: box-shadow 0.2s ease, transform 0.2s ease; }
+.platform-group:hover { box-shadow: 0 10px 28px rgba(153, 27, 27, 0.08); transform: translateY(-2px); }
 .platform-group h3 { margin: 0 0 10px; font-size: 15px; display: flex; justify-content: space-between; align-items: baseline; }
 .platform-group h3 span { color: #8a7f90; font-size: 12px; font-weight: 500; }
 .platform-group ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .platform-group li strong { display: block; font-size: 13.5px; }
 .platform-group li strong a { color: inherit; text-decoration: underline; text-decoration-color: #d8b56c; text-underline-offset: 3px; }
 .platform-group li small { color: #6f6475; font-size: 12.5px; line-height: 1.5; }
+.platform-group li strong a:hover, .platform-group li strong a:focus-visible { color: #991b1b; text-decoration-color: #991b1b; outline: none; }
+.platform-check { transition: border-color 0.2s ease; }
+.platform-check.ready { border-color: #cfe9d8; }
 .platform-total { color: #6f6475; font-size: 13px; }
 @media (max-width: 900px) { .platform-main { padding: 16px 16px 64px; } }
+@media (max-width: 420px) { .platform-groups, .platform-checks { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .platform-group, .platform-bar > i { transition: none; } .platform-group:hover { transform: none; } }
