@@ -5,6 +5,7 @@ import { AdminRoleProvider } from "@/components/admin-role-context";
 import type { AdminRole } from "@/lib/admin-auth";
 import "./lovask-control/admin-unified.css";
 import "./lovask-control/admin-light.css";
+import "./lovask-control/admin-polish.css";
 
 export const metadata: Metadata = { robots: { index: false, follow: false, noarchive: true } };
 

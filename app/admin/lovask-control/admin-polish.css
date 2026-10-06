@@ -1,0 +1,182 @@
+/* Admin polish: one page shell, one header, one chip and one panel style across every desk.
+   Loaded last so it settles the differences between the per-page stylesheets. */
+
+.lovask-light {
+  --admin-gutter: clamp(16px, 2.6vw, 36px);
+  --admin-radius: 14px;
+  --admin-line: #eee3e5;
+  --admin-ink: #352b3c;
+  --admin-ink-soft: #796b77;
+  --admin-rose: #d62f58;
+  --admin-rose-deep: #ae1940;
+  --admin-rose-wash: #ffe1e7;
+  --admin-rose-edge: #f29bad;
+}
+
+/* Page shell */
+.lovask-light :is(.admin-main, .ops-content, .application-desk, .photo-desk, .growth-desk, .platform-main) {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 !important;
+  padding: 28px var(--admin-gutter) 64px !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.lovask-light .payments-workspace { width: 100%; max-width: 1440px; margin: 0; padding: 28px var(--admin-gutter) 64px; align-content: start; }
+.lovask-light .payments-workspace > section { border-radius: var(--admin-radius); }
+.lovask-light .ops-content.brand-settings { max-width: 1080px; }
+.lovask-light .brand-settings > section:not(.brand-preview) { background: transparent !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; }
+.lovask-light .brand-settings > section > h2 { margin: 28px 0 12px; font-size: 17px; font-weight: 600; }
+.lovask-light .brand-settings > section > p { margin: 0 0 12px; max-width: 64ch; font-size: 13.5px; line-height: 1.55; }
+.lovask-light .brand-settings > section,
+.lovask-light .brand-settings > form { width: 100%; max-width: none; }
+.lovask-light .blog-admin-list { padding: 28px var(--admin-gutter) 40px; background: transparent !important; box-shadow: none !important; border: 0 !important; }
+
+/* Page header */
+.lovask-light :is(.admin-main, .ops-content, .application-desk, .photo-desk, .growth-desk) > header,
+.lovask-light .payments-workspace .payment-settings > header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin: 0 0 20px;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.lovask-light :is(.admin-main, .ops-content, .application-desk, .photo-desk, .growth-desk) > header small,
+.lovask-light .payments-workspace .payment-settings > header small {
+  display: block;
+  color: var(--admin-ink-soft);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.lovask-light :is(.admin-main, .ops-content, .application-desk, .photo-desk, .growth-desk) > header h1,
+.lovask-light .payments-workspace .payment-settings h1 {
+  margin: 4px 0 0;
+  color: var(--admin-ink);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -.02em;
+}
+.lovask-light :is(.admin-main, .ops-content, .application-desk, .photo-desk, .growth-desk) > header p,
+.lovask-light .platform-lead {
+  margin: 6px 0 0;
+  max-width: 64ch;
+  color: var(--admin-ink-soft);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+/* Noir business card sits in the payments column like every other card */
+.lovask-light .admin-noir-business > header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+.lovask-light .admin-noir-business > header small { display: block; color: var(--admin-ink-soft); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.lovask-light .admin-noir-business > header h2 { margin: 4px 0 0; font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
+.lovask-light .admin-noir-business > header button { min-height: 38px; padding: 0 16px; border: 1px solid var(--admin-rose) !important; border-radius: 10px; background: var(--admin-rose) !important; color: #fff !important; font-size: 13px; font-weight: 600; cursor: pointer; }
+.lovask-light .admin-noir-business > header button:hover { background: var(--admin-rose-deep) !important; }
+.lovask-light .payments-workspace .payment-settings > header h1 { font-size: 22px; letter-spacing: -.01em; }
+.lovask-light .payments-workspace :is(.payment-settings, .admin-noir-business) :is(h1, h2) { color: var(--admin-ink); }
+
+/* Primary and secondary actions */
+.lovask-light :is(.admin-primary, .editor-primary, .settings-save, .ledger-refresh, .payments-workspace .payment-ledger-head button) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--admin-rose) !important;
+  border-radius: 10px;
+  background: var(--admin-rose) !important;
+  color: #fff !important;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none !important;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+.lovask-light :is(.admin-primary, .editor-primary, .settings-save, .ledger-refresh, .payments-workspace .payment-ledger-head button):hover {
+  border-color: var(--admin-rose-deep) !important;
+  background: var(--admin-rose-deep) !important;
+}
+.lovask-light :is(.admin-primary, .editor-primary, .settings-save, .ledger-refresh) :is(span, svg) { color: inherit; text-decoration: none; }
+.lovask-light .growth-desk > header > button,
+.lovask-light .ops-content header button {
+  min-height: 38px;
+  border-radius: 10px;
+}
+
+/* Filter chips: the active one must stay readable on a light surface */
+.lovask-light :is(.application-toolbar, .conversation-filter, .support-board > header nav, .bot-filters, .ops-content > header nav) button {
+  border: 1px solid var(--admin-line);
+  background: #fff;
+  color: var(--admin-ink-soft);
+  border-radius: 999px;
+  font-weight: 500;
+}
+.lovask-light :is(.application-toolbar, .conversation-filter, .support-board > header nav, .bot-filters) button:hover { background: #fff0eb; color: var(--admin-rose-deep); }
+.lovask-light :is(.application-toolbar, .conversation-filter, .support-board > header nav, .bot-filters) button.active,
+.lovask-light .ops-content > header nav button[aria-pressed="true"] {
+  border-color: var(--admin-rose-edge);
+  background: var(--admin-rose-wash);
+  color: var(--admin-rose-deep);
+  font-weight: 600;
+}
+.lovask-light .ops-content > header nav { display: inline-flex; gap: 6px; }
+
+/* Lists that still carried the old dark surface */
+.lovask-light .application-workspace > aside {
+  border-color: var(--admin-line);
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(63, 35, 52, .05);
+}
+.lovask-light .application-workspace > aside > button { color: var(--admin-ink); }
+.lovask-light .application-workspace > aside > button:hover { background: #fff0eb; }
+.lovask-light .application-workspace > aside > button.active { border-color: var(--admin-rose-edge); background: var(--admin-rose-wash); color: var(--admin-rose-deep); }
+.lovask-light .application-workspace > :not(aside) { border-radius: var(--admin-radius); }
+
+/* Cards share one radius and one hairline */
+.lovask-light :is(.admin-panel, .admin-stat, .ops-row, .ops-empty, .ops-notice, .studio-card, .bot-card, .growth-funnel, .growth-codes, .health-panel) {
+  border-radius: var(--admin-radius);
+}
+.lovask-light .admin-stats { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+
+/* Platform page now follows the shared tokens instead of its own colors */
+.lovask-light .platform-bar > i { background: linear-gradient(90deg, var(--admin-rose-edge), var(--admin-rose)); }
+.lovask-light .platform-group { border-top-color: var(--admin-rose); }
+.lovask-light .platform-group li strong a { text-decoration-color: var(--admin-rose-edge); }
+.lovask-light .platform-group li strong a:hover,
+.lovask-light .platform-group li strong a:focus-visible { color: var(--admin-rose-deep); text-decoration-color: var(--admin-rose-deep); }
+.lovask-light .platform-check i { background: var(--admin-rose-wash); color: var(--admin-rose-deep); }
+.lovask-light .platform-check.ready i { background: #e3f6ea; color: #15803d; }
+
+/* Navigation: keep the footer pinned and the groups evenly spaced */
+.lovask-light .ops-nav > a { min-height: 38px; }
+.lovask-light .ops-nav .ops-nav-status { margin-top: auto; }
+.lovask-light .ops-nav > a:focus-visible,
+.lovask-light .ops-nav .ops-nav-return:focus-visible { outline: 2px solid var(--admin-rose-edge); outline-offset: 2px; }
+
+/* Keyboard focus everywhere in the admin */
+.lovask-light :is(.admin-stage, .ops-stage, .conversation-admin, .bot-studio, .blog-admin-stage) :is(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid var(--admin-rose-edge);
+  outline-offset: 2px;
+}
+
+@media (max-width: 900px) {
+  .lovask-light :is(.admin-main, .ops-content, .application-desk, .photo-desk, .growth-desk, .platform-main) { padding: 20px var(--admin-gutter) 48px !important; }
+  .lovask-light .payments-workspace { padding: 20px var(--admin-gutter) 48px; }
+  .lovask-light :is(.admin-main, .ops-content, .application-desk, .photo-desk, .growth-desk) > header h1,
+  .lovask-light .payments-workspace .payment-settings > header h1 { font-size: 20px; }
+  .lovask-light .application-workspace { grid-template-columns: 1fr; }
+  .lovask-light .ops-content.brand-settings { max-width: none; }
+}
+@media (max-width: 900px) {
+  .lovask-light .admin-main > header { align-items: stretch; }
+  .lovask-light .admin-main > header .admin-primary { width: 100%; padding: 0 16px; font-size: 13px; }
+}
