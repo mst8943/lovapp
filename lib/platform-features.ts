@@ -16,6 +16,7 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
     title: "Sohbet",
     features: [
       { name: "Gerçek zamanlı mesajlaşma", detail: "Kalıcı konuşmalar, anlık gelen kutusu güncellemesi.", href: "/admin/lovask-control/conversations" },
+      { name: "Sesli ve görüntülü arama", detail: "Eşleşmeler arasında uygulama içi WebRTC araması; numara paylaşmadan, kayıt tutmadan. Sohbet şartı, engel ve kapatma ayarı korumalı." },
       { name: "Sesli ve fotoğraflı mesaj", detail: "Web ve Android'de ses kaydı, gizli depolamada fotoğraf mesajı." },
       { name: "AI Wingman", detail: "Sohbeti başlatmak ve sürdürmek için yapay zekâ önerileri." },
       { name: "Gizli konuşmalar", detail: "Kullanıcı konuşmayı listesinden gizleyebilir." },

@@ -83,6 +83,49 @@ try {
     r = await call(A, "/api/profile/credits"); check("kredi harcandı", r.body.balances?.boost === 0);
     r = await call(A, "/api/profile/boost", { method: "POST" }); check("Boost sürerken ikinci istek kredi harcamaz", r.body.activeUntil && (await call(A, "/api/profile/credits")).body.balances?.boost === 0);
   }
+
+  // Calls (migration 078): signaling lifecycle between two matched members who have chatted.
+  if (!(await sv("/rest/v1/call_sessions?select=id&limit=1")).ok) {
+    skip("arama akışı", "078 migration'ı uygulanmadı");
+  } else {
+    const [lo, hi] = [A.profileId, C.profileId].sort();
+    const callMatch = (await (await sv("/rest/v1/matches", { method: "POST", body: JSON.stringify({ user_a: lo, user_b: hi }) })).json())[0];
+    const post = (who, path, body) => call(who, path, { method: "POST", body: JSON.stringify(body) });
+    r = await post(A, "/api/calls", { matchId: callMatch.id, kind: "audio" }); check("arama: sohbet temeli yokken 403", r.status === 403, r.body.error);
+    for (const who of [A, C]) for (let i = 0; i < 3; i++) await sv("/rest/v1/messages", { method: "POST", body: JSON.stringify({ match_id: callMatch.id, sender_id: who.profileId, kind: "text", body: `selam ${i}` }) });
+    r = await call(A, "/api/calls/ice"); check("ICE sunucuları", r.ok && r.body.iceServers?.[0]?.urls?.length > 0, `relay: ${r.body.relayAvailable}`);
+    r = await post(A, "/api/calls", { matchId: "00000000-0000-4000-8000-000000000000", kind: "audio" }); check("arama: olmayan eşleşme 403", r.status === 403);
+    await sv(`/rest/v1/notification_preferences?profile_id=eq.${C.profileId}`, { method: "DELETE" });
+    await sv("/rest/v1/notification_preferences", { method: "POST", body: JSON.stringify({ profile_id: C.profileId, calls_enabled: false }) });
+    r = await post(A, "/api/calls", { matchId: callMatch.id, kind: "video" }); check("arama: aranan aramaları kapattıysa 403", r.status === 403, r.body.error);
+    await sv(`/rest/v1/notification_preferences?profile_id=eq.${C.profileId}`, { method: "PATCH", body: JSON.stringify({ calls_enabled: true }) });
+    await sv("/rest/v1/blocks", { method: "POST", body: JSON.stringify({ blocker_id: C.profileId, blocked_id: A.profileId }) });
+    r = await post(A, "/api/calls", { matchId: callMatch.id, kind: "video" }); check("arama: engelli kişiye 403", r.status === 403);
+    await sv(`/rest/v1/blocks?blocker_id=eq.${C.profileId}`, { method: "DELETE" });
+
+    r = await post(A, "/api/calls", { matchId: callMatch.id, kind: "video" }); const callId = r.body.id; check("arama başlat", r.status === 201 && Boolean(callId));
+    r = await post(C, "/api/calls", { matchId: callMatch.id, kind: "audio" }); check("hat meşgulken ikinci arama 409", r.status === 409);
+    r = await call(C, "/api/calls"); check("aranan gelen aramayı görür", r.ok && r.body.incoming?.id === callId && r.body.incoming.callerName === "Smoke a");
+    r = await call(A, "/api/calls"); check("arayan kendi aramasını 'gelen' görmez", r.ok && r.body.incoming === null);
+    r = await post(A, `/api/calls/${callId}/signal`, { kind: "offer", payload: { type: "offer", sdp: "v=0 test" } }); check("teklif gönder", r.status === 201);
+    r = await post(C, `/api/calls/${callId}/signal`, { kind: "offer", payload: { sdp: "x" } }); check("aranan teklif gönderemez 403", r.status === 403);
+    r = await post(C, `/api/calls/${callId}/signal`, { kind: "answer", payload: { sdp: "x" } }); check("kabul etmeden yanıt gönderilemez 403", r.status === 403);
+    r = await call(A, `/api/calls/${callId}`, { method: "PATCH", body: JSON.stringify({ action: "accept" }) }); check("arayan kabul edemez 403", r.status === 403);
+    r = await call(C, `/api/calls/${callId}`, { method: "PATCH", body: JSON.stringify({ action: "accept" }) }); check("aranan kabul eder", r.ok && r.body.session.status === "accepted");
+    r = await call(C, `/api/calls/${callId}`, { method: "PATCH", body: JSON.stringify({ action: "accept" }) }); check("ikinci kabul 409", r.status === 409);
+    r = await post(C, `/api/calls/${callId}/signal`, { kind: "answer", payload: { type: "answer", sdp: "v=0 reply" } }); check("yanıt gönder", r.status === 201);
+    r = await call(C, `/api/calls/${callId}`); check("aranan teklifi alır, kendi yanıtını görmez", r.ok && r.body.role === "callee" && r.body.signals.length === 1 && r.body.signals[0].kind === "offer" && r.body.peerName === "Smoke a");
+    r = await call(A, `/api/calls/${callId}`); check("arayan yanıtı alır", r.ok && r.body.signals.length === 1 && r.body.signals[0].kind === "answer");
+    r = await call(B, `/api/calls/${callId}`); check("üçüncü kişi aramayı göremez 404", r.status === 404);
+    r = await post(B, `/api/calls/${callId}/signal`, { kind: "ice", payload: { candidate: "x" } }); check("üçüncü kişi sinyal gönderemez 404", r.status === 404);
+    r = await post(A, `/api/calls/${callId}/signal`, { kind: "ice", payload: { x: "y".repeat(20000) } }); check("aşırı büyük sinyal reddedilir", r.status === 413);
+    r = await call(A, `/api/calls/${callId}`, { method: "PATCH", body: JSON.stringify({ action: "end" }) }); check("aramayı bitir", r.ok && r.body.session.status === "ended");
+    r = await call(A, `/api/calls/${callId}`, { method: "PATCH", body: JSON.stringify({ action: "end" }) }); check("ikinci bitirme zararsız", r.ok && r.body.session.status === "ended");
+    r = await post(A, `/api/calls/${callId}/signal`, { kind: "ice", payload: { candidate: "x" } }); check("biten aramaya sinyal 409", r.status === 409);
+    r = await post(A, "/api/calls", { matchId: callMatch.id, kind: "audio" }); const second = r.body.id; check("bittikten sonra yeni arama", r.status === 201);
+    r = await call(C, `/api/calls/${second}`, { method: "PATCH", body: JSON.stringify({ action: "decline" }) }); check("aranan reddeder", r.ok && r.body.session.status === "declined");
+    r = await post(A, "/api/calls", { matchId: callMatch.id, kind: "audio" }); const third = r.body.id; r = await call(A, `/api/calls/${third}`, { method: "PATCH", body: JSON.stringify({ action: "cancel" }) }); check("arayan vazgeçer", r.ok && r.body.session.status === "cancelled");
+  }
 } finally {
   for (const member of members) {
     await sv(`/rest/v1/profiles?id=eq.${member.profileId}`, { method: "DELETE" });

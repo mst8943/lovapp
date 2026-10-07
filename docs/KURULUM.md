@@ -96,6 +96,16 @@ Komut alan adını ve mobil uygulamanın gömülü Supabase varsayılanlarını 
 - **E-posta ve SMS doğrulama:** Ayarlar → Hesap doğrulama bölümünden Resend ve Netgsm bilgilerini girin.
 - **Bot koruma:** Cloudflare Turnstile anahtarlarını `.env.local` dosyasına ekleyin.
 
+## Sesli ve görüntülü arama
+
+Arama web'de çalışır ve ek kurulum gerektirmez: görüntü ve ses üyeler arasında doğrudan akar, sunucunuz yalnızca "arama başladı" sinyallerini taşır. Üyelerin yaklaşık yüzde 10-20'si katı güvenlik duvarı arkasında olabilir; onlar için bir TURN rölesi gerekir:
+
+1. `.env.local` içine `TURN_SECRET` (uzun rastgele bir değer) ve `TURN_URLS=turn:alanadiniz.com:3478` yazın.
+2. `docker compose --env-file .env.local --profile turn up -d` ile coturn'u başlatın.
+3. Sunucuda UDP 3478 ve 49160-49200 portlarını açın.
+
+TURN olmadan da arama çalışır, yalnızca bazı ağlarda bağlantı kurulamayabilir. Arama için iki üyenin de birbirine mesaj yazmış olması gerekir ve her üye ayarlardan aramaları kapatabilir. Aramalar kaydedilmez.
+
 ## 7. Android uygulaması
 
 Flutter 3.x kurulu bir Windows veya macOS bilgisayarda:

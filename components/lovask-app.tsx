@@ -12,6 +12,8 @@ import {
 import {
   ArrowLeft,
   BadgeCheck,
+  Phone,
+  Video,
   Check,
   ChevronDown,
   ChevronUp,
@@ -58,6 +60,7 @@ import {
 } from "react";
 import { Brand } from "@/components/brand";
 import { CampaignBanner } from "@/components/campaign-banner";
+import { CallLayer } from "@/components/call-layer";
 import { DailyQuestionCard } from "@/components/daily-question-card";
 import { EndorsementBadges } from "@/components/endorsement-badges";
 import { readJson } from "@/lib/http-json";
@@ -946,6 +949,7 @@ export function LovaskApp({
           />
         ) : null}
       </AnimatePresence>
+      {liveMode ? <CallLayer /> : null}
     </main>
   );
 }
@@ -4684,6 +4688,24 @@ function ChatView({
             </small>
           </span>
         </button>
+        {liveMode && matchId && !profile.isBot ? (
+          <>
+            <button
+              className="icon-button"
+              aria-label={`${profile.name} ile sesli arama`}
+              onClick={() => window.dispatchEvent(new CustomEvent("lovask:start-call", { detail: { matchId, peerName: profile.name, kind: "audio" } }))}
+            >
+              <Phone size={19} />
+            </button>
+            <button
+              className="icon-button"
+              aria-label={`${profile.name} ile görüntülü arama`}
+              onClick={() => window.dispatchEvent(new CustomEvent("lovask:start-call", { detail: { matchId, peerName: profile.name, kind: "video" } }))}
+            >
+              <Video size={19} />
+            </button>
+          </>
+        ) : null}
         <SafetyMenu
           profile={profile}
           matchId={matchId}

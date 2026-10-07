@@ -10,20 +10,25 @@ export async function GET() {
   const context = await profileContext();
   if (context instanceof NextResponse) return context;
   const read = (columns: string) => context.admin.from("notification_preferences").select(columns).eq("profile_id", context.profileId).maybeSingle();
-  let { data } = await read("quiet_hours_enabled,quiet_start,quiet_end,timezone,daily_bulletin");
-  // Databases without migration 077 do not have the bulletin column yet.
-  if (!data) ({ data } = await read("quiet_hours_enabled,quiet_start,quiet_end,timezone"));
-  return NextResponse.json({ preferences: { quiet_hours_enabled: true, quiet_start: "23:00", quiet_end: "09:00", timezone: "Europe/Istanbul", daily_bulletin: true, ...(data as object | null) } }, { headers: { "Cache-Control": "private, no-store" } });
+  const base = "quiet_hours_enabled,quiet_start,quiet_end,timezone";
+  let { data } = await read(`${base},daily_bulletin,calls_enabled`);
+  // Databases that have not applied migrations 077/078 yet lack the newer columns.
+  if (!data) ({ data } = await read(`${base},daily_bulletin`));
+  if (!data) ({ data } = await read(base));
+  return NextResponse.json({ preferences: { quiet_hours_enabled: true, quiet_start: "23:00", quiet_end: "09:00", timezone: "Europe/Istanbul", daily_bulletin: true, calls_enabled: true, ...(data as object | null) } }, { headers: { "Cache-Control": "private, no-store" } });
 }
 
 export async function PATCH(request: Request) {
   const context = await profileContext();
   if (context instanceof NextResponse) return context;
   const raw = await request.json().catch(() => null);
-  const bulletin = z.object({ dailyBulletin: z.boolean() }).safeParse(raw);
-  if (bulletin.success) {
-    const { error } = await context.admin.from("notification_preferences").upsert({ profile_id: context.profileId, daily_bulletin: bulletin.data.dailyBulletin, updated_at: new Date().toISOString() });
-    return error ? NextResponse.json({ error: "Bülten tercihi kaydedilemedi." }, { status: 503 }) : NextResponse.json({ saved: true });
+  const toggles = z.object({ dailyBulletin: z.boolean().optional(), callsEnabled: z.boolean().optional() }).refine((value) => value.dailyBulletin !== undefined || value.callsEnabled !== undefined).safeParse(raw);
+  if (toggles.success) {
+    const row: Record<string, unknown> = { profile_id: context.profileId, updated_at: new Date().toISOString() };
+    if (toggles.data.dailyBulletin !== undefined) row.daily_bulletin = toggles.data.dailyBulletin;
+    if (toggles.data.callsEnabled !== undefined) row.calls_enabled = toggles.data.callsEnabled;
+    const { error } = await context.admin.from("notification_preferences").upsert(row);
+    return error ? NextResponse.json({ error: "Tercih kaydedilemedi." }, { status: 503 }) : NextResponse.json({ saved: true });
   }
   const parsed = schema.safeParse(raw);
   if (!parsed.success) return NextResponse.json({ error: "Sessiz saat ayarları geçersiz." }, { status: 400 });

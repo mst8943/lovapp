@@ -24,7 +24,8 @@
     "rebrand": "node scripts/rebrand.mjs",
     "audit:handoff": "python zip_project.py --audit",
     "smoke": "node scripts/smoke-admin.mjs",
-    "smoke:member": "node scripts/smoke-member.mjs"
+    "smoke:member": "node scripts/smoke-member.mjs",
+    "test:webrtc": "node scripts/test-webrtc.mjs"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",

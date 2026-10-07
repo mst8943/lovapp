@@ -1,0 +1,28 @@
+.call-overlay { position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; background: radial-gradient(circle at 50% 20%, #5b2548, #1f1420 70%); color: #fff; }
+.call-overlay.incoming { background: rgba(31, 20, 32, .78); backdrop-filter: blur(10px); }
+.call-card { display: grid; justify-items: center; gap: 6px; padding: 28px 24px; width: min(340px, 90vw); text-align: center; }
+.call-card small { color: #f6c3cf; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.call-card h2 { margin: 0; font-size: 26px; }
+.call-card p { margin: 0 0 18px; color: #e8dfe6; font-size: 14px; }
+.call-avatar { display: grid; place-items: center; width: 84px; height: 84px; margin-bottom: 8px; border-radius: 50%; background: rgba(255, 255, 255, .14); animation: call-pulse 1.8s ease-out infinite; }
+@keyframes call-pulse { 0% { box-shadow: 0 0 0 0 rgba(242, 155, 173, .5); } 100% { box-shadow: 0 0 0 28px rgba(242, 155, 173, 0); } }
+.call-remote { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #1f1420; }
+.call-local { position: absolute; right: 16px; top: 16px; width: min(34vw, 150px); aspect-ratio: 3 / 4; object-fit: cover; border: 2px solid rgba(255, 255, 255, .5); border-radius: 14px; background: #3a2535; transform: scaleX(-1); }
+.call-local.off { opacity: .15; }
+.call-status { position: absolute; left: 0; right: 0; top: 0; display: grid; justify-items: center; gap: 2px; padding: 22px 100px 40px; background: linear-gradient(#1f1420cc, transparent); text-align: center; }
+.call-overlay.audio .call-status { position: static; padding: 0; background: none; margin-bottom: 90px; }
+.call-status strong { font-size: 20px; }
+.call-status span { color: #f6e9ee; font-size: 14px; font-variant-numeric: tabular-nums; }
+.call-status small { color: #cdbfc9; font-size: 11px; }
+.call-actions { display: flex; gap: 18px; justify-content: center; }
+.call-overlay.active > .call-actions { position: absolute; left: 0; right: 0; bottom: max(28px, env(safe-area-inset-bottom)); }
+.call-btn { display: grid; place-items: center; width: 58px; height: 58px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .2); color: #fff; cursor: pointer; backdrop-filter: blur(6px); }
+.call-btn:hover { background: rgba(255, 255, 255, .32); }
+.call-btn.on { background: #fff; color: #352b3c; }
+.call-btn.decline { background: #d62f58; }
+.call-btn.decline:hover { background: #ae1940; }
+.call-btn.accept { background: #22a55a; }
+.call-btn.accept:hover { background: #1a8a49; }
+.call-btn:focus-visible { outline: 3px solid #f6c3cf; outline-offset: 3px; }
+.call-notice { position: fixed; left: 50%; bottom: 90px; z-index: 410; transform: translateX(-50%); padding: 11px 18px; border-radius: 999px; background: #352b3c; color: #fff; font-size: 14px; box-shadow: 0 8px 24px rgba(0, 0, 0, .25); }
+@media (prefers-reduced-motion: reduce) { .call-avatar { animation: none; } }

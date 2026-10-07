@@ -42,6 +42,27 @@ services:
     command:
       - 'while true; do curl -fsS -m 55 -H "Authorization: Bearer $$CRON_SECRET" http://app:3000/api/internal/bot-worker >/dev/null || echo "bot-worker istegi basarisiz"; sleep 60; done'
 
+  # Optional TURN relay for voice/video calls behind strict NATs: docker compose --profile turn up -d
+  # Needs TURN_SECRET (same value as in .env.local), TURN_URLS=turn:YOUR_DOMAIN:3478 and UDP 3478 + 49160-49200 open.
+  turn:
+    profiles: ["turn"]
+    image: coturn/coturn:4.6
+    restart: unless-stopped
+    network_mode: host
+    command:
+      - "--use-auth-secret"
+      - "--static-auth-secret=${TURN_SECRET:-change-me}"
+      - "--realm=${DOMAIN:-localhost}"
+      - "--listening-port=3478"
+      - "--min-port=49160"
+      - "--max-port=49200"
+      - "--fingerprint"
+      - "--no-cli"
+      - "--no-multicast-peers"
+      - "--denied-peer-ip=10.0.0.0-10.255.255.255"
+      - "--denied-peer-ip=172.16.0.0-172.31.255.255"
+      - "--denied-peer-ip=192.168.0.0-192.168.255.255"
+
 volumes:
   caddy_data:
   caddy_config:
