@@ -438,3 +438,14 @@
 }
 .lovask-light :is(.admin-noir-business, .admin-events, .admin-campaigns, .admin-option-form) :is(button:not([class]), button[type="submit"]):hover:not(:disabled) { background: var(--admin-rose-deep) !important; border-color: var(--admin-rose-deep) !important; }
 .lovask-light :is(.admin-noir-business, .admin-events, .admin-campaigns, .admin-option-form) button:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Member credits */
+.lovask-light .user-credits { display: grid; gap: 8px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--admin-line); }
+.lovask-light .user-credits > small { color: var(--admin-ink-soft); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.lovask-light .user-credit-balances { display: flex; flex-wrap: wrap; gap: 8px; }
+.lovask-light .user-credit-balances span { display: inline-flex; align-items: baseline; gap: 6px; padding: 6px 12px; border: 1px solid var(--admin-line); border-radius: 12px; background: #fff8f5; color: var(--admin-ink-soft); font-size: 12.5px; }
+.lovask-light .user-credit-balances b { color: var(--admin-ink); font-size: 18px; }
+.lovask-light .user-credits form { display: grid; grid-template-columns: auto 90px minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.lovask-light .user-credits form :is(select, input) { height: 36px; padding: 0 10px; border: 1px solid #d8c7d0; border-radius: 10px; background: #fff; color: var(--admin-ink); font: inherit; font-size: 13px; }
+.lovask-light .user-credits form button { min-height: 36px; padding: 0 14px; border: 1px solid var(--admin-rose); border-radius: 10px; background: var(--admin-rose); color: #fff; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+@media (max-width: 700px) { .lovask-light .user-credits form { grid-template-columns: 1fr 1fr; } .lovask-light .user-credits form input[name="reason"] { grid-column: 1 / -1; } }

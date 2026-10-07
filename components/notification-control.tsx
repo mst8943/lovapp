@@ -18,6 +18,7 @@ export function NotificationControl({ liveMode }: { liveMode: boolean }) {
   const [quietEnabled, setQuietEnabled] = useState(true);
   const [quietStart, setQuietStart] = useState("23:00");
   const [quietEnd, setQuietEnd] = useState("09:00");
+  const [dailyBulletin, setDailyBulletin] = useState(true);
   const [showQuietSettings, setShowQuietSettings] = useState(false);
   const [savingQuiet, setSavingQuiet] = useState(false);
 
@@ -41,11 +42,20 @@ export function NotificationControl({ liveMode }: { liveMode: boolean }) {
       const data = await response.json().catch(() => ({})); const preferences = data.preferences;
       if (preferences) {
         setQuietEnabled(Boolean(preferences.quiet_hours_enabled));
+        setDailyBulletin(preferences.daily_bulletin !== false);
         if (preferences.quiet_start) setQuietStart(String(preferences.quiet_start).slice(0, 5));
         if (preferences.quiet_end) setQuietEnd(String(preferences.quiet_end).slice(0, 5));
       }
     }).catch(() => setNotice("Bildirim tercihleri yüklenemedi. Bağlantını kontrol et."));
   }, [liveMode]);
+
+  const toggleBulletin = async (next: boolean) => {
+    setDailyBulletin(next);
+    try {
+      const response = await fetch("/api/push/preferences", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ dailyBulletin: next }) });
+      if (!response.ok) throw new Error("save_failed");
+    } catch { setDailyBulletin(!next); setNotice("Bülten tercihin kaydedilemedi. Tekrar dene."); }
+  };
 
   const saveQuietHours = async () => {
     if (savingQuiet) return;
@@ -214,6 +224,10 @@ export function NotificationControl({ liveMode }: { liveMode: boolean }) {
               />
             </div>
           </div>
+          <label className="hub-quiet-check">
+            <input type="checkbox" checked={dailyBulletin} onChange={(e) => void toggleBulletin(e.target.checked)} />
+            <span>Her sabah Astra&apos;dan günün özeti</span>
+          </label>
         </div>
       ) : null}
     </div>

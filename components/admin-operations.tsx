@@ -53,7 +53,7 @@ function OperationRow({ mode, row, onSelect, onMutate }: { mode: Mode; row: Row;
 
 function UserDetail({ profileId, onClose }: { profileId: string; onClose: () => void }) {
   const [user, setUser] = useState<Row | null>(null); useEffect(() => { void fetch(`/api/admin/users/${profileId}`, { cache: "no-store" }).then((response) => response.json().catch(() => ({}))).then((body) => setUser(body.user ?? null)); }, [profileId]);
-  return <div className="ops-modal" onClick={onClose}><article onClick={(event) => event.stopPropagation()}><button className="close" onClick={onClose}><X /></button>{!user ? <LoaderCircle className="spin" /> : <><small>Kullanıcı kaydı</small><h2>{String(user.display_name)}</h2><dl><dt>E-posta</dt><dd>{String(user.email ?? "Yetki nedeniyle gizli")}</dd><dt>Telefon</dt><dd>{String(user.phone ?? "Eklenmemiş veya gizli")}</dd><dt>Şehir</dt><dd>{String(user.city ?? "—")}</dd><dt>XP / Seviye</dt><dd>{String(user.xp)} / {String(user.level)}</dd><dt>Eşleşme / Mesaj</dt><dd>{String(user.matchCount)} / {String(user.messageCount)}</dd><dt>Şikâyet</dt><dd>{String(user.reportCount)}</dd><dt>Gizlenen Sohbet</dt><dd>{String(user.hiddenConversationCount ?? 0)}</dd><dt>Noir bitişi</dt><dd>{formatDate(user.noirUntil)}</dd><dt>Son görülme</dt><dd>{formatDate(user.lastSeenAt)}</dd></dl>{user.superLikes && (((user.superLikes as { sent?: unknown[] })?.sent?.length ?? 0) > 0 || ((user.superLikes as { received?: unknown[] })?.received?.length ?? 0) > 0) ? <div style={{ marginTop: 12, padding: 10, background: "rgba(255,255,255,0.04)", borderRadius: 10 }}><strong style={{ fontSize: 12, color: "#f59e0b", display: "block", marginBottom: 4 }}>⭐ Notlu Süper Beğeniler</strong>{((user.superLikes as { sent: { super_like_note: string; created_at: string }[] }).sent ?? []).map((s, idx) => <div key={`s-${idx}`} style={{ fontSize: 11, margin: "2px 0", color: "#493c50" }}>Gönderdiği Not: &quot;{s.super_like_note}&quot; <small style={{ opacity: 0.6 }}>({new Date(s.created_at).toLocaleDateString("tr-TR")})</small></div>)}{((user.superLikes as { received: { super_like_note: string; created_at: string }[] }).received ?? []).map((s, idx) => <div key={`r-${idx}`} style={{ fontSize: 11, margin: "2px 0", color: "#493c50" }}>Aldığı Not: &quot;{s.super_like_note}&quot; <small style={{ opacity: 0.6 }}>({new Date(s.created_at).toLocaleDateString("tr-TR")})</small></div>)}</div> : null}<AdminVoice profileId={profileId} prompt={user.voicePrompt} url={user.voiceUrl} enabled={user.canManageNoir === true} /><ManualNoirControls profileId={profileId} initialNoirUntil={user.noirUntil} enabled={user.canManageNoir === true} /><UserTimeline profileId={profileId} /><UserNotes profileId={profileId} /></>}</article></div>;
+  return <div className="ops-modal" onClick={onClose}><article onClick={(event) => event.stopPropagation()}><button className="close" onClick={onClose}><X /></button>{!user ? <LoaderCircle className="spin" /> : <><small>Kullanıcı kaydı</small><h2>{String(user.display_name)}</h2><dl><dt>E-posta</dt><dd>{String(user.email ?? "Yetki nedeniyle gizli")}</dd><dt>Telefon</dt><dd>{String(user.phone ?? "Eklenmemiş veya gizli")}</dd><dt>Şehir</dt><dd>{String(user.city ?? "—")}</dd><dt>XP / Seviye</dt><dd>{String(user.xp)} / {String(user.level)}</dd><dt>Eşleşme / Mesaj</dt><dd>{String(user.matchCount)} / {String(user.messageCount)}</dd><dt>Şikâyet</dt><dd>{String(user.reportCount)}</dd><dt>Gizlenen Sohbet</dt><dd>{String(user.hiddenConversationCount ?? 0)}</dd><dt>Noir bitişi</dt><dd>{formatDate(user.noirUntil)}</dd><dt>Son görülme</dt><dd>{formatDate(user.lastSeenAt)}</dd></dl>{user.superLikes && (((user.superLikes as { sent?: unknown[] })?.sent?.length ?? 0) > 0 || ((user.superLikes as { received?: unknown[] })?.received?.length ?? 0) > 0) ? <div style={{ marginTop: 12, padding: 10, background: "rgba(255,255,255,0.04)", borderRadius: 10 }}><strong style={{ fontSize: 12, color: "#f59e0b", display: "block", marginBottom: 4 }}>⭐ Notlu Süper Beğeniler</strong>{((user.superLikes as { sent: { super_like_note: string; created_at: string }[] }).sent ?? []).map((s, idx) => <div key={`s-${idx}`} style={{ fontSize: 11, margin: "2px 0", color: "#493c50" }}>Gönderdiği Not: &quot;{s.super_like_note}&quot; <small style={{ opacity: 0.6 }}>({new Date(s.created_at).toLocaleDateString("tr-TR")})</small></div>)}{((user.superLikes as { received: { super_like_note: string; created_at: string }[] }).received ?? []).map((s, idx) => <div key={`r-${idx}`} style={{ fontSize: 11, margin: "2px 0", color: "#493c50" }}>Aldığı Not: &quot;{s.super_like_note}&quot; <small style={{ opacity: 0.6 }}>({new Date(s.created_at).toLocaleDateString("tr-TR")})</small></div>)}</div> : null}<AdminVoice profileId={profileId} prompt={user.voicePrompt} url={user.voiceUrl} enabled={user.canManageNoir === true} /><ManualNoirControls profileId={profileId} initialNoirUntil={user.noirUntil} enabled={user.canManageNoir === true} /><UserCredits profileId={profileId} /><UserTimeline profileId={profileId} /><UserNotes profileId={profileId} /></>}</article></div>;
 }
 
 function AdminVoice({ profileId, prompt, url, enabled }: { profileId: string; prompt: unknown; url: unknown; enabled: boolean }) {
@@ -147,4 +147,38 @@ function UserTimeline({ profileId }: { profileId: string }) {
     {open && !events && !error ? <p className="user-timeline-empty">Yükleniyor…</p> : null}
     <ol>{(events ?? []).map((item, index) => <li key={`${item.at}-${index}`} data-kind={item.kind}><time>{formatDate(item.at)}</time><strong>{item.title}</strong>{item.detail ? <small>{item.detail}</small> : null}</li>)}</ol>
   </details>;
+}
+
+const CREDIT_LABELS: [string, string][] = [["boost", "Boost"], ["super_like", "Süper beğeni"], ["profile_unlock", "Profil açma"]];
+function UserCredits({ profileId }: { profileId: string }) {
+  const role = useAdminRole();
+  const [balances, setBalances] = useState<Record<string, number> | null>(null);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const canGrant = role === "owner";
+  const load = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/admin/users/${profileId}/credits`, { cache: "no-store" });
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok) { setError(body.error ?? "Krediler yüklenemedi."); return; }
+      setError(""); setBalances(body.balances);
+    } catch { setError("Krediler yüklenemedi."); }
+  }, [profileId]);
+  useEffect(() => { if (role !== "owner" && role !== "support") return; const timer = window.setTimeout(() => void load(), 0); return () => window.clearTimeout(timer); }, [load, role]);
+  if (role !== "owner" && role !== "support") return null;
+  const grant = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget; const data = new FormData(form);
+    setBusy(true);
+    const response = await fetch(`/api/admin/users/${profileId}/credits`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kind: data.get("kind"), delta: Number(data.get("delta")), reason: data.get("reason") }) });
+    const body = await response.json().catch(() => ({}));
+    setBusy(false);
+    if (!response.ok) return setError(body.error ?? "Kredi kaydedilemedi.");
+    form.reset(); await load();
+  };
+  return <section className="user-credits"><small>Krediler</small>
+    {error ? <p className="user-notes-error">{error}</p> : null}
+    {balances ? <div className="user-credit-balances">{CREDIT_LABELS.map(([key, label]) => <span key={key}><b>{balances[key] ?? 0}</b>{label}</span>)}</div> : null}
+    {canGrant && balances ? <form onSubmit={grant}><select name="kind" aria-label="Kredi türü">{CREDIT_LABELS.map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select><input name="delta" type="number" min={-50} max={50} step={1} required placeholder="± miktar" aria-label="Miktar" /><input name="reason" required minLength={2} maxLength={120} placeholder="Neden (ör. hediye, iade)" aria-label="Neden" /><button disabled={busy}>Uygula</button></form> : null}
+  </section>;
 }

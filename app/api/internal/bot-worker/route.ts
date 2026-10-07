@@ -5,6 +5,7 @@ import { processDeferredPushes } from "@/lib/push";
 import { processDueBotMatches } from "@/lib/bot-matches";
 import { processDueAccountDeletions } from "@/lib/account-deletion";
 import { processSafetyCheckins } from "@/lib/safety-checkins";
+import { processDailyBulletin } from "@/lib/daily-bulletin";
 
 export const maxDuration = 60;
 
@@ -22,11 +23,12 @@ export async function GET(request: Request) {
     processDueAccountDeletions(admin, 3),
   ]);
   const safetyCheckins = await processSafetyCheckins(admin).catch(() => ({ prompted: 0, escalated: 0 }));
+  const dailyBulletin = await processDailyBulletin(admin).catch(() => ({ sent: 0 }));
   const { data: expiredStories } = await admin.from("profile_stories")
     .select("id,storage_path").lte("expires_at", new Date().toISOString()).limit(100);
   if (expiredStories?.length) {
     const { error } = await admin.storage.from("profiles").remove(expiredStories.map((story) => story.storage_path));
     if (!error) await admin.from("profile_stories").delete().in("id", expiredStories.map((story) => story.id));
   }
-  return NextResponse.json({ processed: results.length, matched: botMatches.length, deferredPushes, accountDeletions, safetyCheckins, results }, { headers: { "Cache-Control": "no-store" } });
+  return NextResponse.json({ processed: results.length, matched: botMatches.length, deferredPushes, accountDeletions, safetyCheckins, dailyBulletin, results }, { headers: { "Cache-Control": "no-store" } });
 }

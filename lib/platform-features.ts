@@ -26,6 +26,8 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
     features: [
       { name: "Hikâyeler", detail: "24 saat sonra kaybolan paylaşımlar, tam ekran izleyici.", href: "/admin/lovask-control/community" },
       { name: "Buluşma planları", detail: "Ortak plan seçen üyeler birbirini görür.", href: "/admin/lovask-control/community" },
+      { name: "Günün sorusu", detail: "Her gün tek soru; aynı şıkkı seçenler keşifte rozetle işaretlenir.", href: "/" },
+      { name: "Karakter rozetleri", detail: "Eşleşilen kişilere yalnızca olumlu rozet bırakma; iki rozetten sonra profilde görünür." },
       { name: "Sesli biyografi", detail: "Profile kısa ses tanıtımı ekleme." },
       { name: "Yüz yüze etkinlikler", detail: "Yöneticinin yayınladığı etkinliklere kontenjanlı katılım kaydı.", href: "/admin/lovask-control/community" },
       { name: "Özel buluşma planları", detail: "Eşleşmeler arasında kişiye özel plan önerme ve yanıtlama." },
@@ -49,6 +51,7 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
       { name: "Şikâyet ve engelleme", detail: "Kullanıcı bildirimi, moderatör kuyruğu.", href: "/admin/lovask-control/reports" },
       { name: "Bot ve kötüye kullanım koruması", detail: "Cloudflare Turnstile ve istek hız sınırı." },
       { name: "SSS ve güvenlik ipuçları sayfaları", detail: "SEO uyumlu sık sorulan sorular (FAQ şeması) ve güvenli tanışma rehberi.", href: "/sss" },
+      { name: "Buluşma güvenlik check-in'i", detail: "Buluşma bitişinde \"Her şey yolunda mı?\" bildirimi; onay gelmezse acil durum kişisine SMS." },
       { name: "Hesap silme ve kurtarma", detail: "Silinen hesap 30 gün içinde geri alınabilir." },
       { name: "Verilerimi indir (KVKK)", detail: "Üye kendi profil, eşleşme ve mesaj verilerini tek dosyada indirir." },
     ],
@@ -56,6 +59,9 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
   {
     title: "Büyüme",
     features: [
+      { name: "AI profil koçu", detail: "Profil puanı, eksik listesi ve yapay zekâ destekli kişisel öneriler." },
+      { name: "Günlük Astra bülteni", detail: "Her sabah tek push: şehirdeki yeni üyeler ve günün sorusu; kullanıcı kapatabilir." },
+      { name: "Kredi defteri", detail: "Boost, süper beğeni ve profil açma kredileri; admin verir, üye Boost için harcar." },
       { name: "Segmentli bildirim", detail: "Üyeleri segmente ayırıp önizleme, test ve onayla toplu push gönderme.", href: "/admin/lovask-control/notify" },
       { name: "Büyüme paneli", detail: "Kayıt kaynakları, dönüşüm ve indirme takibi.", href: "/admin/lovask-control/growth" },
       { name: "Blog ve SEO", detail: "Zengin metin editörü, site haritası, yapılandırılmış veri.", href: "/admin/lovask-control/blog" },

@@ -109,7 +109,7 @@ Sürüm yayınlamadan önce APK'yı kendi anahtar deponuzla imzalayın ve `publi
 
 ## 8. Test
 
-Site çalışırken `npm run smoke -- https://alanadiniz.com` yönetim API'lerini gerçek veritabanınızda dener (geçici bir yönetici hesabı açar, bildirim göndermez, işi bitince kaldırır). `https://alanadiniz.com/api/health` ise uptime izleme servislerine verebileceğiniz herkese açık sağlık adresidir.
+Site çalışırken `npm run smoke -- https://alanadiniz.com` yönetim API'lerini gerçek veritabanınızda dener (geçici bir yönetici hesabı açar, bildirim göndermez, işi bitince kaldırır). `npm run smoke:member -- https://alanadiniz.com` aynısını üye tarafı için yapar (geçici üyeler oluşturur ve siler). `https://alanadiniz.com/api/health` ise uptime izleme servislerine verebileceğiniz herkese açık sağlık adresidir.
 
 `npm run verify` kod denetimi, tür denetimi ve derlemeyi birlikte çalıştırır. `npm run test:full` ayrılmış test hesaplarıyla uçtan uca testleri çalıştırır; ayrıntılar `docs/qa/` altındadır.
 
