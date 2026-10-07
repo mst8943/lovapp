@@ -1,0 +1,12 @@
+.recent-panel { margin: 0 0 20px; padding: 18px 20px; border: 1px solid #eee3e5; border-radius: 14px; background: #fff; }
+.recent-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.recent-head small { color: #796b77; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.recent-head h2 { margin: 2px 0 0; color: #352b3c; font-size: 17px; font-weight: 600; }
+.recent-head a { color: #ae1940; font-size: 13px; font-weight: 600; text-decoration: none; }
+.recent-head a:hover { text-decoration: underline; }
+.recent-panel ul { list-style: none; margin: 0; padding: 0; display: grid; }
+.recent-panel li { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 9px 0; border-top: 1px solid #f4eceb; font-size: 13px; }
+.recent-panel li strong { color: #352b3c; font-weight: 600; overflow-wrap: anywhere; }
+.recent-panel li span { color: #796b77; overflow-wrap: anywhere; }
+.recent-panel li time { color: #9b8f98; font-size: 12px; white-space: nowrap; }
+@media (max-width: 700px) { .recent-panel li { grid-template-columns: minmax(0, 1fr) auto; } .recent-panel li span { display: none; } }

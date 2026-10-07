@@ -417,3 +417,24 @@
 .lovask-light .photo-shortcuts { margin: 10px 0 0; color: #9b8f98; font-size: 12px; }
 .lovask-light .photo-shortcuts kbd { display: inline-block; min-width: 20px; margin: 0 2px; padding: 1px 6px; border: 1px solid var(--admin-line); border-radius: 6px; background: #fff; color: var(--admin-ink-soft); font: inherit; font-size: 11px; text-align: center; }
 @media (max-width: 900px) { .lovask-light .photo-shortcuts { display: none; } }
+
+/* Waiting-time badges */
+.lovask-light .wait-badge { display: inline-block; margin-left: 8px; padding: 2px 10px; border-radius: 999px; background: #eef7f0; color: #15803d; font-size: 11.5px; font-style: normal; font-weight: 600; white-space: nowrap; }
+.lovask-light .wait-badge[data-tone="warn"] { background: #fff4e0; color: #b45309; }
+.lovask-light .wait-badge[data-tone="late"] { background: #fde8e8; color: #b42343; }
+
+/* Buttons inside the noir, events and campaign cards used an off-palette plum; align them with the primary action color */
+.lovask-light :is(.admin-noir-business, .admin-events, .admin-campaigns, .admin-option-form) :is(button:not([class]), button[type="submit"]) {
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--admin-rose) !important;
+  border-radius: 10px;
+  background: var(--admin-rose) !important;
+  color: #fff !important;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.lovask-light :is(.admin-noir-business, .admin-events, .admin-campaigns, .admin-option-form) :is(button:not([class]), button[type="submit"]):hover:not(:disabled) { background: var(--admin-rose-deep) !important; border-color: var(--admin-rose-deep) !important; }
+.lovask-light :is(.admin-noir-business, .admin-events, .admin-campaigns, .admin-option-form) button:disabled { opacity: .5; cursor: not-allowed; }

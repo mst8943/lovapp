@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin-auth";
 
-const PAGE = 100;
+const MAX_PAGE = 100;
 
 export async function GET(request: Request) {
   const auth = await requireAdmin(["owner"]);
@@ -9,6 +9,7 @@ export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   const q = params.get("q")?.trim().slice(0, 60).replace(/[%_,()]/g, "") ?? "";
   const before = Number(params.get("before"));
+  const PAGE = Math.min(MAX_PAGE, Math.max(1, Number(params.get("limit")) || MAX_PAGE));
   let query = auth.admin.from("admin_audit_log").select("id,actor_user_id,action,target_type,target_id,metadata,created_at").order("id", { ascending: false }).limit(PAGE + 1);
   if (q) query = query.ilike("action", `%${q}%`);
   if (Number.isFinite(before) && before > 0) query = query.lt("id", before);

@@ -1,5 +1,6 @@
 "use client";
 
+import { waitingBadge } from "@/lib/waiting";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Check, Copy, ExternalLink, LoaderCircle, RefreshCw, Search, ShieldCheck, X } from "lucide-react";
 
@@ -42,6 +43,8 @@ export function AdminPaymentOperations() {
   const [filter, setFilter] = useState<Filter>("queue");
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [openedAt] = useState(() => Date.now());
+  const wait = (order: PaymentOrder) => waitingBadge(order.submitted_at ?? order.created_at, openedAt);
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const [canApprove, setCanApprove] = useState(false);
@@ -120,7 +123,7 @@ export function AdminPaymentOperations() {
       {visible.map((order) => <article className={`payment-slip status-${order.status}`} key={order.id}>
         <div className="payment-slip-rail"><small>ÖDEME KODU</small><button onClick={() => void copy(order.payment_reference)}><code>{order.payment_reference}</code><Copy/>{copied === order.payment_reference ? <span>Kopyalandı</span> : null}</button></div>
         <div className="payment-slip-main">
-          <header><div><small>{providerLabel(order.provider)}</small><h2>{order.profiles?.display_name ?? "İsimsiz kullanıcı"}</h2></div><span className={`payment-state state-${order.status}`}>{statusLabel(order)}</span></header>
+          <header><div><small>{providerLabel(order.provider)}</small><h2>{order.profiles?.display_name ?? "İsimsiz kullanıcı"}</h2></div><span className={`payment-state state-${order.status}`}>{statusLabel(order)}</span>{order.status === "under_review" && wait(order) ? <em className="wait-badge" data-tone={wait(order)?.tone}>{wait(order)?.label}</em> : null}</header>
           <div className="payment-facts">
             <span><small>Paket</small><strong>{order.premium_plans?.name ?? "Noir"}</strong></span>
             <span><small>Tutar</small><strong>{Number(order.amount).toLocaleString("tr-TR")} {order.currency}</strong></span>

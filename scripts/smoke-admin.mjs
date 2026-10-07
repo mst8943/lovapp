@@ -27,6 +27,7 @@ try {
   let r = await fetch(`${app}/api/health`); let b = await r.json().catch(() => ({})); check("sağlık ucu", r.ok && b.database === "ok", JSON.stringify(b));
   r = await fetch(`${app}/api/admin/audit`); check("audit: oturumsuz 401", r.status === 401, String(r.status));
   r = await api("/api/admin/audit"); b = await r.json(); check("audit listesi", r.ok && Array.isArray(b.entries), `${b.entries?.length} kayıt`);
+  r = await api("/api/admin/audit?limit=6"); b = await r.json(); check("audit limit=6", r.ok && b.entries.length <= 6 && b.entries.length > 0, `${b.entries?.length}`);
   r = await api("/api/admin/audit?q=team"); b = await r.json(); check("audit arama", r.ok, `${b.entries?.length}`);
   r = await api("/api/admin/trends"); b = await r.json(); check("trends", r.ok && b.series?.length === 4, r.ok ? b.series.map((s) => `${s.label}=${s.values.reduce((a, c) => a + c, 0)}`).join(", ") : JSON.stringify(b));
   r = await api("/api/admin/deletions"); b = await r.json(); check("deletions", r.ok && Array.isArray(b.requests), `${b.requests?.length} talep`);
