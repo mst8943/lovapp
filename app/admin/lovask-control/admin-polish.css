@@ -376,3 +376,21 @@
 .lovask-light .ops-segments button:hover { background: #fff0eb; color: var(--admin-rose-deep); }
 .lovask-light .ops-segments button.active { border-color: var(--admin-rose-edge); background: var(--admin-rose-wash); color: var(--admin-rose-deep); font-weight: 600; }
 .lovask-light .ops-segments span { margin-left: auto; color: #9b8f98; font-size: 12px; }
+
+/* Member notes and canned replies */
+.lovask-light .user-notes { display: grid; gap: 8px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--admin-line); }
+.lovask-light .user-notes > small { color: var(--admin-ink-soft); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.lovask-light .user-notes form { display: grid; gap: 8px; }
+.lovask-light .user-notes textarea { padding: 10px 12px; border: 1px solid #d8c7d0; border-radius: 10px; background: #fff; color: var(--admin-ink); font: inherit; font-size: 13.5px; resize: vertical; }
+.lovask-light .user-notes form button { justify-self: end; min-height: 34px; padding: 0 14px; border: 1px solid var(--admin-rose); border-radius: 10px; background: var(--admin-rose); color: #fff; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+.lovask-light .user-notes form button:disabled { opacity: .5; cursor: not-allowed; }
+.lovask-light .user-notes-error { margin: 0; color: #b42343; font-size: 12.5px; }
+.lovask-light .user-note { display: grid; gap: 4px; margin: 0; padding: 10px 12px; border: 1px solid var(--admin-line); border-radius: 10px; background: #fff8f5; }
+.lovask-light .user-note span { color: var(--admin-ink); font-size: 13.5px; line-height: 1.5; overflow-wrap: anywhere; white-space: pre-wrap; }
+.lovask-light .user-note small { color: #9b8f98; font-size: 11.5px; }
+.lovask-light .user-note small button { margin-left: 8px; border: 0; background: none; color: #b42343; font: inherit; font-size: 11.5px; cursor: pointer; }
+.lovask-light .support-admin-list form .reply { display: grid; gap: 6px; }
+.lovask-light .support-admin-list form .reply :is(select, textarea) { width: 100%; padding: 8px 10px; border: 1px solid #d8c7d0; border-radius: 10px; background: #fff; color: var(--admin-ink); font: inherit; font-size: 13px; }
+.lovask-light .support-admin-list form .reply textarea { resize: vertical; }
+.lovask-light .trend-card > span.up { color: #15803d !important; }
+.lovask-light .trend-card > span.down { color: #b42343 !important; }

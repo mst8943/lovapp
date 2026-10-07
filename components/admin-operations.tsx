@@ -53,7 +53,7 @@ function OperationRow({ mode, row, onSelect, onMutate }: { mode: Mode; row: Row;
 
 function UserDetail({ profileId, onClose }: { profileId: string; onClose: () => void }) {
   const [user, setUser] = useState<Row | null>(null); useEffect(() => { void fetch(`/api/admin/users/${profileId}`, { cache: "no-store" }).then((response) => response.json().catch(() => ({}))).then((body) => setUser(body.user ?? null)); }, [profileId]);
-  return <div className="ops-modal" onClick={onClose}><article onClick={(event) => event.stopPropagation()}><button className="close" onClick={onClose}><X /></button>{!user ? <LoaderCircle className="spin" /> : <><small>Kullanıcı kaydı</small><h2>{String(user.display_name)}</h2><dl><dt>E-posta</dt><dd>{String(user.email ?? "Yetki nedeniyle gizli")}</dd><dt>Telefon</dt><dd>{String(user.phone ?? "Eklenmemiş veya gizli")}</dd><dt>Şehir</dt><dd>{String(user.city ?? "—")}</dd><dt>XP / Seviye</dt><dd>{String(user.xp)} / {String(user.level)}</dd><dt>Eşleşme / Mesaj</dt><dd>{String(user.matchCount)} / {String(user.messageCount)}</dd><dt>Şikâyet</dt><dd>{String(user.reportCount)}</dd><dt>Gizlenen Sohbet</dt><dd>{String(user.hiddenConversationCount ?? 0)}</dd><dt>Noir bitişi</dt><dd>{formatDate(user.noirUntil)}</dd><dt>Son görülme</dt><dd>{formatDate(user.lastSeenAt)}</dd></dl>{user.superLikes && (((user.superLikes as { sent?: unknown[] })?.sent?.length ?? 0) > 0 || ((user.superLikes as { received?: unknown[] })?.received?.length ?? 0) > 0) ? <div style={{ marginTop: 12, padding: 10, background: "rgba(255,255,255,0.04)", borderRadius: 10 }}><strong style={{ fontSize: 12, color: "#f59e0b", display: "block", marginBottom: 4 }}>⭐ Notlu Süper Beğeniler</strong>{((user.superLikes as { sent: { super_like_note: string; created_at: string }[] }).sent ?? []).map((s, idx) => <div key={`s-${idx}`} style={{ fontSize: 11, margin: "2px 0", color: "#493c50" }}>Gönderdiği Not: &quot;{s.super_like_note}&quot; <small style={{ opacity: 0.6 }}>({new Date(s.created_at).toLocaleDateString("tr-TR")})</small></div>)}{((user.superLikes as { received: { super_like_note: string; created_at: string }[] }).received ?? []).map((s, idx) => <div key={`r-${idx}`} style={{ fontSize: 11, margin: "2px 0", color: "#493c50" }}>Aldığı Not: &quot;{s.super_like_note}&quot; <small style={{ opacity: 0.6 }}>({new Date(s.created_at).toLocaleDateString("tr-TR")})</small></div>)}</div> : null}<AdminVoice profileId={profileId} prompt={user.voicePrompt} url={user.voiceUrl} enabled={user.canManageNoir === true} /><ManualNoirControls profileId={profileId} initialNoirUntil={user.noirUntil} enabled={user.canManageNoir === true} /></>}</article></div>;
+  return <div className="ops-modal" onClick={onClose}><article onClick={(event) => event.stopPropagation()}><button className="close" onClick={onClose}><X /></button>{!user ? <LoaderCircle className="spin" /> : <><small>Kullanıcı kaydı</small><h2>{String(user.display_name)}</h2><dl><dt>E-posta</dt><dd>{String(user.email ?? "Yetki nedeniyle gizli")}</dd><dt>Telefon</dt><dd>{String(user.phone ?? "Eklenmemiş veya gizli")}</dd><dt>Şehir</dt><dd>{String(user.city ?? "—")}</dd><dt>XP / Seviye</dt><dd>{String(user.xp)} / {String(user.level)}</dd><dt>Eşleşme / Mesaj</dt><dd>{String(user.matchCount)} / {String(user.messageCount)}</dd><dt>Şikâyet</dt><dd>{String(user.reportCount)}</dd><dt>Gizlenen Sohbet</dt><dd>{String(user.hiddenConversationCount ?? 0)}</dd><dt>Noir bitişi</dt><dd>{formatDate(user.noirUntil)}</dd><dt>Son görülme</dt><dd>{formatDate(user.lastSeenAt)}</dd></dl>{user.superLikes && (((user.superLikes as { sent?: unknown[] })?.sent?.length ?? 0) > 0 || ((user.superLikes as { received?: unknown[] })?.received?.length ?? 0) > 0) ? <div style={{ marginTop: 12, padding: 10, background: "rgba(255,255,255,0.04)", borderRadius: 10 }}><strong style={{ fontSize: 12, color: "#f59e0b", display: "block", marginBottom: 4 }}>⭐ Notlu Süper Beğeniler</strong>{((user.superLikes as { sent: { super_like_note: string; created_at: string }[] }).sent ?? []).map((s, idx) => <div key={`s-${idx}`} style={{ fontSize: 11, margin: "2px 0", color: "#493c50" }}>Gönderdiği Not: &quot;{s.super_like_note}&quot; <small style={{ opacity: 0.6 }}>({new Date(s.created_at).toLocaleDateString("tr-TR")})</small></div>)}{((user.superLikes as { received: { super_like_note: string; created_at: string }[] }).received ?? []).map((s, idx) => <div key={`r-${idx}`} style={{ fontSize: 11, margin: "2px 0", color: "#493c50" }}>Aldığı Not: &quot;{s.super_like_note}&quot; <small style={{ opacity: 0.6 }}>({new Date(s.created_at).toLocaleDateString("tr-TR")})</small></div>)}</div> : null}<AdminVoice profileId={profileId} prompt={user.voicePrompt} url={user.voiceUrl} enabled={user.canManageNoir === true} /><ManualNoirControls profileId={profileId} initialNoirUntil={user.noirUntil} enabled={user.canManageNoir === true} /><UserNotes profileId={profileId} /></>}</article></div>;
 }
 
 function AdminVoice({ profileId, prompt, url, enabled }: { profileId: string; prompt: unknown; url: unknown; enabled: boolean }) {
@@ -95,3 +95,35 @@ function formatShortDate(value: unknown) { return typeof value === "string" && v
 function providerLabel(value: string) { return ({ shopier: "Kartla ödeme · otomatik", bank_transfer: "Havale / EFT · manuel", papara: "Papara · manuel", crypto: "Kripto · manuel" } as Record<string,string>)[value] ?? value; }
 function statusLabel(value: string) { return ({ awaiting_payment: "Ödeme bekleniyor", under_review: "İncelemede", approved: "Onaylandı", rejected: "Reddedildi", open: "Açık", reviewing: "İncelemede", resolved: "Tamamlandı", pending: "Bekliyor" } as Record<string,string>)[value] ?? value; }
 function reasonLabel(value: string) { return ({ fake_profile: "Sahte profil", harassment: "Taciz veya tehdit", inappropriate_content: "Uygunsuz içerik", fraud: "Dolandırıcılık", underage: "18 yaş altı şüphesi", spam: "Spam", other: "Diğer" } as Record<string,string>)[value] ?? value; }
+
+type Note = { id: string; body: string; author: string; created_at: string; mine: boolean };
+function UserNotes({ profileId }: { profileId: string }) {
+  const [notes, setNotes] = useState<Note[] | null>(null);
+  const [error, setError] = useState("");
+  const [draft, setDraft] = useState("");
+  const [busy, setBusy] = useState(false);
+  const load = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/admin/users/${profileId}/notes`, { cache: "no-store" });
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok) { setError(body.error ?? "Notlar yüklenemedi."); setNotes([]); return; }
+      setError(""); setNotes(body.notes ?? []);
+    } catch { setError("Notlar yüklenemedi."); setNotes([]); }
+  }, [profileId]);
+  useEffect(() => { const timer = window.setTimeout(() => void load(), 0); return () => window.clearTimeout(timer); }, [load]);
+  const add = async (event: FormEvent) => {
+    event.preventDefault(); if (!draft.trim() || busy) return;
+    setBusy(true);
+    const response = await fetch(`/api/admin/users/${profileId}/notes`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ body: draft }) });
+    const body = await response.json().catch(() => ({}));
+    setBusy(false);
+    if (!response.ok) return setError(body.error ?? "Not kaydedilemedi.");
+    setDraft(""); await load();
+  };
+  const remove = async (id: string) => { await fetch(`/api/admin/users/${profileId}/notes?noteId=${id}`, { method: "DELETE" }); await load(); };
+  return <section className="user-notes"><small>Yönetici notları · üyeye görünmez</small>
+    <form onSubmit={add}><textarea value={draft} onChange={(event) => setDraft(event.target.value)} maxLength={1000} rows={2} placeholder="Bu üye hakkında ekip için not bırak…" /><button disabled={busy || !draft.trim()}>Not ekle</button></form>
+    {error ? <p className="user-notes-error">{error}</p> : null}
+    {(notes ?? []).map((note) => <p key={note.id} className="user-note"><span>{note.body}</span><small>{note.author} · {formatDate(note.created_at)}{note.mine ? <button type="button" onClick={() => void remove(note.id)}>Sil</button> : null}</small></p>)}
+  </section>;
+}
