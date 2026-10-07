@@ -267,7 +267,8 @@
   .lovask-light .conversation-stage > .ops-nav { height: auto !important; }
   .lovask-light .conversation-stage .conversation-admin { grid-column: 1 !important; height: auto; grid-template-columns: minmax(0, 1fr); overflow: visible; }
   .lovask-light .conversation-admin > aside { height: auto; max-height: 46dvh; border-right: 0; border-bottom: 1px solid var(--admin-line); }
-  .lovask-light .admin-thread { height: 80dvh; }
+  .lovask-light .admin-thread { height: auto; min-height: 80dvh; }
+  .lovask-light .admin-thread-body { min-height: 55dvh; overflow: visible; }
   .lovask-light .admin-thread > header { padding: 12px 16px; flex-wrap: wrap; gap: 10px; }
   .lovask-light .admin-composer { padding: 10px 14px; }
 }
@@ -289,3 +290,77 @@
   .lovask-light .bot-stage > .bot-studio { grid-column: 1 !important; grid-template-columns: minmax(0, 1fr); }
   .lovask-light .bot-stage .bot-studio > aside { position: static; height: auto; }
 }
+
+/* Leftover dark surfaces from the original dark theme, mapped onto the light palette */
+.lovask-light :is(
+  .panel-head button, .admin-search, .bot-filters button, .bot-bulk-actions, .bot-row-link > span:first-child,
+  .ai-provider-panel, .ai-provider-panel .provider-health i, .ai-provider-panel select, .global-ai-field textarea,
+  .provider-test, .provider-test-results p, .automation-panel, .phase-flag, .automation-pairs input[type="number"],
+  .fallback-panel, .fallback-panel article button:first-child, .fallback-panel form input, .fallback-panel form button,
+  .bot-photo-pool, .photo-studio-tabs button, .set-secondary, .photo-set-card, .photo-set-strip, .photo-set-strip > span,
+  .dashboard-module-card, .dashboard-status-item, .quick-link-item, .studio-tabs, .studio-tab-btn.active, .bot-kpi-card,
+  .registration-mode-panel, .instagram-review, .photo-facts > div, .reject-dialog fieldset label, .reject-note textarea
+) {
+  background: #fff !important;
+  border-color: var(--admin-line) !important;
+  color: var(--admin-ink) !important;
+}
+.lovask-light :is(.bot-filters button, .set-secondary, .photo-studio-tabs button, .panel-head button, .fallback-panel form button, .phase-flag, .photo-set-strip > span, .bot-row-link > span:first-child, .ai-provider-panel .provider-health i) { background: #fff8f5 !important; }
+.lovask-light :is(.bot-filters button.active, .photo-studio-tabs button.active, .studio-tab-btn.active, .phase-flag.active) { background: var(--admin-rose-wash) !important; border-color: var(--admin-rose-edge) !important; color: var(--admin-rose-deep) !important; }
+.lovask-light .quick-link-item:hover { background: #fff0eb !important; }
+.lovask-light :is(.ops-avatar) { background: #fff0eb !important; color: var(--admin-rose-deep) !important; border: 1px solid var(--admin-line); }
+.lovask-light .ops-modal article { background: #fff !important; color: var(--admin-ink) !important; border: 1px solid var(--admin-line); box-shadow: 0 24px 80px rgba(63, 35, 52, .18) !important; }
+.lovask-light .ops-modal article :is(h2, dd, strong) { color: var(--admin-ink); }
+.lovask-light .ops-modal article :is(dt, small, p) { color: var(--admin-ink-soft); }
+
+/* Photo review desk */
+.lovask-light .photo-queue { background: #fff !important; border: 1px solid var(--admin-line) !important; border-radius: var(--admin-radius); box-shadow: 0 12px 32px rgba(63, 35, 52, .05); }
+.lovask-light .photo-queue > button { border: 1px solid transparent !important; border-radius: 10px; background: transparent !important; color: var(--admin-ink) !important; }
+.lovask-light .photo-queue > button:hover { background: #fff8f5 !important; }
+.lovask-light .photo-queue > button.active { background: var(--admin-rose-wash) !important; border-color: var(--admin-rose-edge) !important; }
+.lovask-light .photo-queue > button > span { background: #fff0eb !important; color: var(--admin-rose); }
+.lovask-light .photo-queue strong { color: var(--admin-ink) !important; }
+.lovask-light .photo-queue small { color: var(--admin-ink-soft) !important; }
+.lovask-light .photo-canvas { background: #f4eceb !important; border: 1px solid var(--admin-line); border-radius: var(--admin-radius); }
+.lovask-light .photo-canvas > a { background: rgba(255, 255, 255, .92) !important; color: var(--admin-ink) !important; border: 1px solid var(--admin-line); }
+.lovask-light .photo-focus { background: #fff; border: 1px solid var(--admin-line); border-radius: var(--admin-radius); }
+.lovask-light .photo-context :is(h2, p) { color: var(--admin-ink); }
+.lovask-light .photo-context p { color: var(--admin-ink-soft); }
+.lovask-light .reject-backdrop { background: rgba(53, 43, 60, .4) !important; }
+.lovask-light .reject-dialog { background: #fff !important; color: var(--admin-ink); border: 1px solid var(--admin-line); box-shadow: 0 24px 80px rgba(63, 35, 52, .2); }
+.lovask-light .reject-dialog :is(h2, h3, legend, strong) { color: var(--admin-ink); }
+.lovask-light .reject-dialog :is(p, small) { color: var(--admin-ink-soft); }
+
+/* Payments slip rail */
+.lovask-light .payment-slip-rail { background: #fff8f5 !important; border-right: 1px solid var(--admin-line) !important; }
+.lovask-light .payment-slip-rail small { color: var(--admin-ink-soft); }
+.lovask-light .payment-slip-rail :is(button, strong, code) { color: var(--admin-ink) !important; }
+
+/* Conversations: the list must not overflow and every action button must be readable */
+.lovask-light .admin-conversation-list > button { min-width: 0; overflow: hidden; }
+.lovask-light .admin-conversation-list > button > div { min-width: 0; }
+.lovask-light .admin-conversation-list :is(strong, small) { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.lovask-light .conversation-search { background: #fff !important; }
+.lovask-light :is(.risk-strip, .thread-context, .daily-state, .case-access) :is(button, select, input) {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--admin-line) !important;
+  border-radius: 8px;
+  background: #fff !important;
+  color: var(--admin-ink) !important;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.lovask-light :is(.risk-strip, .thread-context, .daily-state, .case-access) button:hover { background: var(--admin-rose-wash) !important; border-color: var(--admin-rose-edge) !important; color: var(--admin-rose-deep) !important; }
+.lovask-light .risk-strip { border-bottom: 1px solid #f6c3cf; background: #fff5f6 !important; border-radius: 0; box-shadow: none !important; }
+.lovask-light .thread-context, .lovask-light .daily-state, .lovask-light .case-access { border-radius: 0; box-shadow: none !important; }
+.lovask-light .admin-thread > :is(.risk-strip, .thread-context, .daily-state, .case-access) { flex: none; }
+.lovask-light .admin-thread-body { min-height: 0; }
+
+/* Settings: tighten the verification card */
+.lovask-light .brand-settings .setup-checks > p { margin: 0 0 8px; color: var(--admin-ink-soft); font-size: 13.5px; line-height: 1.55; }
+.lovask-light .brand-settings .setup-checks form { display: grid; gap: 12px; }
+.lovask-light .brand-settings .setup-checks form > :is(h3, p) { margin: 0; }
+.lovask-light .brand-settings .setup-checks form > h3 { font-size: 15px; }
+.lovask-light .brand-settings .setup-checks label { display: grid; gap: 4px; font-size: 12.5px; color: var(--admin-ink-soft); }
+.lovask-light .brand-settings .setup-checks label:has(> input[type="checkbox"]) { display: flex; align-items: center; gap: 8px; }
