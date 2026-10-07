@@ -75,6 +75,7 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
       { name: "Bugün yapılacaklar", detail: "Bekleyen ödeme, başvuru, destek ve şikâyetler tek kartta.", href: "/admin/lovask-control" },
       { name: "Hızlı arama (Ctrl+K)", detail: "Panelde sayfa ve üye arama, klavye ile gezinme." },
       { name: "14 günlük trend grafikleri", detail: "Yeni üye, eşleşme, mesaj ve onaylı ödeme trendi, genel bakışta.", href: "/admin/lovask-control" },
+      { name: "Üye etkinlik geçmişi", detail: "Üyenin eşleşme, şikâyet, destek, ödeme ve fotoğraf olaylarını tek zaman çizgisinde gösterir." },
       { name: "Üye notları", detail: "Ekibin üye hakkında bıraktığı, üyeye görünmeyen iç notlar." },
       { name: "Hazır destek yanıtları", detail: "Sık sorulan taleplere tek tıkla şablon yanıt." },
       { name: "Ekip ve roller", detail: "Yönetici ekleme, rol değiştirme ve kaldırma; son sahip korunur.", href: "/admin/lovask-control/team" },

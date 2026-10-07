@@ -399,3 +399,16 @@
 .lovask-light .ops-nav-group { margin: 14px 12px 4px; color: #9b8f98; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .lovask-light .ops-nav > a { min-height: 36px; }
 @media (max-width: 900px) { .lovask-light .ops-nav-group { display: none; } }
+
+/* Member activity timeline */
+.lovask-light .user-timeline { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--admin-line); }
+.lovask-light .user-timeline > summary { cursor: pointer; color: var(--admin-ink-soft); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.lovask-light .user-timeline-empty { margin: 8px 0 0; color: var(--admin-ink-soft); font-size: 13px; }
+.lovask-light .user-timeline ol { list-style: none; margin: 10px 0 0; padding: 0 0 0 14px; border-left: 2px solid var(--admin-line); display: grid; gap: 10px; max-height: 280px; overflow-y: auto; }
+.lovask-light .user-timeline li { display: grid; gap: 1px; position: relative; }
+.lovask-light .user-timeline li::before { content: ""; position: absolute; left: -19px; top: 5px; width: 8px; height: 8px; border-radius: 50%; background: var(--admin-rose-edge); }
+.lovask-light .user-timeline li[data-kind="report"]::before, .lovask-light .user-timeline li[data-kind="deletion"]::before { background: #b42343; }
+.lovask-light .user-timeline li[data-kind="payment"]::before { background: #15803d; }
+.lovask-light .user-timeline li time { color: #9b8f98; font-size: 11.5px; }
+.lovask-light .user-timeline li strong { color: var(--admin-ink); font-size: 13px; }
+.lovask-light .user-timeline li small { color: var(--admin-ink-soft); font-size: 12px; overflow-wrap: anywhere; }
