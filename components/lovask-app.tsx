@@ -59,6 +59,7 @@ import {
 import { Brand } from "@/components/brand";
 import { CampaignBanner } from "@/components/campaign-banner";
 import { DailyQuestionCard } from "@/components/daily-question-card";
+import { EndorsementBadges } from "@/components/endorsement-badges";
 import { readJson } from "@/lib/http-json";
 import { SafetyMenu } from "@/components/safety-menu";
 import { PremiumNotice } from "@/components/premium-notice";
@@ -3006,6 +3007,7 @@ function ProfileDetail({
               <span key={badge}>{badge}</span>
             ))}
           </div>
+          <EndorsementBadges profileId={profile.id} />
           {profile.superLikeNote ? (
             <section>
               <small>Süper Beğeni notu</small>
