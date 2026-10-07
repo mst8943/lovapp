@@ -56,7 +56,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Geçersiz dışa aktarma türü." }, { status: 400 });
   }
   await auth.session.rpc("write_admin_audit", { event_action: `export.${type}`, event_target_type: "export", event_target_id: null, event_metadata: { rows: lines.length - 1 } });
-  return new NextResponse(`﻿sep=;\n${lines.join("\r\n")}\r\n`, {
+  return new NextResponse(`\uFEFFsep=;\n${lines.join("\r\n")}\r\n`, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="${type}-${new Date().toISOString().slice(0, 10)}.csv"`,

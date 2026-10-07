@@ -80,6 +80,7 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
       { name: "Ekip ve roller", detail: "Yönetici ekleme, rol değiştirme ve kaldırma; son sahip korunur.", href: "/admin/lovask-control/team" },
       { name: "İşlem günlüğü", detail: "Yönetici işlemlerinin değiştirilemez kaydı: kim, ne zaman, neyi yaptı.", href: "/admin/lovask-control/audit" },
       { name: "CSV dışa aktarma", detail: "Kullanıcı ve ödeme listelerini Excel için indirme." },
+      { name: "Sağlık ucu ve duman testi", detail: "Herkese açık /api/health ve tek komutla yönetim API testi (npm run smoke).", href: "/api/health" },
       { name: "Telegram yönetimi", detail: "Önemli işlemleri Telegram üzerinden takip ve onay." },
     ],
   },

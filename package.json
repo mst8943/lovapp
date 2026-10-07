@@ -22,7 +22,8 @@
     "package:handoff": "python zip_project.py",
     "build:install-sql": "node scripts/build-install-sql.mjs",
     "rebrand": "node scripts/rebrand.mjs",
-    "audit:handoff": "python zip_project.py --audit"
+    "audit:handoff": "python zip_project.py --audit",
+    "smoke": "node scripts/smoke-admin.mjs"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",
