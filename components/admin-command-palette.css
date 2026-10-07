@@ -1,0 +1,14 @@
+.palette-trigger { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 36px; margin: 0 0 8px; padding: 0 12px; border: 1px solid #eee3e5; border-radius: 10px; background: #fff8f5; color: #796b77; font: inherit; font-size: 13px; cursor: pointer; }
+.palette-trigger:hover { border-color: #f29bad; color: #ae1940; }
+.palette-trigger kbd { margin-left: auto; padding: 1px 6px; border: 1px solid #eee3e5; border-radius: 6px; background: #fff; font: inherit; font-size: 10.5px; color: #9b8f98; }
+.palette-dialog { width: min(560px, calc(100vw - 32px)); margin: 12vh auto auto; padding: 0; border: 1px solid #eee3e5; border-radius: 16px; background: #fff; color: #352b3c; box-shadow: 0 24px 80px rgba(63, 35, 52, .25); overflow: hidden; }
+.palette-dialog::backdrop { background: rgba(53, 43, 60, .4); }
+.palette-input { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid #eee3e5; color: #9b8f98; }
+.palette-input input { flex: 1; border: 0; outline: 0; background: none; color: #352b3c; font: inherit; font-size: 15px; }
+.palette-box ul { list-style: none; margin: 0; padding: 8px; max-height: 50vh; overflow-y: auto; }
+.palette-box li button { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 10px 12px; border: 0; border-radius: 10px; background: none; color: #352b3c; font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+.palette-box li button.active { background: #ffe1e7; color: #ae1940; }
+.palette-box li small { color: #9b8f98; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.palette-empty { padding: 16px; color: #796b77; font-size: 13.5px; text-align: center; }
+@media (max-width: 900px) { .palette-trigger { display: none; } }
+.lovask-light .palette-input input:focus-visible { outline: none; }

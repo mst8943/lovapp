@@ -17,7 +17,8 @@ const config = {
 
 export function AdminOperations({ mode }: { mode: Mode }) {
   const role = useAdminRole();
-  const meta = config[mode]; const [rows, setRows] = useState<Row[]>([]); const [loading, setLoading] = useState(true); const [notice, setNotice] = useState(""); const [query, setQuery] = useState(""); const [kind, setKind] = useState<"human" | "bot">("human"); const [selected, setSelected] = useState<Row | null>(null); const requestId = useRef(0);
+  const meta = config[mode]; const [rows, setRows] = useState<Row[]>([]); const [loading, setLoading] = useState(true); const [notice, setNotice] = useState(""); const [query, setQuery] = useState(""); const [kind, setKind] = useState<"human" | "bot">("human"); const [selected, setSelected] = useState<Row | null>(null); const requestId = useRef(0); const [segment, setSegment] = useState<"all" | "noir" | "free" | "active7">("all");
+  useEffect(() => { if (mode !== "users") return; const initial = new URLSearchParams(window.location.search).get("q"); if (initial) { const timer = window.setTimeout(() => setQuery(initial.slice(0, 80)), 0); return () => window.clearTimeout(timer); } }, [mode]);
   const load = useCallback(async () => {
     const currentRequest = ++requestId.current;
     setLoading(true); setNotice("");
@@ -32,10 +33,13 @@ export function AdminOperations({ mode }: { mode: Mode }) {
     if (!response.ok) return setNotice(body.error ?? "İşlem tamamlanamadı."); setSelected(null); setNotice("İşlem kaydedildi."); await load();
   };
   const search = (event: FormEvent) => { event.preventDefault(); void load(); };
+  const [openedAt] = useState(() => Date.now()); const weekAgo = openedAt - 7 * 86_400_000;
+  const visibleRows = mode === "users" && kind === "human" ? rows.filter((row) => segment === "all" || (segment === "noir" && isNoir(row.noirUntil)) || (segment === "free" && !isNoir(row.noirUntil)) || (segment === "active7" && row.lastSeenAt && new Date(String(row.lastSeenAt)).getTime() >= weekAgo)) : rows;
   return <section className="ops-content">
     <header><div><small>{meta.eyebrow}</small><h1>{meta.title}</h1></div>{mode === "users" ? <><nav aria-label="Profil türü"><button type="button" aria-pressed={kind === "human"} onClick={() => { setSelected(null); setKind("human"); }}>Kullanıcılar</button><button type="button" aria-pressed={kind === "bot"} onClick={() => { setSelected(null); setKind("bot"); }}>Botlar</button></nav><form onSubmit={search}><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="İsimle ara" /><button>Ara</button></form>{role === "owner" || role === "support" ? <a className="export-link" href="/api/admin/export?type=users" download>CSV indir</a> : null}</> : null}</header>
     {notice ? <p className="ops-notice" role="status">{notice}</p> : null}
-    {loading ? <div className="ops-empty"><LoaderCircle className="spin" /> Yükleniyor</div> : rows.length === 0 ? <div className="ops-empty">{meta.empty}</div> : <div className={`ops-list ${mode}`}>{rows.map((row) => <OperationRow key={String(row.id)} mode={mode} row={row} onSelect={() => setSelected(row)} onMutate={mutate} />)}</div>}
+    {mode === "users" && kind === "human" && !loading && rows.length ? <div className="ops-segments" role="group" aria-label="Üye filtresi">{([["all", "Tümü"], ["noir", "Noir"], ["free", "Ücretsiz"], ["active7", "Son 7 gün aktif"]] as const).map(([value, label]) => <button key={value} type="button" className={segment === value ? "active" : ""} aria-pressed={segment === value} onClick={() => setSegment(value)}>{label}</button>)}<span>{visibleRows.length} / {rows.length} kayıt</span></div> : null}
+    {loading ? <div className="ops-empty"><LoaderCircle className="spin" /> Yükleniyor</div> : rows.length === 0 ? <div className="ops-empty">{meta.empty}</div> : <div className={`ops-list ${mode}`}>{visibleRows.map((row) => <OperationRow key={String(row.id)} mode={mode} row={row} onSelect={() => setSelected(row)} onMutate={mutate} />)}</div>}
     {selected && mode === "users" ? <UserDetail profileId={String(selected.id)} onClose={() => setSelected(null)} /> : null}
   </section>;
 }

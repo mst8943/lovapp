@@ -369,3 +369,10 @@
 .lovask-light .export-link { display: inline-flex; align-items: center; min-height: 38px; padding: 0 14px; border: 1px solid var(--admin-line); border-radius: 10px; background: #fff; color: var(--admin-ink); font-size: 13px; font-weight: 600; text-decoration: none; }
 .lovask-light .export-link:hover { border-color: var(--admin-rose-edge); background: var(--admin-rose-wash); color: var(--admin-rose-deep); }
 .lovask-light .ledger-actions { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* Member segment chips */
+.lovask-light .ops-segments { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 14px; }
+.lovask-light .ops-segments button { min-height: 32px; padding: 0 14px; border: 1px solid var(--admin-line); border-radius: 999px; background: #fff; color: var(--admin-ink-soft); font: inherit; font-size: 12.5px; font-weight: 500; cursor: pointer; }
+.lovask-light .ops-segments button:hover { background: #fff0eb; color: var(--admin-rose-deep); }
+.lovask-light .ops-segments button.active { border-color: var(--admin-rose-edge); background: var(--admin-rose-wash); color: var(--admin-rose-deep); font-weight: 600; }
+.lovask-light .ops-segments span { margin-left: auto; color: #9b8f98; font-size: 12px; }
