@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
@@ -41,6 +41,6 @@ export async function GET() {
     }));
     return [{ id: match.id, a, b, preview: latest.get(match.id)?.body ?? "Henüz mesaj yok", updatedAt: latest.get(match.id)?.created_at ?? match.matched_at, mode: control?.mode ?? "ai", takeoverExpiresAt: control?.takeover_expires_at ?? null, hasBot: a.kind === "bot" || b.kind === "bot", hasRisk: Boolean(risk), riskSeverity: risk?.severity ?? null, hiddenFor }];
   });
-  await session.rpc("write_admin_audit", { event_action: "conversations.listed", event_target_type: "conversation", event_target_id: null, event_metadata: { count: rows.length } });
+  after(async () => { await session.rpc("write_admin_audit", { event_action: "conversations.listed", event_target_type: "conversation", event_target_id: null, event_metadata: { count: rows.length } }); });
   return NextResponse.json({ conversations: rows }, { headers: { "Cache-Control": "private, no-store" } });
 }

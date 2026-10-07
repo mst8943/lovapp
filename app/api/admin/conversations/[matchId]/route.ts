@@ -37,13 +37,13 @@ const sendSchema = z.object({ message: z.string().trim().min(1).max(1200) });
 export async function GET(_request: Request, context: { params: Promise<{ matchId: string }> }) {
   const auth = await conversationContext((await context.params).matchId);
   if (auth instanceof NextResponse) return auth;
-  const { data: messages } = await auth.admin.from("messages").select("id,sender_id,kind,body,audio_path,created_at,sent_by_admin").eq("match_id", auth.match.id).order("created_at").limit(120);
-  const visibleMessages = await Promise.all((messages ?? []).map(async ({ audio_path, ...message }) => {
+  const { data: messages } = await auth.admin.from("messages").select("id,sender_id,kind,body,audio_path,created_at,sent_by_admin").eq("match_id", auth.match.id).order("created_at", { ascending: false }).limit(200);
+  const visibleMessages = await Promise.all((messages ?? []).toReversed().map(async ({ audio_path, ...message }) => {
     if (message.kind !== "image" || !audio_path) return { ...message, imageUrl: null };
     const { data } = await auth.admin.storage.from("chat-images").createSignedUrl(audio_path, 900);
     return { ...message, imageUrl: data?.signedUrl ?? null };
   }));
-  await auth.session.rpc("write_admin_audit", { event_action: "conversation.viewed", event_target_type: "conversation", event_target_id: auth.match.id, event_metadata: { hasBot: Boolean(auth.bot) } });
+  after(async () => { await auth.session.rpc("write_admin_audit", { event_action: "conversation.viewed", event_target_type: "conversation", event_target_id: auth.match.id, event_metadata: { hasBot: Boolean(auth.bot) } }); });
   const [{ data: risks }, { data: memory }, { data: relationship }, dailyResult] = await Promise.all([
     auth.admin.from("bot_risk_events").select("id,category,severity,status,created_at,resolution").eq("match_id", auth.match.id).order("created_at", { ascending: false }).limit(10),
     auth.admin.from("bot_conversation_memory").select("summary,facts,updated_at").eq("match_id", auth.match.id).maybeSingle(),

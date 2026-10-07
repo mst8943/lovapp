@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Bot, Check, Clock3, FlaskConical, ImagePlus, LoaderCircle, Radio, Save, Sparkles, TimerReset, UserRound } from "lucide-react";
 import { ChangeEvent, FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { AdminResourceNav } from "@/components/admin-resource-nav";
 import "./bot-automation-studio.css";
 
 type Schedule = Record<string, [string, string][]>;
@@ -54,7 +55,7 @@ export function BotAutomationStudio({ profileId }: { profileId: string }) {
   }, [profileId]);
   useEffect(() => { const timer = window.setTimeout(() => { void load(); }, 0); return () => window.clearTimeout(timer); }, [load]);
 
-  if (!data || !values) return <main className="bot-studio loading"><LoaderCircle className="spin" /><p>{status}</p></main>;
+  if (!data || !values) return <main className="ops-stage bot-stage"><AdminResourceNav /><div className="bot-studio loading"><LoaderCircle className="spin" /><p>{status}</p></div></main>;
   const effective = (key: keyof SettingsRow) => values[key] ?? data.global[key];
   const setNumber = (key: keyof SettingsRow) => (event: ChangeEvent<HTMLInputElement>) => { setDirty(true); setValues((current) => current ? { ...current, [key]: Number(event.target.value) } : current); };
   const schedule = (customSchedule ? values.weekly_schedule : data.global.weekly_schedule) ?? {};
@@ -93,9 +94,9 @@ export function BotAutomationStudio({ profileId }: { profileId: string }) {
     if (response.ok) await load();
   };
 
-  return <main className="bot-studio">
+  return <main className="ops-stage bot-stage"><AdminResourceNav /><div className="bot-studio">
     <aside>
-      <Link href="/admin/lovask-control"><ArrowLeft size={15} /> Bot stüdyosu</Link>
+      <Link href="/admin/lovask-control/bots"><ArrowLeft size={15} /> Bot stüdyosu</Link>
       <span className="studio-avatar"><Bot size={25} /></span>
       <small>Davranış çalışma alanı</small>
       <h1>{data.profile.display_name}</h1>
@@ -139,7 +140,7 @@ export function BotAutomationStudio({ profileId }: { profileId: string }) {
       </article>
       {dirty ? <div className="unsaved-bar"><span>Kaydedilmemiş davranış değişiklikleri var.</span><button onClick={() => void load()}>Vazgeç</button><button onClick={() => void save()}><Save size={14}/> Değişiklikleri kaydet</button></div> : null}
     </section>
-  </main>;
+  </div></main>;
 }
 
 type BotProfilePayload = {

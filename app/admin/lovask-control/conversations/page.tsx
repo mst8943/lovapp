@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { AlertTriangle, Bot, ChevronLeft, LoaderCircle, MessageSquareText, Pause, Play, Send, ShieldCheck, Sparkles, Trash2 } from "lucide-react";
-import { FormEvent, useCallback, useEffect, useState } from "react";
-import { Brand } from "@/components/brand";
+import { AlertTriangle, Bot, LoaderCircle, MessageSquareText, Pause, Play, Send, ShieldCheck, Sparkles, Trash2 } from "lucide-react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { AdminResourceNav } from "@/components/admin-resource-nav";
 import "./conversation-controls.css";
 
 type ConversationMode = "ai" | "admin" | "paused";
@@ -38,21 +37,28 @@ export default function ConversationsPage() {
   const [grantData, setGrantData] = useState<GrantData | null>(null);
   const [takeoverDuration, setTakeoverDuration] = useState("60");
   const [status, setStatus] = useState("Sohbetler yükleniyor…");
-  const [filter, setFilter] = useState<"attention" | "risk" | "admin" | "paused" | "all">("attention");
+  const [filter, setFilter] = useState<"attention" | "risk" | "admin" | "paused" | "all">("all");
   const [query, setQuery] = useState("");
 
   useEffect(() => {
     fetch("/api/admin/conversations").then(async (response) => ({ ok: response.ok, data: await response.json().catch(() => ({})) })).then(({ ok, data }) => {
-      if (!ok) return setStatus(data.error);
-      setConversations(data.conversations);
-      setStatus(data.conversations.length ? "" : "Henüz sohbet yok.");
-    });
+      if (!ok) return setStatus(data.error ?? "Sohbetler yüklenemedi.");
+      setConversations(data.conversations ?? []);
+      setStatus(data.conversations?.length ? "" : "Henüz sohbet yok.");
+    }).catch(() => setStatus("Sohbetler yüklenemedi. Bağlantını kontrol et."));
   }, []);
+  const latestRequest = useRef("");
+  const threadEnd = useRef<HTMLDivElement>(null);
   const refresh = useCallback(async (matchId: string) => {
-    const response = await fetch(`/api/admin/conversations/${matchId}`, { cache: "no-store" });
-    const data = await response.json().catch(() => ({}));
-    if (response.ok) { setThread(data); setStatus(""); } else setStatus(data.error);
+    latestRequest.current = matchId;
+    try {
+      const response = await fetch(`/api/admin/conversations/${matchId}`, { cache: "no-store" });
+      const data = await response.json().catch(() => ({}));
+      if (latestRequest.current !== matchId) return;
+      if (response.ok) { setThread(data); setStatus(""); } else setStatus(data.error ?? "Mesajlar yüklenemedi.");
+    } catch { if (latestRequest.current === matchId) setStatus("Mesajlar yüklenemedi. Bağlantını kontrol et."); }
   }, []);
+  useEffect(() => { threadEnd.current?.scrollIntoView({ block: "end" }); }, [thread?.messages.length, thread?.profiles]);
   const loadGrants = useCallback(async (matchId: string) => {
     const response = await fetch(`/api/admin/conversation-grants?matchId=${encodeURIComponent(matchId)}`, { cache: "no-store" });
     if (!response.ok) return setGrantData(null);
@@ -122,8 +128,9 @@ export default function ConversationsPage() {
     return queryMatch && filterMatch;
   }).toSorted((a,b) => Number(b.hasRisk) - Number(a.hasRisk) || new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
-  return <main className="conversation-admin">
-    <aside><header><Brand compact /><Link href="/admin/lovask-control"><ChevronLeft size={16} /> Panele dön</Link></header><small>Denetimli erişim</small><h1>Sohbetler</h1>
+  return <main className="ops-stage conversation-stage"><AdminResourceNav />
+  <div className="conversation-admin">
+    <aside><small>Denetimli erişim</small><h1>Sohbetler</h1>
       <input className="conversation-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Kullanıcı veya profil ara"/><div className="conversation-filter">{([['attention','İlgi bekleyen'],['risk','Riskli'],['admin','Admin'],['paused','Duraklatılmış'],['all','Tümü']] as const).map(([value,label]) => <button key={value} className={filter === value ? "active" : ""} onClick={() => setFilter(value)}>{label}</button>)}</div><div className="admin-conversation-list">{visibleConversations.map((conversation) => <button key={conversation.id} className={`${selected?.id === conversation.id ? "active" : ""} ${conversation.hasRisk ? "has-risk" : ""}`} onClick={() => chooseConversation(conversation)}><span>{conversation.hasRisk ? <AlertTriangle size={15}/> : conversation.hasBot ? <Bot size={15} /> : <MessageSquareText size={15} />}</span><div><strong>{conversation.a.display_name} × {conversation.b.display_name}</strong><small>{conversation.preview}</small><time>{new Date(conversation.updatedAt).toLocaleString("tr-TR", { dateStyle: "short", timeStyle: "short" })}</time>{conversation.hiddenFor?.length ? <span style={{ color: "#ef4444", fontSize: 11, display: "block", marginTop: 2 }}>🗑️ {conversation.hiddenFor.map((h) => h.name).join(", ")} sildi</span> : null}</div><i>{conversation.hasRisk ? conversation.riskSeverity : conversation.mode === "admin" ? "Admin" : conversation.mode === "paused" ? "Duraklatıldı" : "AI"}</i></button>)}</div>
       {status ? <p className="admin-thread-status">{status}</p> : null}
     </aside>
@@ -135,8 +142,8 @@ export default function ConversationsPage() {
       {thread?.memory?.summary || thread?.relationship ? <div className="thread-context"><form onSubmit={updateRelationship}><small>İlişki aşaması</small><select name="stage" defaultValue={thread.relationship?.stage ?? "new_match"}>{Object.entries(relationshipLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select><input name="score" type="number" min="-100" max="100" defaultValue={thread.relationship?.score ?? 0} /><button>Uygula</button></form><span><small>Bot hafızası</small><b>{thread.memory?.summary || "Henüz özet oluşmadı."}</b>{thread.memory ? <button className="memory-delete" onClick={() => { if (window.confirm("Bot hafızası kalıcı olarak silinsin mi? Bu işlem geri alınamaz.")) void patch({ action: "memory.delete" }); }}><Trash2 size={12} /> Sil</button> : null}</span></div> : null}
       {selected?.hasBot && thread ? <details className="daily-state"><summary>Bugünün bot durumu{thread.dailyState ? ` · ${thread.dailyState.context}` : ""}</summary><form onSubmit={updateDailyState}><select name="energy" defaultValue={thread.dailyState?.energy ?? "normal"}><option value="low">Düşük enerji</option><option value="normal">Normal enerji</option><option value="high">Yüksek enerji</option></select><select name="availability" defaultValue={thread.dailyState?.availability ?? "relaxed"}><option value="busy">Meşgul</option><option value="relaxed">Rahat</option><option value="brief">Kısa yazıyor</option></select><select name="mood" defaultValue={thread.dailyState?.mood ?? "calm"}><option value="cheerful">Neşeli</option><option value="calm">Sakin</option><option value="thoughtful">Düşünceli</option><option value="stressed">Stresli</option></select><input name="context" maxLength={240} required defaultValue={thread.dailyState?.context ?? "Bugün sakin ve doğal bir tempoda."} /><button>Bugün için uygula</button></form></details> : null}
       {selected && grantData ? <details className="case-access"><summary>Vaka erişimi · {grantData.grants.filter((grant) => !grant.revoked_at && new Date(grant.expires_at) > new Date()).length} aktif</summary><form onSubmit={grantAccess}><select name="reviewer" required defaultValue=""><option value="" disabled>İnceleyici seç</option>{grantData.reviewers.map((reviewer) => <option key={reviewer.user_id} value={reviewer.user_id}>{reviewer.email} · {reviewer.role}</option>)}</select><select name="duration" defaultValue="60"><option value="15">15 dakika</option><option value="60">1 saat</option><option value="480">8 saat</option><option value="1440">24 saat</option></select><input name="reason" minLength={10} maxLength={500} required placeholder="Erişim nedeni" /><button>Erişim ver</button></form><div>{grantData.grants.filter((grant) => !grant.revoked_at && new Date(grant.expires_at) > new Date()).map((grant) => <span key={grant.id}><small>{grantData.reviewers.find((reviewer) => reviewer.user_id === grant.admin_user_id)?.email ?? grant.admin_user_id}</small><b>{new Date(grant.expires_at).toLocaleString("tr-TR")}</b><button onClick={() => void revokeGrant(grant.id)}>Kaldır</button></span>)}</div></details> : null}
-      <div className="admin-thread-body">{selected && !thread ? <LoaderCircle className="spin" /> : null}{thread?.messages.map((message) => <div key={message.id} className={message.sender_id === botId ? "admin-bubble bot-side" : "admin-bubble human-side"}><small>{thread.profiles.find((profile) => profile.id === message.sender_id)?.display_name}{message.sent_by_admin ? " · admin yazdı" : ""}</small>{message.imageUrl ? <Image src={message.imageUrl} alt="Şikâyet incelemesindeki sohbet fotoğrafı" width={220} height={260} unoptimized style={{ objectFit: "contain" }} /> : <p>{message.kind === "audio" ? "Sesli mesaj" : message.body}</p>}<time>{new Date(message.created_at).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}</time></div>)}{!selected ? <div className="thread-empty"><Sparkles size={22} /><p>İncelemek veya devralmak için soldan bir sohbet seç.</p></div> : null}</div>
+      <div className="admin-thread-body">{selected && !thread ? <LoaderCircle className="spin" /> : null}{thread?.messages.map((message) => <div key={message.id} className={message.sender_id === botId ? "admin-bubble bot-side" : "admin-bubble human-side"}><small>{thread.profiles.find((profile) => profile.id === message.sender_id)?.display_name}{message.sent_by_admin ? " · admin yazdı" : ""}</small>{message.imageUrl ? <Image src={message.imageUrl} alt="Şikâyet incelemesindeki sohbet fotoğrafı" width={220} height={260} unoptimized style={{ objectFit: "contain" }} /> : <p>{message.kind === "audio" ? "Sesli mesaj" : message.body}</p>}<time>{new Date(message.created_at).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })}</time></div>)}{thread && !thread.messages.length ? <div className="thread-empty"><MessageSquareText size={22} /><p>Bu sohbette henüz mesaj yok.</p></div> : null}{!selected ? <div className="thread-empty"><Sparkles size={22} /><p>İncelemek veya devralmak için soldan bir sohbet seç.</p></div> : null}<div ref={threadEnd} /></div>
       {selected?.hasBot && thread?.mode === "admin" ? <form className="admin-composer" onSubmit={send}><input name="message" maxLength={1200} placeholder="Botun ağzından yaz…" /><button aria-label="Bot olarak gönder"><Send size={16} /></button></form> : null}
     </section>
-  </main>;
+  </div></main>;
 }
