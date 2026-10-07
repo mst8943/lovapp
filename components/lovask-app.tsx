@@ -58,6 +58,7 @@ import {
 } from "react";
 import { Brand } from "@/components/brand";
 import { CampaignBanner } from "@/components/campaign-banner";
+import { DailyQuestionCard } from "@/components/daily-question-card";
 import { readJson } from "@/lib/http-json";
 import { SafetyMenu } from "@/components/safety-menu";
 import { PremiumNotice } from "@/components/premium-notice";
@@ -1975,6 +1976,7 @@ function DiscoverView({
       />
       <StoryStrip live={liveMode} />
       {liveMode ? <CampaignBanner compact /> : null}
+      {liveMode ? <DailyQuestionCard /> : null}
       <div className="deck" aria-live="polite">
         {profile ? (
           <>
@@ -2793,6 +2795,7 @@ function SwipeCard({
         unoptimized={photos[photoIndex].startsWith("http")}
       />
       <div className="photo-vignette" />
+      {profile.sameDailyAnswer ? <div className="same-answer-label">Günün sorusunda aynı şıkkı seçtiniz</div> : null}
       {dailyPickReason ? <div className="daily-pick-label"><strong>Günün uyumu</strong><span>{dailyPickReason}</span></div> : null}
       {photos.length > 1 ? (
         <span className="card-photo-progress" aria-hidden="true">

@@ -2,6 +2,7 @@ import { after, NextResponse } from "next/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { loadDiscoveryProfiles, selectDailyPick } from "@/lib/discovery";
+import { istanbulDate, questionForDate } from "@/lib/daily-question";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { sendPushToProfile } from "@/lib/push";
@@ -38,10 +39,23 @@ export async function GET(request: Request) {
     if (superLike.error || likeAllowance.error) throw new Error("like allowance unavailable");
     const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Istanbul", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
     const dailyPick = viewer.data?.id ? selectDailyPick(profiles, viewer.data, today) : null;
-    return NextResponse.json({ profiles, dailyPick, superLike: superLike.data ?? null, likeAllowance: likeAllowance.data ?? null }, { headers: { "Cache-Control": "private, no-store" } });
+    const sameAnswerIds = await sameDailyAnswerIds(admin, viewer.data?.id, profiles.map((profile) => profile.id));
+    const marked = profiles.map((profile) => (sameAnswerIds.has(profile.id) ? { ...profile, sameDailyAnswer: true } : profile));
+    return NextResponse.json({ profiles: marked, dailyPick, superLike: superLike.data ?? null, likeAllowance: likeAllowance.data ?? null }, { headers: { "Cache-Control": "private, no-store" } });
   } catch {
     return NextResponse.json({ error: "Keşfet kartları yüklenemedi." }, { status: 503 });
   }
+}
+
+async function sameDailyAnswerIds(admin: SupabaseClient, viewerId: string | undefined, candidateIds: string[]) {
+  if (!viewerId || !candidateIds.length) return new Set<string>();
+  try {
+    const date = istanbulDate();
+    const { data: mine } = await admin.from("daily_question_answers").select("option_index").eq("profile_id", viewerId).eq("question_date", date).maybeSingle();
+    if (!mine) return new Set<string>();
+    const { data } = await admin.from("daily_question_answers").select("profile_id").eq("question_date", date).eq("question_key", questionForDate(date).key).eq("option_index", mine.option_index).in("profile_id", candidateIds);
+    return new Set((data ?? []).map((row) => row.profile_id as string));
+  } catch { return new Set<string>(); }
 }
 
 async function getQuestSummary(admin: SupabaseClient, userId: string) {

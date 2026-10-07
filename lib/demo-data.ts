@@ -21,6 +21,7 @@ export type Profile = {
   distance: string;
   verified?: boolean;
   isBot?: boolean;
+  sameDailyAnswer?: boolean;
   badges: string[];
   prompt: string;
   answer: string;

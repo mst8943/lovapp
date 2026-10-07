@@ -1,0 +1,12 @@
+.daily-question { margin: 8px 16px; padding: 12px 14px; border: 1px solid rgba(214, 47, 88, .18); border-radius: 16px; background: rgba(255, 255, 255, .85); }
+.daily-question-head { display: grid; gap: 2px; width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.daily-question.answered .daily-question-head { cursor: default; }
+.daily-question small { color: #d62f58; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.daily-question strong { color: #352b3c; font-size: 15px; line-height: 1.3; }
+.daily-question-head > span { color: #796b77; font-size: 12.5px; line-height: 1.4; }
+.daily-question-options { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.daily-question-options button { min-height: 36px; padding: 0 14px; border: 1px solid #eee3e5; border-radius: 999px; background: #fff; color: #352b3c; font: inherit; font-size: 13px; cursor: pointer; }
+.daily-question-options button:hover:not(:disabled) { border-color: #f29bad; background: #ffe1e7; color: #ae1940; }
+.daily-question-options button:disabled { opacity: .6; }
+.daily-question-error { margin: 8px 0 0; color: #b42343; font-size: 12.5px; }
+.same-answer-label { position: absolute; left: 14px; top: 14px; z-index: 3; display: inline-flex; gap: 6px; align-items: center; padding: 5px 11px; border-radius: 999px; background: rgba(255, 255, 255, .92); color: #ae1940; font-size: 12px; font-weight: 700; box-shadow: 0 4px 14px rgba(63, 35, 52, .15); }
