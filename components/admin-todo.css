@@ -1,0 +1,8 @@
+.todo-panel { display: grid; gap: 12px; margin: 0 0 20px; padding: 18px 20px; border: 1px solid #eee3e5; border-radius: 14px; background: #fff; }
+.todo-panel small { color: #796b77; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.todo-panel h2 { margin: 2px 0 0; color: #352b3c; font-size: 17px; font-weight: 600; }
+.todo-panel p { margin: 0; color: #796b77; font-size: 13.5px; }
+.todo-panel ul { display: flex; flex-wrap: wrap; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.todo-panel li a { display: inline-flex; align-items: center; gap: 8px; min-height: 38px; padding: 0 14px 0 8px; border: 1px solid #eee3e5; border-radius: 999px; background: #fff8f5; color: #352b3c; font-size: 13px; text-decoration: none; }
+.todo-panel li a:hover { border-color: #f29bad; background: #ffe1e7; color: #ae1940; }
+.todo-panel li b { min-width: 26px; padding: 2px 8px; border-radius: 999px; background: #d62f58; color: #fff; font-size: 12px; text-align: center; }

@@ -394,3 +394,8 @@
 .lovask-light .support-admin-list form .reply textarea { resize: vertical; }
 .lovask-light .trend-card > span.up { color: #15803d !important; }
 .lovask-light .trend-card > span.down { color: #b42343 !important; }
+
+/* Sidebar group headings */
+.lovask-light .ops-nav-group { margin: 14px 12px 4px; color: #9b8f98; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.lovask-light .ops-nav > a { min-height: 36px; }
+@media (max-width: 900px) { .lovask-light .ops-nav-group { display: none; } }

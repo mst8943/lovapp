@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Banknote, Bot, CalendarHeart, Camera, Bell, ScrollText, ShieldUser, ChartNoAxesCombined, ClipboardList, FileText, HeartPulse, LayoutDashboard, LifeBuoy, MessageSquareText, MessageSquareWarning, Settings2, Sparkles, Users } from "lucide-react";
+import { Banknote, Bot, CalendarHeart, Camera, Bell, ScrollText, UserX, ShieldUser, ChartNoAxesCombined, ClipboardList, FileText, HeartPulse, LayoutDashboard, LifeBuoy, MessageSquareText, MessageSquareWarning, Settings2, Sparkles, Users } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { AdminCommandPalette } from "@/components/admin-command-palette";
 import { ADMIN_PAGES } from "@/lib/admin-pages";
 import type { LucideIcon } from "lucide-react";
 import { useAdminRole } from "@/components/admin-role-context";
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 
-const ICONS: Record<string, LucideIcon> = { overview: LayoutDashboard, users: Users, applications: ClipboardList, payments: Banknote, support: LifeBuoy, reports: MessageSquareWarning, photos: Camera, conversations: MessageSquareText, community: CalendarHeart, bots: Bot, blog: FileText, growth: ChartNoAxesCombined, notify: Bell, platform: Sparkles, health: HeartPulse, team: ShieldUser, audit: ScrollText, settings: Settings2 };
+const ICONS: Record<string, LucideIcon> = { overview: LayoutDashboard, users: Users, applications: ClipboardList, payments: Banknote, support: LifeBuoy, reports: MessageSquareWarning, photos: Camera, conversations: MessageSquareText, community: CalendarHeart, bots: Bot, blog: FileText, growth: ChartNoAxesCombined, notify: Bell, platform: Sparkles, health: HeartPulse, team: ShieldUser, deletions: UserX, audit: ScrollText, settings: Settings2 };
 
 export function AdminResourceNav() {
   const role = useAdminRole();
@@ -23,9 +23,10 @@ export function AdminResourceNav() {
   return <aside className="ops-nav">
     <Brand />
     <AdminCommandPalette role={role} />
-    {ADMIN_PAGES.filter((page) => page.roles.includes(role)).map((page) => {
+    {ADMIN_PAGES.filter((page) => page.roles.includes(role)).map((page, index, list) => {
       const Icon = ICONS[page.key] ?? LayoutDashboard;
-      return <Link key={page.key} onClick={page.key === "users" ? seenUsers : undefined} className={active === page.key ? "active" : ""} href={page.href}><Icon size={17} /> {page.label}<Badge count={counts[page.key]}/></Link>;
+      const heading = page.group !== "Genel" && list[index - 1]?.group !== page.group ? <span className="ops-nav-group">{page.group}</span> : null;
+      return <Fragment key={page.key}>{heading}<Link onClick={page.key === "users" ? seenUsers : undefined} className={active === page.key ? "active" : ""} href={page.href}><Icon size={17} /> {page.label}<Badge count={counts[page.key]}/></Link></Fragment>;
     })}
     <div className="ops-nav-status"><i /><span>Yönetim alanı<small>Canlı bağlantı etkin</small></span></div>
     <Link className="ops-nav-return" href="/">Uygulamaya dön</Link>

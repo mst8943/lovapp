@@ -1,0 +1,11 @@
+.deletions-status { margin: 0 0 12px; color: var(--admin-ink-soft, #796b77); font-size: 13.5px; }
+.deletions-list { display: grid; gap: 10px; }
+.deletion-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; align-items: center; padding: 14px 16px; border: 1px solid var(--admin-line, #eee3e5); border-radius: 14px; background: #fff; }
+.deletion-row strong { display: block; font-size: 14px; overflow-wrap: anywhere; }
+.deletion-row small { display: block; margin-top: 2px; color: var(--admin-ink-soft, #796b77); font-size: 12.5px; }
+.deletion-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; background: #fff0eb; color: #ae1940; font-size: 12px; font-weight: 600; }
+.deletion-row.completed .deletion-badge { background: #eee; color: #5b5160; }
+.deletion-row.cancelled .deletion-badge { background: #e3f6ea; color: #15803d; }
+.deletion-row.due .deletion-badge { background: #fde8e8; color: #b42343; }
+.deletion-error { grid-column: 1 / -1; margin: 0; padding: 8px 12px; border-radius: 10px; background: #fff5f6; color: #b42343; font-size: 12.5px; overflow-wrap: anywhere; }
+@media (max-width: 700px) { .deletion-row { grid-template-columns: 1fr; } }

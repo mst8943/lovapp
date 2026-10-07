@@ -20,6 +20,7 @@ import { useCallback, useEffect, useState } from "react";
 import { AdminResourceNav } from "@/components/admin-resource-nav";
 import { useAdminRole } from "@/components/admin-role-context";
 import { AdminTrends } from "@/components/admin-trends";
+import { AdminTodo } from "@/components/admin-todo";
 import "./admin-page.css";
 
 type AdminStats = {
@@ -128,6 +129,8 @@ export default function AdminPage() {
             detail={`${activeBotCount} keşfette aktif`}
           />
         </div>
+
+        <AdminTodo />
 
         <AdminTrends />
 

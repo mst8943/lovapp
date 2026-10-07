@@ -70,6 +70,8 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
       { name: "Başvuru ve davet akışı", detail: "Üyelik başvurusu, onay ve davet e-postası.", href: "/admin/lovask-control/applications" },
       { name: "Canlı destek", detail: "Kullanıcı talepleri ve yanıt kuyruğu.", href: "/admin/lovask-control/support" },
       { name: "Sistem sağlığı", detail: "Kapasite, başarısız webhook ve servis durumu.", href: "/admin/lovask-control/health" },
+      { name: "Hesap silme talepleri", detail: "KVKK: bekleyen, silinen ve geri alınan hesap silme talepleri.", href: "/admin/lovask-control/deletions" },
+      { name: "Bugün yapılacaklar", detail: "Bekleyen ödeme, başvuru, destek ve şikâyetler tek kartta.", href: "/admin/lovask-control" },
       { name: "Hızlı arama (Ctrl+K)", detail: "Panelde sayfa ve üye arama, klavye ile gezinme." },
       { name: "14 günlük trend grafikleri", detail: "Yeni üye, eşleşme, mesaj ve onaylı ödeme trendi, genel bakışta.", href: "/admin/lovask-control" },
       { name: "Üye notları", detail: "Ekibin üye hakkında bıraktığı, üyeye görünmeyen iç notlar." },
