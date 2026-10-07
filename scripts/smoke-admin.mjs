@@ -49,6 +49,12 @@ try {
   r = await api("/api/admin/notify", { method: "POST", body: JSON.stringify({ mode: "preview", segment: "all", title: "x", body: "x", url: "https://evil.example" }) }); check("notify dış bağlantı reddi 400", r.status === 400);
   const prof = await (await sv("/rest/v1/profiles?select=id&kind=eq.human&limit=1")).json();
   r = await api(`/api/admin/users/${prof[0]?.id}/notes`); b = await r.json(); check("not API (076 yoksa anlaşılır hata)", r.status === 503 || r.ok, `${r.status} ${b.error ?? ""}`);
+  if (r.ok) {
+    r = await api(`/api/admin/users/${prof[0]?.id}/notes`, { method: "POST", body: JSON.stringify({ body: "smoke test notu" }) }); check("üye notu ekle", r.status === 201);
+    r = await api(`/api/admin/users/${prof[0]?.id}/notes`); b = await r.json(); const note = b.notes?.find((n) => n.body === "smoke test notu"); check("üye notu listelenir", Boolean(note?.mine));
+    if (note) { r = await api(`/api/admin/users/${prof[0]?.id}/notes?noteId=${note.id}`, { method: "DELETE" }); check("üye notu sil", r.ok); }
+    r = await api(`/api/admin/users/${prof[0]?.id}/credits`); b = await r.json(); check("üye kredi bakiyesi (admin)", r.ok && typeof b.balances?.boost === "number");
+  }
   r = await api(`/api/admin/users/${prof[0]?.id}/timeline`); b = await r.json(); check("üye etkinlik geçmişi", r.ok && b.events?.[0] && b.events.every((e, i, a) => i === 0 || a[i - 1].at >= e.at), `${b.events?.length} olay`);
   r = await api("/api/admin/users/not-a-uuid/timeline"); check("etkinlik geçmişi geçersiz id 400", r.status === 400, String(r.status));
   r = await api("/api/admin/users?q=a"); b = await r.json(); check("kullanıcı arama (palet)", r.ok && Array.isArray(b.users), `${b.users?.length}`);
