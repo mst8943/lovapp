@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Banknote, Bot, CalendarHeart, Camera, ChartNoAxesCombined, ClipboardList, FileText, HeartPulse, LayoutDashboard, LifeBuoy, MessageSquareText, MessageSquareWarning, Settings2, Sparkles, Users } from "lucide-react";
+import { Banknote, Bot, CalendarHeart, Camera, ScrollText, ChartNoAxesCombined, ClipboardList, FileText, HeartPulse, LayoutDashboard, LifeBuoy, MessageSquareText, MessageSquareWarning, Settings2, Sparkles, Users } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { useAdminRole } from "@/components/admin-role-context";
 import { useCallback, useEffect, useState } from "react";
@@ -33,6 +33,7 @@ export function AdminResourceNav() {
     {link("growth", "/admin/lovask-control/growth", "Büyüme", <ChartNoAxesCombined size={17}/>, ["owner"])}
     {link("platform", "/admin/lovask-control/platform", "Platform özeti", <Sparkles size={17}/>, ["owner"])}
     {link("health", "/admin/lovask-control/health", "Sistem sağlığı", <HeartPulse size={17}/>, ["owner"])}
+    {link("audit", "/admin/lovask-control/audit", "İşlem günlüğü", <ScrollText size={17}/>, ["owner"])}
     {link("settings", "/admin/lovask-control/settings", "Ayarlar", <Settings2 size={17}/>, ["owner"])}
     <div className="ops-nav-status"><i /><span>Yönetim alanı<small>Canlı bağlantı etkin</small></span></div>
     <Link className="ops-nav-return" href="/">Uygulamaya dön</Link>

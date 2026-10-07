@@ -364,3 +364,8 @@
 .lovask-light .brand-settings .setup-checks form > h3 { font-size: 15px; }
 .lovask-light .brand-settings .setup-checks label { display: grid; gap: 4px; font-size: 12.5px; color: var(--admin-ink-soft); }
 .lovask-light .brand-settings .setup-checks label:has(> input[type="checkbox"]) { display: flex; align-items: center; gap: 8px; }
+
+/* CSV export links */
+.lovask-light .export-link { display: inline-flex; align-items: center; min-height: 38px; padding: 0 14px; border: 1px solid var(--admin-line); border-radius: 10px; background: #fff; color: var(--admin-ink); font-size: 13px; font-weight: 600; text-decoration: none; }
+.lovask-light .export-link:hover { border-color: var(--admin-rose-edge); background: var(--admin-rose-wash); color: var(--admin-rose-deep); }
+.lovask-light .ledger-actions { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; }

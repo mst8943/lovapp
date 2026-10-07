@@ -1,0 +1,13 @@
+.audit-desk .audit-status { margin: 0 0 12px; color: var(--admin-ink-soft, #796b77); font-size: 13.5px; }
+.audit-desk > header form { display: flex; gap: 8px; align-items: center; }
+.audit-desk > header form input { font-size: 13px; width: min(320px, 60vw); height: 38px; padding: 0 12px; border: 1px solid #d8c7d0; border-radius: 10px; }
+.audit-list { display: grid; gap: 8px; }
+.audit-row { border: 1px solid var(--admin-line, #eee3e5); border-radius: 12px; background: #fff; overflow: hidden; }
+.audit-row > button { width: 100%; display: grid; grid-template-columns: 160px minmax(160px, 1.2fr) minmax(140px, 1fr) minmax(120px, .8fr); gap: 12px; align-items: center; padding: 12px 16px; border: 0; background: none; text-align: left; font: inherit; cursor: pointer; }
+.audit-row > button:hover { background: #fff8f5; }
+.audit-row time { color: #9b8f98; font-size: 12px; }
+.audit-row strong { font-size: 13.5px; overflow-wrap: anywhere; }
+.audit-row span, .audit-row small { color: var(--admin-ink-soft, #796b77); font-size: 12.5px; overflow-wrap: anywhere; }
+.audit-row pre { margin: 0; padding: 12px 16px; border-top: 1px solid var(--admin-line, #eee3e5); background: #fff8f5; color: #493c50; font-size: 12px; overflow-x: auto; }
+.audit-more { justify-self: center; margin: 16px auto 0; min-height: 38px; padding: 0 18px; border: 1px solid var(--admin-line, #eee3e5); border-radius: 10px; background: #fff; cursor: pointer; font-weight: 600; }
+@media (max-width: 900px) { .audit-row > button { grid-template-columns: 1fr; gap: 4px; } }

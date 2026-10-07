@@ -1,5 +1,6 @@
 "use client";
 
+import { useAdminRole } from "@/components/admin-role-context";
 import Image from "next/image";
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Check, ExternalLink, LoaderCircle, Search, X } from "lucide-react";
@@ -15,6 +16,7 @@ const config = {
 } as const;
 
 export function AdminOperations({ mode }: { mode: Mode }) {
+  const role = useAdminRole();
   const meta = config[mode]; const [rows, setRows] = useState<Row[]>([]); const [loading, setLoading] = useState(true); const [notice, setNotice] = useState(""); const [query, setQuery] = useState(""); const [kind, setKind] = useState<"human" | "bot">("human"); const [selected, setSelected] = useState<Row | null>(null); const requestId = useRef(0);
   const load = useCallback(async () => {
     const currentRequest = ++requestId.current;
@@ -31,7 +33,7 @@ export function AdminOperations({ mode }: { mode: Mode }) {
   };
   const search = (event: FormEvent) => { event.preventDefault(); void load(); };
   return <section className="ops-content">
-    <header><div><small>{meta.eyebrow}</small><h1>{meta.title}</h1></div>{mode === "users" ? <><nav aria-label="Profil türü"><button type="button" aria-pressed={kind === "human"} onClick={() => { setSelected(null); setKind("human"); }}>Kullanıcılar</button><button type="button" aria-pressed={kind === "bot"} onClick={() => { setSelected(null); setKind("bot"); }}>Botlar</button></nav><form onSubmit={search}><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="İsimle ara" /><button>Ara</button></form></> : null}</header>
+    <header><div><small>{meta.eyebrow}</small><h1>{meta.title}</h1></div>{mode === "users" ? <><nav aria-label="Profil türü"><button type="button" aria-pressed={kind === "human"} onClick={() => { setSelected(null); setKind("human"); }}>Kullanıcılar</button><button type="button" aria-pressed={kind === "bot"} onClick={() => { setSelected(null); setKind("bot"); }}>Botlar</button></nav><form onSubmit={search}><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="İsimle ara" /><button>Ara</button></form>{role === "owner" || role === "support" ? <a className="export-link" href="/api/admin/export?type=users" download>CSV indir</a> : null}</> : null}</header>
     {notice ? <p className="ops-notice" role="status">{notice}</p> : null}
     {loading ? <div className="ops-empty"><LoaderCircle className="spin" /> Yükleniyor</div> : rows.length === 0 ? <div className="ops-empty">{meta.empty}</div> : <div className={`ops-list ${mode}`}>{rows.map((row) => <OperationRow key={String(row.id)} mode={mode} row={row} onSelect={() => setSelected(row)} onMutate={mutate} />)}</div>}
     {selected && mode === "users" ? <UserDetail profileId={String(selected.id)} onClose={() => setSelected(null)} /> : null}

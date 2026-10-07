@@ -103,7 +103,8 @@ export function AdminPaymentOperations() {
   return <section className="payment-ledger" aria-labelledby="payment-ledger-title">
     <header className="payment-ledger-head">
       <div><small>NOIR FİNANS MASASI</small><h1 id="payment-ledger-title">Ödeme hareketleri</h1><p>Bekleyen bildirimleri inceleyin; Shopier işlemlerini ve tamamlanan kayıtları tek akışta izleyin.</p></div>
-      <button className="ledger-refresh" onClick={() => void load()} disabled={loading}><RefreshCw className={loading ? "spin" : ""}/> Yenile</button>
+      <span className="ledger-actions"><a className="export-link" href="/api/admin/export?type=payments" download>CSV indir</a>
+<button className="ledger-refresh" onClick={() => void load()} disabled={loading}><RefreshCw className={loading ? "spin" : ""}/> Yenile</button></span>
     </header>
 
     <nav className="payment-tabs" aria-label="Ödeme filtreleri">

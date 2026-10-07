@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+  Download,
   BadgeCheck,
   ChevronDown,
   ChevronRight,
@@ -321,6 +322,17 @@ export function LovaskProfileView({
               </div>
               <ChevronRight size={16} className="hub-chevron-icon" />
             </button>
+
+            <div className="hub-divider" />
+
+            <a className="hub-row-interactive hub-button-row" href="/api/profile/export" download>
+              <span className="hub-row-icon"><Download size={16} /></span>
+              <div className="hub-row-text">
+                <strong>Verilerimi indir</strong>
+                <small>Profilin, eşleşmelerin ve gönderdiğin mesajlar tek dosyada</small>
+              </div>
+              <ChevronRight size={16} className="hub-chevron-icon" />
+            </a>
 
             <div className="hub-divider" />
 

@@ -49,6 +49,7 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
       { name: "Şikâyet ve engelleme", detail: "Kullanıcı bildirimi, moderatör kuyruğu.", href: "/admin/lovask-control/reports" },
       { name: "Bot ve kötüye kullanım koruması", detail: "Cloudflare Turnstile ve istek hız sınırı." },
       { name: "Hesap silme ve kurtarma", detail: "Silinen hesap 30 gün içinde geri alınabilir." },
+      { name: "Verilerimi indir (KVKK)", detail: "Üye kendi profil, eşleşme ve mesaj verilerini tek dosyada indirir." },
     ],
   },
   {
@@ -68,6 +69,8 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
       { name: "Başvuru ve davet akışı", detail: "Üyelik başvurusu, onay ve davet e-postası.", href: "/admin/lovask-control/applications" },
       { name: "Canlı destek", detail: "Kullanıcı talepleri ve yanıt kuyruğu.", href: "/admin/lovask-control/support" },
       { name: "Sistem sağlığı", detail: "Kapasite, başarısız webhook ve servis durumu.", href: "/admin/lovask-control/health" },
+      { name: "İşlem günlüğü", detail: "Yönetici işlemlerinin değiştirilemez kaydı: kim, ne zaman, neyi yaptı.", href: "/admin/lovask-control/audit" },
+      { name: "CSV dışa aktarma", detail: "Kullanıcı ve ödeme listelerini Excel için indirme." },
       { name: "Telegram yönetimi", detail: "Önemli işlemleri Telegram üzerinden takip ve onay." },
     ],
   },
