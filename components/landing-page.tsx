@@ -481,6 +481,8 @@ export async function LandingPage() {
           <Link href="/privacy">Gizlilik</Link>
           <Link href="/terms">Koşullar</Link>
           <Link href="/community-guidelines">Topluluk</Link>
+          <Link href="/sss">SSS</Link>
+          <Link href="/guvenlik-ipuclari">Güvenlik</Link>
           <a href={`mailto:${brand.support_email}`}>Destek</a>
         </nav>
         <small>© {new Date().getFullYear()} {brand.brand_name}</small>

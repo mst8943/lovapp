@@ -48,6 +48,7 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
       { name: "Selfie doğrulama", detail: "Doğrulama rozeti ve manuel inceleme akışı.", href: "/admin/lovask-control/settings" },
       { name: "Şikâyet ve engelleme", detail: "Kullanıcı bildirimi, moderatör kuyruğu.", href: "/admin/lovask-control/reports" },
       { name: "Bot ve kötüye kullanım koruması", detail: "Cloudflare Turnstile ve istek hız sınırı." },
+      { name: "SSS ve güvenlik ipuçları sayfaları", detail: "SEO uyumlu sık sorulan sorular (FAQ şeması) ve güvenli tanışma rehberi.", href: "/sss" },
       { name: "Hesap silme ve kurtarma", detail: "Silinen hesap 30 gün içinde geri alınabilir." },
       { name: "Verilerimi indir (KVKK)", detail: "Üye kendi profil, eşleşme ve mesaj verilerini tek dosyada indirir." },
     ],
