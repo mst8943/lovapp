@@ -69,6 +69,7 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
       { name: "Başvuru ve davet akışı", detail: "Üyelik başvurusu, onay ve davet e-postası.", href: "/admin/lovask-control/applications" },
       { name: "Canlı destek", detail: "Kullanıcı talepleri ve yanıt kuyruğu.", href: "/admin/lovask-control/support" },
       { name: "Sistem sağlığı", detail: "Kapasite, başarısız webhook ve servis durumu.", href: "/admin/lovask-control/health" },
+      { name: "Ekip ve roller", detail: "Yönetici ekleme, rol değiştirme ve kaldırma; son sahip korunur.", href: "/admin/lovask-control/team" },
       { name: "İşlem günlüğü", detail: "Yönetici işlemlerinin değiştirilemez kaydı: kim, ne zaman, neyi yaptı.", href: "/admin/lovask-control/audit" },
       { name: "CSV dışa aktarma", detail: "Kullanıcı ve ödeme listelerini Excel için indirme." },
       { name: "Telegram yönetimi", detail: "Önemli işlemleri Telegram üzerinden takip ve onay." },

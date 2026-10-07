@@ -1,0 +1,13 @@
+.team-desk .team-status { margin: 0 0 12px; padding: 10px 14px; border: 1px solid #f6c3cf; border-radius: 10px; background: #fff5f6; color: #ae1940; font-size: 13.5px; }
+.team-add { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 20px; padding: 16px; border: 1px solid var(--admin-line, #eee3e5); border-radius: 14px; background: #fff; }
+.team-add input { flex: 1 1 260px; }
+.team-add :is(input, select) { height: 40px; padding: 0 12px; border: 1px solid #d8c7d0; border-radius: 10px; background: #fff; font: inherit; font-size: 13.5px; }
+.team-list { display: grid; gap: 10px; }
+.team-row { display: grid; grid-template-columns: minmax(0, 1fr) 180px auto; gap: 14px; align-items: center; padding: 14px 16px; border: 1px solid var(--admin-line, #eee3e5); border-radius: 14px; background: #fff; }
+.team-row strong { display: block; overflow-wrap: anywhere; font-size: 14px; }
+.team-row small { display: block; margin-top: 2px; color: var(--admin-ink-soft, #796b77); font-size: 12.5px; }
+.team-row select { height: 38px; padding: 0 10px; border: 1px solid #d8c7d0; border-radius: 10px; background: #fff; font: inherit; font-size: 13px; }
+.team-remove { min-height: 38px; padding: 0 14px; border: 1px solid #f6c3cf; border-radius: 10px; background: #fff; color: #b42343; font-weight: 600; cursor: pointer; }
+.team-remove:hover:not(:disabled) { background: #fff5f6; }
+.team-remove:disabled { opacity: .45; cursor: not-allowed; }
+@media (max-width: 700px) { .team-row { grid-template-columns: 1fr; } }
