@@ -26,6 +26,7 @@ import {
 import { motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { NotificationControl } from "@/components/notification-control";
+import { ProfileCoach } from "@/components/profile-coach";
 import { ReferralPanel } from "@/components/referral-panel";
 import { SupportCenter } from "@/components/support-center";
 import { VoiceBioEditor } from "@/components/voice-bio-editor";
@@ -379,6 +380,7 @@ export function LovaskProfileView({
         </Link>
         <ProfileVisitors liveMode={liveMode} initialPremium={viewer.isNoir} />
       </div>
+      <ProfileCoach liveMode={liveMode} />
       <ReferralPanel liveMode={liveMode} />
 
       <dialog ref={deleteDialog} className="account-delete-dialog" aria-labelledby="delete-title" onCancel={(event) => { if (busy) event.preventDefault(); }}>
