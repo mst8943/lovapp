@@ -44,7 +44,7 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
   {
     title: "Güven ve güvenlik",
     features: [
-      { name: "Fotoğraf moderasyonu", detail: "Yüklenen fotoğraflar onaydan geçer.", href: "/admin/lovask-control/photos" },
+      { name: "Fotoğraf moderasyonu", detail: "Yüklenen fotoğraflar onaydan geçer; klavye kısayollarıyla (A onayla, R reddet, oklar gezin) hızlı inceleme.", href: "/admin/lovask-control/photos" },
       { name: "Selfie doğrulama", detail: "Doğrulama rozeti ve manuel inceleme akışı.", href: "/admin/lovask-control/settings" },
       { name: "Şikâyet ve engelleme", detail: "Kullanıcı bildirimi, moderatör kuyruğu.", href: "/admin/lovask-control/reports" },
       { name: "Bot ve kötüye kullanım koruması", detail: "Cloudflare Turnstile ve istek hız sınırı." },

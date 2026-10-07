@@ -67,6 +67,22 @@ export function PhotoModerationBoard() {
     setNotice(status === "approved" ? "Fotoğraf onaylandı; sıradaki incelemeye geçildi." : status === "rejected" ? body.profilePaused ? "Fotoğraf reddedildi. Yeterli güvenli fotoğraf kalmadığı için profil keşfetten kaldırıldı." : "Fotoğraf reddedildi; karar denetim kaydına işlendi." : "Fotoğraf yeniden inceleme kuyruğuna alındı.");
   };
 
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.metaKey || event.altKey || rejecting) return;
+      const target = event.target as HTMLElement | null;
+      if (target && (["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName) || target.isContentEditable)) return;
+      const index = selected ? visible.findIndex((photo) => photo.id === selected.id) : -1;
+      const key = event.key.toLowerCase();
+      if ((key === "arrowdown" || key === "j") && visible[index + 1]) { event.preventDefault(); setSelectedId(visible[index + 1].id); }
+      else if ((key === "arrowup" || key === "k") && index > 0) { event.preventDefault(); setSelectedId(visible[index - 1].id); }
+      else if (key === "a" && selected?.moderation_status === "pending" && !busyId) { event.preventDefault(); void decide(selected, "approved"); }
+      else if (key === "r" && selected?.moderation_status === "pending" && !busyId) { event.preventDefault(); setRejecting(selected); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
   return <section className="photo-desk">
     <header className="photo-desk-head"><div><small>Görsel güvenlik</small><h1>Fotoğraf inceleme</h1><p>Önce bekleyenleri değerlendir; geçmiş kararları gerektiğinde yeniden kuyruğa al.</p></div><button onClick={() => void load()} disabled={loading}><RotateCcw size={15}/>{loading ? "Yenileniyor" : "Kuyruğu yenile"}</button></header>
     <div className="photo-stats">{(["pending","approved","rejected"] as const).map((status) => <button key={status} className={filter === status ? "active" : ""} onClick={() => { setFilter(status); setSelectedId(null); }}><small>{status === "pending" ? "Bekleyen" : status === "approved" ? "Onaylanan" : "Reddedilen"}</small><b>{stats[status]}</b></button>)}</div>
@@ -81,6 +97,7 @@ export function PhotoModerationBoard() {
         <section className="review-guide"><small>Karardan önce kontrol et</small><ul><li>Yüz veya kişi yeterince anlaşılır mı?</li><li>Çıplaklık, şiddet veya rahatsız edici içerik var mı?</li><li>18 yaş altı, sahte profil veya başkasına ait görsel şüphesi var mı?</li></ul></section>
         {selected.moderation_reason ? <p className="previous-reason"><b>Önceki ret nedeni</b>{selected.moderation_reason}</p> : null}
         {selected.moderation_status === "pending" ? <div className="photo-decisions"><button disabled={busyId === selected.id} onClick={() => void decide(selected,"approved")}><Check/> Onayla</button><button className="danger" disabled={busyId === selected.id} onClick={() => setRejecting(selected)}><X/> Reddet</button></div> : <div className="photo-decisions single"><button disabled={busyId === selected.id} onClick={() => void decide(selected,"pending")}><RotateCcw/> Yeniden incelemeye al</button></div>}
+        <p className="photo-shortcuts" aria-label="Klavye kısayolları"><kbd>A</kbd> onayla · <kbd>R</kbd> reddet · <kbd>↑</kbd><kbd>↓</kbd> gezin</p>
       </article>
     </div>}
     {rejecting ? <RejectDialog photo={rejecting} busy={busyId === rejecting.id} onClose={() => setRejecting(null)} onConfirm={(reason) => void decide(rejecting,"rejected",reason)} /> : null}
