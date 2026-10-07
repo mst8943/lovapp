@@ -55,6 +55,7 @@ export const PLATFORM_FEATURES: PlatformFeatureGroup[] = [
   {
     title: "Büyüme",
     features: [
+      { name: "Segmentli bildirim", detail: "Üyeleri segmente ayırıp önizleme, test ve onayla toplu push gönderme.", href: "/admin/lovask-control/notify" },
       { name: "Büyüme paneli", detail: "Kayıt kaynakları, dönüşüm ve indirme takibi.", href: "/admin/lovask-control/growth" },
       { name: "Blog ve SEO", detail: "Zengin metin editörü, site haritası, yapılandırılmış veri.", href: "/admin/lovask-control/blog" },
       { name: "Uygulama içi kampanya kartı", detail: "Zamanlanmış duyuru kartı, isteğe bağlı tıklama ölçümü.", href: "/admin/lovask-control/growth" },

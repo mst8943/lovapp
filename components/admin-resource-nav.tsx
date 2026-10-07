@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Banknote, Bot, CalendarHeart, Camera, ScrollText, ShieldUser, ChartNoAxesCombined, ClipboardList, FileText, HeartPulse, LayoutDashboard, LifeBuoy, MessageSquareText, MessageSquareWarning, Settings2, Sparkles, Users } from "lucide-react";
+import { Banknote, Bot, CalendarHeart, Camera, Bell, ScrollText, ShieldUser, ChartNoAxesCombined, ClipboardList, FileText, HeartPulse, LayoutDashboard, LifeBuoy, MessageSquareText, MessageSquareWarning, Settings2, Sparkles, Users } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { useAdminRole } from "@/components/admin-role-context";
 import { useCallback, useEffect, useState } from "react";
@@ -31,6 +31,7 @@ export function AdminResourceNav() {
     {link("bots", "/admin/lovask-control/bots", "Bot stüdyosu", <Bot size={17}/>, ["owner", "bot_editor"])}
     {link("blog", "/admin/lovask-control/blog", "Blog", <FileText size={17}/>, ["owner", "bot_editor"])}
     {link("growth", "/admin/lovask-control/growth", "Büyüme", <ChartNoAxesCombined size={17}/>, ["owner"])}
+    {link("notify", "/admin/lovask-control/notify", "Bildirim gönder", <Bell size={17}/>, ["owner"])}
     {link("platform", "/admin/lovask-control/platform", "Platform özeti", <Sparkles size={17}/>, ["owner"])}
     {link("health", "/admin/lovask-control/health", "Sistem sağlığı", <HeartPulse size={17}/>, ["owner"])}
     {link("team", "/admin/lovask-control/team", "Ekip ve roller", <ShieldUser size={17}/>, ["owner"])}
