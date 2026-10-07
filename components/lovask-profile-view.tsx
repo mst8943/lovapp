@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Download,
+  HelpCircle,
   BadgeCheck,
   ChevronDown,
   ChevronRight,
@@ -322,6 +323,17 @@ export function LovaskProfileView({
               </div>
               <ChevronRight size={16} className="hub-chevron-icon" />
             </button>
+
+            <div className="hub-divider" />
+
+            <Link className="hub-row-interactive hub-button-row" href="/sss">
+              <span className="hub-row-icon"><HelpCircle size={16} /></span>
+              <div className="hub-row-text">
+                <strong>Yardım ve güvenlik</strong>
+                <small>Sık sorulan sorular, güvenli tanışma ipuçları</small>
+              </div>
+              <ChevronRight size={16} className="hub-chevron-icon" />
+            </Link>
 
             <div className="hub-divider" />
 
